@@ -1,4 +1,13 @@
+import 'package:emigo/core/common/custom_textfield.dart';
+import 'package:emigo/core/common/long_button.dart';
+import 'package:emigo/core/config/theme/app_palette.dart';
+import 'package:emigo/core/constants/constants.dart';
 import 'package:flutter/material.dart';
+
+enum Auth {
+  signIn,
+  signUp,
+}
 
 class AuthScreen extends StatefulWidget {
   static const String routeName = 'auth_screen';
@@ -9,14 +18,107 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  Auth _auth = Auth.signUp;
+  final _signUpFormKey = GlobalKey<FormState>();
+  final _signInFormKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _nameController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Auth Screen'),
-      ),
-      body: const Center(
-        child: Text('This is the Auth Screen'),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(
+          child: Column(
+            children: [
+              SizedBox(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 50),
+                    Image.asset(Constants.logoPath),
+                  ],
+                ),
+              ),
+              if (_auth == Auth.signUp)
+                Form(
+                  key: _signUpFormKey,
+                  child: Column(
+                    children: [
+                      CustomTextField(controller: _nameController, hintText: 'Name'),
+                      CustomTextField(controller: _emailController, hintText: 'Email'),
+                      CustomTextField(controller: _passwordController, hintText: 'Password'),
+                      const SizedBox(height: 20),
+                      ListTile(
+                        tileColor: _auth == Auth.signIn
+                            ? AppPalette.gradient3.withOpacity(0.5)
+                            : AppPalette.backgroundColor,
+                        title: const Text(
+                          'Sign-In.',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        leading: Radio(
+                          activeColor: AppPalette.gradient3,
+                          value: Auth.signIn,
+                          groupValue: _auth,
+                          onChanged: (Auth? val) {
+                            setState(() {
+                              _auth = val!;
+                            });
+                          },
+                        ),
+                      ),
+                      LongButton(buttonText: 'Sign Up', onPressed: () {}),
+                    ],
+                  ),
+                ),
+              if (_auth == Auth.signIn)
+                Form(
+                  key: _signInFormKey,
+                  child: Column(
+                    children: [
+                      CustomTextField(controller: _emailController, hintText: 'Email'),
+                      CustomTextField(controller: _passwordController, hintText: 'Password'),
+                      const SizedBox(height: 20),
+                      ListTile(
+                        tileColor: _auth == Auth.signUp
+                            ? AppPalette.gradient3.withOpacity(0.5)
+                            : AppPalette.backgroundColor,
+                        title: const Text(
+                          'Sign-Up.',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        leading: Radio(
+                          activeColor: AppPalette.gradient3,
+                          value: Auth.signUp,
+                          groupValue: _auth,
+                          onChanged: (Auth? val) {
+                            setState(() {
+                              _auth = val!;
+                            });
+                          },
+                        ),
+                      ),
+                      LongButton(buttonText: 'Sign In', onPressed: () {}),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -17,9 +17,9 @@ class AppTheme {
         ),
       );
 
-  static final darkThemeMode = ThemeData.dark().copyWith(
+  static final lightThemeMode = ThemeData.light().copyWith(
     scaffoldBackgroundColor: AppPalette.backgroundColor,
-    textTheme: ThemeData.dark().textTheme.apply(
+    textTheme: ThemeData.light().textTheme.apply(
           fontFamily: 'AlegreyaSans',
         ),
     pageTransitionsTheme: const PageTransitionsTheme(builders: {
@@ -42,14 +42,17 @@ class AppTheme {
         ),
       ),
     ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
+    elevatedButtonTheme: const ElevatedButtonThemeData(
       style: ButtonStyle(
-        backgroundColor: const MaterialStatePropertyAll(AppPalette.gradient2),
-        shape: MaterialStatePropertyAll(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+        backgroundColor: MaterialStatePropertyAll(AppPalette.btnColor),
+        textStyle: MaterialStatePropertyAll(
+          TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: AppPalette.backgroundColor,
           ),
         ),
+
       ),
     ),
     appBarTheme: const AppBarTheme(
@@ -65,7 +68,7 @@ class AppTheme {
     inputDecorationTheme: InputDecorationTheme(
       // contentPadding: const EdgeInsets.all(27),
       border: _border(AppPalette.gradient2),
-      enabledBorder: _underBorder(AppPalette.gradient3),
+      enabledBorder: _underBorder(AppPalette.gradient2),
       focusedBorder: _underBorder(AppPalette.gradient5),
       errorBorder: _border(AppPalette.errorColor),
     ),
