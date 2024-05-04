@@ -2,6 +2,7 @@ import 'package:emigo/core/common/custom_textfield.dart';
 import 'package:emigo/core/common/long_button.dart';
 import 'package:emigo/core/config/theme/app_palette.dart';
 import 'package:emigo/core/constants/constants.dart';
+import 'package:emigo/features/auth/services/auth_service.dart';
 import 'package:flutter/material.dart';
 
 enum Auth {
@@ -16,7 +17,6 @@ class AuthScreen extends StatefulWidget {
   @override
   _AuthScreenState createState() => _AuthScreenState();
 }
-
 class _AuthScreenState extends State<AuthScreen> {
   Auth _auth = Auth.signUp;
   final _signUpFormKey = GlobalKey<FormState>();
@@ -24,6 +24,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  final AuthService _authService = AuthService();
 
   @override
   void dispose() {
@@ -31,6 +32,15 @@ class _AuthScreenState extends State<AuthScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
+  }
+
+  void _signUp() {
+    _authService.signUp(
+      context: context,
+      email: _emailController.text,
+      password: _passwordController.text,
+      name: _nameController.text,
+    );
   }
 
   @override
@@ -54,9 +64,13 @@ class _AuthScreenState extends State<AuthScreen> {
                   key: _signUpFormKey,
                   child: Column(
                     children: [
-                      CustomTextField(controller: _nameController, hintText: 'Name'),
-                      CustomTextField(controller: _emailController, hintText: 'Email'),
-                      CustomTextField(controller: _passwordController, hintText: 'Password'),
+                      CustomTextField(
+                          controller: _nameController, hintText: 'Name'),
+                      CustomTextField(
+                          controller: _emailController, hintText: 'Email'),
+                      CustomTextField(
+                          controller: _passwordController,
+                          hintText: 'Password'),
                       const SizedBox(height: 20),
                       ListTile(
                         tileColor: _auth == Auth.signIn
@@ -79,7 +93,13 @@ class _AuthScreenState extends State<AuthScreen> {
                           },
                         ),
                       ),
-                      LongButton(buttonText: 'Sign Up', onPressed: () {}),
+                      LongButton(
+                          buttonText: 'Sign Up',
+                          onPressed: () {
+                            if (_signUpFormKey.currentState!.validate()) {
+                              _signUp();
+                            }
+                          }),
                     ],
                   ),
                 ),
@@ -88,8 +108,11 @@ class _AuthScreenState extends State<AuthScreen> {
                   key: _signInFormKey,
                   child: Column(
                     children: [
-                      CustomTextField(controller: _emailController, hintText: 'Email'),
-                      CustomTextField(controller: _passwordController, hintText: 'Password'),
+                      CustomTextField(
+                          controller: _emailController, hintText: 'Email'),
+                      CustomTextField(
+                          controller: _passwordController,
+                          hintText: 'Password'),
                       const SizedBox(height: 20),
                       ListTile(
                         tileColor: _auth == Auth.signUp

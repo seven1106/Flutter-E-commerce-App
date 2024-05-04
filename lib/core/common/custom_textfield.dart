@@ -15,7 +15,7 @@ class CustomTextField extends StatelessWidget {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
-          hintText: hintText,
+        label: Text(hintText),
           ),
       validator: (val) {
         if (val == null || val.isEmpty) {
