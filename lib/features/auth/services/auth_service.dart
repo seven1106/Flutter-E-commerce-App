@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:emigo/core/constants/constants.dart';
 import 'package:emigo/core/constants/error_handler.dart';
 import 'package:emigo/models/user_model.dart';
@@ -24,7 +26,7 @@ class AuthService {
         token: '',
       );
       http.Response response = await http.post(
-        Uri.parse('${Constants.backEndUrl}/signup'),
+        Uri.parse('${Constants.backEndUrl}/sign-up'),
         body: user.toJson(),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
@@ -44,7 +46,35 @@ class AuthService {
         },
       );
     } catch (e) {
-      print(e);
+      showSnackBar(context, e.toString());
+    }
+  }
+  void signIn({
+    required BuildContext context,
+    required String email,
+    required String password,
+  }) async {
+    try {
+      http.Response response = await http.post(
+        Uri.parse('${Constants.backEndUrl}/sign-in'),
+        body: jsonEncode({
+          'email': email,
+          'password': password,
+        }),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+      // ignore: use_build_context_synchronously
+      httpErrorHandler(
+        response: response,
+        context: context,
+        onSuccess: () {
+          showSnackBar(context, 'Logged in!');
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
     }
   }
 }

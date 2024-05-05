@@ -17,6 +17,7 @@ class AuthScreen extends StatefulWidget {
   @override
   _AuthScreenState createState() => _AuthScreenState();
 }
+
 class _AuthScreenState extends State<AuthScreen> {
   Auth _auth = Auth.signUp;
   final _signUpFormKey = GlobalKey<FormState>();
@@ -25,6 +26,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final AuthService _authService = AuthService();
+  bool _obscureText = true;
 
   @override
   void dispose() {
@@ -40,6 +42,13 @@ class _AuthScreenState extends State<AuthScreen> {
       email: _emailController.text,
       password: _passwordController.text,
       name: _nameController.text,
+    );
+  }
+  void _signIn() {
+    _authService.signIn(
+      context: context,
+      email: _emailController.text,
+      password: _passwordController.text,
     );
   }
 
@@ -68,9 +77,21 @@ class _AuthScreenState extends State<AuthScreen> {
                           controller: _nameController, hintText: 'Name'),
                       CustomTextField(
                           controller: _emailController, hintText: 'Email'),
-                      CustomTextField(
-                          controller: _passwordController,
-                          hintText: 'Password'),
+                      TextFormField(
+                        obscuringCharacter: '*',
+                        obscureText: _obscureText,
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          suffixIcon: showHidePassword(),
+                          labelText: 'Password',
+                        ),
+                        validator: (val) {
+                          if (val == null || val.isEmpty) {
+                            return 'Enter your password';
+                          }
+                          return null;
+                        },
+                      ),
                       const SizedBox(height: 20),
                       ListTile(
                         tileColor: _auth == Auth.signIn
@@ -110,9 +131,21 @@ class _AuthScreenState extends State<AuthScreen> {
                     children: [
                       CustomTextField(
                           controller: _emailController, hintText: 'Email'),
-                      CustomTextField(
-                          controller: _passwordController,
-                          hintText: 'Password'),
+                      TextFormField(
+                        obscuringCharacter: '*',
+                        obscureText: _obscureText,
+                        controller: _passwordController,
+                        decoration: InputDecoration(
+                          suffixIcon: showHidePassword(),
+                          labelText: 'Password',
+                        ),
+                        validator: (val) {
+                          if (val == null || val.isEmpty) {
+                            return 'Enter your password';
+                          }
+                          return null;
+                        },
+                      ),
                       const SizedBox(height: 20),
                       ListTile(
                         tileColor: _auth == Auth.signUp
@@ -135,7 +168,11 @@ class _AuthScreenState extends State<AuthScreen> {
                           },
                         ),
                       ),
-                      LongButton(buttonText: 'Sign In', onPressed: () {}),
+                      LongButton(buttonText: 'Sign In', onPressed: () {
+                        if (_signInFormKey.currentState!.validate()) {
+                          _signIn();
+                        }
+                      }),
                     ],
                   ),
                 ),
@@ -143,6 +180,18 @@ class _AuthScreenState extends State<AuthScreen> {
           ),
         ),
       ),
+    );
+  }
+  Widget showHidePassword() {
+    return IconButton(
+      icon: _obscureText
+          ? const Icon(Icons.visibility_off, color: Colors.black)
+          : const Icon(Icons.visibility, color: Colors.black),
+      onPressed: () {
+        setState(() {
+          _obscureText = !_obscureText;
+        });
+      },
     );
   }
 }

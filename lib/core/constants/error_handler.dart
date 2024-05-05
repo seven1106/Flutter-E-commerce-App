@@ -24,7 +24,7 @@ void httpErrorHandler({
       onSuccess();
       break;
     case 400:
-      showErrorMessage(jsonResponse['message']);
+      showErrorMessage(jsonResponse['error'].toString());
       break;
     case 500:
       showErrorMessage(jsonResponse['error']);
