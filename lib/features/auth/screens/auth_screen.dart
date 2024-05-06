@@ -92,7 +92,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 1),
                       ListTile(
                         tileColor: _auth == Auth.signIn
                             ? AppPalette.gradient3.withOpacity(0.5)
@@ -146,7 +146,7 @@ class _AuthScreenState extends State<AuthScreen> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 1),
                       ListTile(
                         tileColor: _auth == Auth.signUp
                             ? AppPalette.gradient3.withOpacity(0.5)
