@@ -1,9 +1,9 @@
 import 'package:emigo/providers/user-provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-    
+
 class HomeScreen extends StatefulWidget {
-  static const String routeName = '/home'; 
+  static const String routeName = '/home';
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
@@ -13,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<UserProvider>(context).user  ;
+    final user = Provider.of<UserProvider>(context).user;
     return Scaffold(
       appBar: AppBar(
         title: const Text(''),
@@ -25,8 +25,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Text('Welcome ${user.name}'),
               ElevatedButton(
-                onPressed: () {
-                },
+                onPressed: () {},
                 child: const Text('Logout'),
               ),
             ],

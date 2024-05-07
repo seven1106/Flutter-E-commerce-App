@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:emigo/core/common/bottom_bar.dart';
 import 'package:emigo/core/constants/constants.dart';
 import 'package:emigo/core/constants/error_handler.dart';
 import 'package:emigo/features/home/screens/home_screen.dart';
@@ -84,7 +85,7 @@ class AuthService {
           // ignore: use_build_context_synchronously
           Navigator.pushNamedAndRemoveUntil(
             context,
-            HomeScreen.routeName,
+            BottomBar.routeName,
             (route) => false,
           );
         },
@@ -122,7 +123,6 @@ class AuthService {
           'x-auth-token': token ?? '',
         },
       );
-      // ignore: use_build_context_synchronously
       var userProvider = Provider.of<UserProvider>(context, listen: false);
       userProvider.setUser(UserModel.fromJson(userRes.body));
       }
