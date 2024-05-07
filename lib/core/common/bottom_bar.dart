@@ -1,5 +1,6 @@
 import 'package:badges/badges.dart' as badges;
 import 'package:emigo/core/config/theme/app_palette.dart';
+import 'package:emigo/features/account/screens/account_screen.dart';
 import 'package:emigo/features/home/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -26,10 +27,7 @@ class _BottomBarState extends State<BottomBar> {
       'Cart',
       style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
     ),
-    const Text(
-      'Account',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
+    const AccountScreen(),
   ];
   void _onItemTapped(int index) {
     setState(() {
