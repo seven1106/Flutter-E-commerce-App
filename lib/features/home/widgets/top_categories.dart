@@ -1,3 +1,4 @@
+import 'package:emigo/core/config/theme/app_palette.dart';
 import 'package:emigo/core/constants/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,10 @@ class TopCategories extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      decoration: const BoxDecoration(
+        color: AppPalette.appBarColor,
+      ),
       height: 60,
       child: ListView.builder(
         itemCount: Constants.categoryImages.length,

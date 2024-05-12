@@ -1,7 +1,7 @@
 import 'package:emigo/core/common/bottom_bar.dart';
 import 'package:emigo/features/auth/screens/auth_screen.dart';
 import 'package:emigo/features/auth/services/auth_service.dart';
-import 'package:emigo/features/home/screens/home_screen.dart';
+import 'package:emigo/features/vendor/screens/vendor_screen.dart';
 import 'package:emigo/providers/user-provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +12,7 @@ import 'core/router/app_router.dart';
 void main() {
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (_) => UserProvider()),
-  ],child: const MyApp()));
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -29,6 +29,7 @@ class _MyAppState extends State<MyApp> {
     super.initState();
     _authService.getUserData(context: context);
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -36,10 +37,11 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightThemeMode,
       home: Provider.of<UserProvider>(context).user.token.isEmpty
-          ? const AuthScreen()
-          : const BottomBar(),
+          ? Provider.of<UserProvider>(context).user.type == 'user'
+              ? const BottomBar()
+              : const VendorScreen()
+          : const AuthScreen(),
       onGenerateRoute: AppRouter.onGenerateRoute,
     );
   }
 }
-

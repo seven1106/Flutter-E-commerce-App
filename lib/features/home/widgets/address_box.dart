@@ -1,3 +1,4 @@
+import 'package:emigo/core/config/theme/app_palette.dart';
 import 'package:emigo/providers/user-provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,8 +15,8 @@ class AddressBox extends StatelessWidget {
       decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Color.fromARGB(255, 114, 226, 221),
-            Color.fromARGB(255, 162, 236, 233),
+            AppPalette.gradient3,
+            AppPalette.gradient5,
           ],
           stops: [0.5, 1.0],
         ),
