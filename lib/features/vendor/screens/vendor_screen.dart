@@ -1,10 +1,11 @@
 import 'package:badges/badges.dart' as badges;
 import 'package:emigo/core/config/theme/app_palette.dart';
 import 'package:emigo/features/account/screens/account_screen.dart';
-import 'package:emigo/features/home/screens/home_screen.dart';
+import 'package:emigo/features/vendor/screens/product_screen.dart';
 import 'package:flutter/material.dart';
 
 class VendorScreen extends StatefulWidget {
+  static const String routeName = '/vendor';
   const VendorScreen({super.key});
 
   @override
@@ -12,14 +13,11 @@ class VendorScreen extends StatefulWidget {
 }
 
 class _VendorScreenState extends State<VendorScreen> {
- int _selectedIndex = 0;
+  int _selectedIndex = 0;
   double bottomBarWidth = 42;
   double bottomBarBorderWidth = 5;
   final List<Widget> _widgetOptions = <Widget>[
-    const Text(
-         'PostsScreen',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
+    const ProductScreen(),
     const Text(
       'AnalyticsScreen',
       style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),

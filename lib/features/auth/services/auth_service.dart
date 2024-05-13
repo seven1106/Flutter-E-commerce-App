@@ -4,6 +4,7 @@ import 'package:emigo/core/common/bottom_bar.dart';
 import 'package:emigo/core/constants/constants.dart';
 import 'package:emigo/core/constants/error_handler.dart';
 import 'package:emigo/features/home/screens/home_screen.dart';
+import 'package:emigo/features/vendor/screens/vendor_screen.dart';
 import 'package:emigo/models/user_model.dart';
 import 'package:emigo/providers/user-provider.dart';
 import 'package:flutter/material.dart';
@@ -85,7 +86,7 @@ class AuthService {
           // ignore: use_build_context_synchronously
           Navigator.pushNamedAndRemoveUntil(
             context,
-            BottomBar.routeName,
+            VendorScreen.routeName,
             (route) => false,
           );
         },

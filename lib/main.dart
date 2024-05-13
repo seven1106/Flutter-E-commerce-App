@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp> {
       theme: AppTheme.lightThemeMode,
       home: Provider.of<UserProvider>(context).user.token.isEmpty
           ? Provider.of<UserProvider>(context).user.type == 'user'
-              ? const BottomBar()
+              ? const VendorScreen()
               : const VendorScreen()
           : const AuthScreen(),
       onGenerateRoute: AppRouter.onGenerateRoute,
