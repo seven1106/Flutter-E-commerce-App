@@ -5,6 +5,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:emigo/core/common/custom_textfield.dart';
 import 'package:emigo/core/common/long_button.dart';
 import 'package:emigo/core/utils/utils.dart';
+import 'package:emigo/features/vendor/services/vendor_services.dart';
 import 'package:flutter/material.dart';
 
 class AddProductScreen extends StatefulWidget {
@@ -20,7 +21,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
-  // final AdminServices adminServices = AdminServices();
+  final VendorServices vendorServices = VendorServices();
 
   String category = 'Mobiles';
   List<File> images = [];
@@ -51,6 +52,22 @@ class _AddProductScreenState extends State<AddProductScreen> {
           images.add(File(pickedImage.path));
         }
       });
+    }
+  }
+
+  void addProduct() {
+    if (_addProductFormKey.currentState!.validate()) {
+      vendorServices.sellProduct(
+        context: context,
+        name: productNameController.text,
+        description: descriptionController.text,
+        price: double.parse(priceController.text),
+        quantity: double.parse(quantityController.text),
+        category: category,
+        images: images,
+      );
+    } else {
+      showSnackBar(context, 'Please fill all the fields');
     }
   }
 
@@ -170,18 +187,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 const SizedBox(height: 10),
                 LongButton(
                   buttonText: 'Add Product',
-                  onPressed: () {
-                    if (_addProductFormKey.currentState!.validate()) {
-                      // adminServices.addProduct(
-                      //   productName: productNameController.text,
-                      //   description: descriptionController.text,
-                      //   price: priceController.text,
-                      //   quantity: quantityController.text,
-                      //   category: category,
-                      //   images: images,
-                      // );
-                    }
-                  },
+                  onPressed: addProduct,
                 ),
                 const SizedBox(height: 20),
               ],

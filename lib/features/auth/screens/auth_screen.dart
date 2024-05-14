@@ -10,6 +10,11 @@ enum Auth {
   signUp,
 }
 
+enum Role {
+  user,
+  vendor,
+}
+
 class AuthScreen extends StatefulWidget {
   static const String routeName = 'auth_screen';
   const AuthScreen({Key? key}) : super(key: key);
@@ -20,6 +25,7 @@ class AuthScreen extends StatefulWidget {
 
 class _AuthScreenState extends State<AuthScreen> {
   Auth _auth = Auth.signUp;
+  Role _role = Role.user;
   final _signUpFormKey = GlobalKey<FormState>();
   final _signInFormKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
@@ -42,8 +48,10 @@ class _AuthScreenState extends State<AuthScreen> {
       email: _emailController.text,
       password: _passwordController.text,
       name: _nameController.text,
+      role: _role == Role.user ? 'user' : 'vendor',
     );
   }
+
   void _signIn() {
     _authService.signIn(
       context: context,
@@ -93,27 +101,38 @@ class _AuthScreenState extends State<AuthScreen> {
                         },
                       ),
                       const SizedBox(height: 1),
-                      ListTile(
-                        tileColor: _auth == Auth.signIn
-                            ? AppPalette.gradient3.withOpacity(0.5)
-                            : AppPalette.backgroundColor,
-                        title: const Text(
-                          'Sign-In.',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                      Row(
+                        children: [
+                          const Text('Role:',
+                              style: TextStyle(
+                                fontSize: 20,
+                              )),
+                          Radio(
+                            activeColor: AppPalette.gradient3,
+                            value: Role.user,
+                            groupValue: _role,
+                            onChanged: (Role? val) {
+                              setState(() {
+                                _role = val!;
+                              });
+                            },
                           ),
-                        ),
-                        leading: Radio(
-                          activeColor: AppPalette.gradient3,
-                          value: Auth.signIn,
-                          groupValue: _auth,
-                          onChanged: (Auth? val) {
-                            setState(() {
-                              _auth = val!;
-                            });
-                          },
-                        ),
+                          const Text('User', style: TextStyle(fontSize: 16)),
+                          const SizedBox(width: 10),
+                          Radio(
+                            activeColor: AppPalette.gradient3,
+                            value: Role.vendor,
+                            groupValue: _role,
+                            onChanged: (Role? val) {
+                              setState(() {
+                                _role = val!;
+                              });
+                            },
+                          ),
+                          const Text('Vendor', style: TextStyle(fontSize: 16)),
+                        ],
                       ),
+                      const SizedBox(height: 10),
                       LongButton(
                           buttonText: 'Sign Up',
                           onPressed: () {
@@ -121,6 +140,21 @@ class _AuthScreenState extends State<AuthScreen> {
                               _signUp();
                             }
                           }),
+                      const SizedBox(height: 10),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _auth = Auth.signIn;
+                          });
+                        },
+                        child: const Text(
+                          'Already have an account? Sign-In.',
+                          style: TextStyle(
+                            fontSize: 16,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -146,33 +180,29 @@ class _AuthScreenState extends State<AuthScreen> {
                           return null;
                         },
                       ),
-                      const SizedBox(height: 1),
-                      ListTile(
-                        tileColor: _auth == Auth.signUp
-                            ? AppPalette.gradient3.withOpacity(0.5)
-                            : AppPalette.backgroundColor,
-                        title: const Text(
-                          'Sign-Up.',
+                      const SizedBox(height: 10),
+                      LongButton(
+                          buttonText: 'Sign In',
+                          onPressed: () {
+                            if (_signInFormKey.currentState!.validate()) {
+                              _signIn();
+                            }
+                          }),
+                      const SizedBox(height: 10),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _auth = Auth.signUp;
+                          });
+                        },
+                        child: const Text(
+                          'Don\'t have an account? Sign-Up.',
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            decoration: TextDecoration.underline,
                           ),
                         ),
-                        leading: Radio(
-                          activeColor: AppPalette.gradient3,
-                          value: Auth.signUp,
-                          groupValue: _auth,
-                          onChanged: (Auth? val) {
-                            setState(() {
-                              _auth = val!;
-                            });
-                          },
-                        ),
                       ),
-                      LongButton(buttonText: 'Sign In', onPressed: () {
-                        if (_signInFormKey.currentState!.validate()) {
-                          _signIn();
-                        }
-                      }),
                     ],
                   ),
                 ),
@@ -182,6 +212,7 @@ class _AuthScreenState extends State<AuthScreen> {
       ),
     );
   }
+
   Widget showHidePassword() {
     return IconButton(
       icon: _obscureText

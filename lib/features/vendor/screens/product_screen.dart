@@ -44,7 +44,13 @@ class _ProductScreenState extends State<ProductScreen>
           ],
         ),
       ),
-      body: Container(),
+      body: TabBarView(
+        controller: _tabController,
+        children: const [
+           Text('Stocking'),
+           Text('Sold out'),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, '/add-product');

@@ -19,18 +19,20 @@ void httpErrorHandler({
       showSnackBar(context, "Unknown error occurred");
     }
   }
+
   switch (response.statusCode) {
     case 200:
       onSuccess();
       break;
     case 400:
       showErrorMessage(jsonResponse['error'].toString());
+      print(jsonResponse['error']);
       break;
     case 500:
-      showErrorMessage(jsonResponse['error']);
+      showErrorMessage(jsonResponse['error'].toString());
+      print(jsonResponse['error']);
       break;
     default:
       showSnackBar(context, response.body);
   }
 }
-

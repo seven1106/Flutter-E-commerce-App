@@ -1,9 +1,7 @@
 import 'dart:convert';
 
-import 'package:emigo/core/common/bottom_bar.dart';
 import 'package:emigo/core/constants/constants.dart';
 import 'package:emigo/core/constants/error_handler.dart';
-import 'package:emigo/features/home/screens/home_screen.dart';
 import 'package:emigo/features/vendor/screens/vendor_screen.dart';
 import 'package:emigo/models/user_model.dart';
 import 'package:emigo/providers/user-provider.dart';
@@ -15,12 +13,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/utils/show_snack_bar.dart';
 
 class AuthService {
-  void signUp({
-    required BuildContext context,
-    required String email,
-    required String password,
-    required String name,
-  }) async {
+  void signUp(
+      {required BuildContext context,
+      required String email,
+      required String password,
+      required String name,
+      required String role}) async {
     try {
       UserModel user = UserModel(
         id: '',
@@ -28,7 +26,7 @@ class AuthService {
         email: email,
         password: password,
         address: '',
-        type: '',
+        type: role,
         token: '',
       );
       http.Response response = await http.post(
@@ -95,6 +93,7 @@ class AuthService {
       showSnackBar(context, e.toString());
     }
   }
+
   void getUserData({
     required BuildContext context,
   }) async {
@@ -118,18 +117,17 @@ class AuthService {
       var tokenData = jsonDecode(tokenResponse.body);
       if (tokenData == true) {
         http.Response userRes = await http.get(
-        Uri.parse('${Constants.backEndUrl}/'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-auth-token': token ?? '',
-        },
-      );
-      var userProvider = Provider.of<UserProvider>(context, listen: false);
-      userProvider.setUser(UserModel.fromJson(userRes.body));
+          Uri.parse('${Constants.backEndUrl}/'),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': token ?? '',
+          },
+        );
+        var userProvider = Provider.of<UserProvider>(context, listen: false);
+        userProvider.setUser(UserModel.fromJson(userRes.body));
       }
     } catch (e) {
       showSnackBar(context, e.toString());
     }
   }
-  
 }
