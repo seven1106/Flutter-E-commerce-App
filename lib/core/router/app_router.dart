@@ -1,6 +1,6 @@
 import 'package:emigo/core/common/bottom_bar.dart';
 import 'package:emigo/features/home/screens/home_screen.dart';
-import 'package:emigo/features/vendor/screens/add_product_screen.dart';
+import 'package:emigo/features/vendor/screens/product/add_product_screen.dart';
 import 'package:emigo/features/vendor/screens/vendor_screen.dart';
 import 'package:flutter/material.dart';
 import '../../features/auth/screens/auth_screen.dart';
