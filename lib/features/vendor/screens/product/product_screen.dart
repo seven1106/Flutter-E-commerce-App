@@ -29,6 +29,17 @@ class _ProductScreenState extends State<ProductScreen>
     setState(() {});
   }
 
+  void deleteProduct(ProductModel product, int index) {
+    _vendorServices.deleteProduct(
+      context: context,
+      product: product,
+      onSuccess: () {
+        _products!.removeAt(index);
+        setState(() {});
+      },
+    );
+  }
+
   @override
   void dispose() {
     _tabController.dispose();
@@ -37,29 +48,29 @@ class _ProductScreenState extends State<ProductScreen>
 
   @override
   Widget build(BuildContext context) {
-    return _products == null
-        ? const Loader()
-        : Scaffold(
-            appBar: AppBar(
-              title: const Text('My Store'),
-              bottom: TabBar(
-                controller: _tabController,
-                indicatorWeight: 4,
-                unselectedLabelColor: Colors.grey,
-                labelStyle: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-                tabs: const [
-                  Tab(
-                    text: 'Stocking',
-                  ),
-                  Tab(
-                    text: 'Sold out',
-                  ),
-                ],
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('My Store'),
+        bottom: TabBar(
+          controller: _tabController,
+          indicatorWeight: 4,
+          unselectedLabelColor: Colors.grey,
+          labelStyle: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+          tabs: const [
+            Tab(
+              text: 'Stocking',
             ),
-            body: TabBarView(
+            Tab(
+              text: 'Sold out',
+            ),
+          ],
+        ),
+      ),
+      body: _products == null
+          ? const Loader()
+          : TabBarView(
               controller: _tabController,
               children: [
                 GridView.builder(
@@ -90,9 +101,10 @@ class _ProductScreenState extends State<ProductScreen>
                                   maxLines: 2,
                                 ),
                               ),
-                              const IconButton(
-                                onPressed: null,
-                                icon: Icon(
+                              IconButton(
+                                onPressed: () =>
+                                    deleteProduct(productData, index),
+                                icon: const Icon(
                                   Icons.delete_outline,
                                   color: Colors.red,
                                 ),
@@ -107,12 +119,12 @@ class _ProductScreenState extends State<ProductScreen>
                 Text('Sold out'),
               ],
             ),
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/add-product');
-              },
-              child: const Icon(Icons.add),
-            ),
-          );
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, '/add-product');
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 }
