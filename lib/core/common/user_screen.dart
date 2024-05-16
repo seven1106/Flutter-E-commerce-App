@@ -4,16 +4,16 @@ import 'package:emigo/features/account/screens/account_screen.dart';
 import 'package:emigo/features/home/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
-class BottomBar extends StatefulWidget {
+class UserScreen extends StatefulWidget {
   static const String routeName = '/bottomBar';
 
-  const BottomBar({Key? key}) : super(key: key);
+  const UserScreen({Key? key}) : super(key: key);
 
   @override
-  State<BottomBar> createState() => _BottomBarState();
+  State<UserScreen> createState() => _UserScreenState();
 }
 
-class _BottomBarState extends State<BottomBar> {
+class _UserScreenState extends State<UserScreen> {
   int _selectedIndex = 0;
   double bottomBarWidth = 42;
   double bottomBarBorderWidth = 5;

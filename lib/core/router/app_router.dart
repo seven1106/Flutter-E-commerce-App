@@ -1,4 +1,4 @@
-import 'package:emigo/core/common/bottom_bar.dart';
+import 'package:emigo/core/common/user_screen.dart';
 import 'package:emigo/features/home/screens/home_screen.dart';
 import 'package:emigo/features/vendor/screens/product/add_product_screen.dart';
 import 'package:emigo/features/vendor/screens/vendor_screen.dart';
@@ -13,7 +13,7 @@ class AppRouter {
       case HomeScreen.routeName:
         return _materialRoute(const HomeScreen());
       case '/bottomBar':
-        return _materialRoute(const BottomBar());
+        return _materialRoute(const UserScreen());
       case '/vendor':
         return _materialRoute(const VendorScreen());
       case '/add-product':

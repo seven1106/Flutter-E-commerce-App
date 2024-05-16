@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:emigo/core/common/user_screen.dart';
 import 'package:emigo/core/constants/constants.dart';
 import 'package:emigo/core/constants/error_handler.dart';
 import 'package:emigo/features/vendor/screens/vendor_screen.dart';
@@ -70,7 +71,6 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
-      // ignore: use_build_context_synchronously
       httpErrorHandler(
         response: response,
         context: context,
@@ -79,14 +79,23 @@ class AuthService {
           await prefs.setString(
               'x-auth-token', jsonDecode(response.body)['token']);
           Provider.of<UserProvider>(context, listen: false).setUser(
-            UserModel.fromJson(response.body),
+            response.body,
           );
-          // ignore: use_build_context_synchronously
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            VendorScreen.routeName,
-            (route) => false,
-          );
+          if (jsonDecode(response.body)['type'] == 'vendor') {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const VendorScreen(),
+              ),
+            );
+          } else {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const UserScreen(),
+              ),
+            );
+          }
         },
       );
     } catch (e) {
@@ -101,16 +110,16 @@ class AuthService {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('x-auth-token');
       if (token == null) {
-        prefs.clear();
+        prefs.setString('x-auth-token', '');
       }
       var tokenResponse = await http.post(
         Uri.parse('${Constants.backEndUrl}/token-is-valid'),
         body: jsonEncode({
-          'token': token,
+          'token': token!,
         }),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
-          'x-auth-token': token ?? '',
+          'x-auth-token': token,
         },
       );
 
@@ -120,11 +129,11 @@ class AuthService {
           Uri.parse('${Constants.backEndUrl}/'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
-            'x-auth-token': token ?? '',
+            'x-auth-token': token,
           },
         );
         var userProvider = Provider.of<UserProvider>(context, listen: false);
-        userProvider.setUser(UserModel.fromJson(userRes.body));
+        userProvider.setUser(userRes.body);
       }
     } catch (e) {
       showSnackBar(context, e.toString());

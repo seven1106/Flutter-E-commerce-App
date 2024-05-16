@@ -12,7 +12,7 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class VendorServices {
-    void sellProduct({
+  void sellProduct({
     required BuildContext context,
     required String name,
     required String description,
@@ -24,18 +24,17 @@ class VendorServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
-      try{
-        final cloudinary = CloudinaryPublic('dhpmkmnap', 'ifzll6l1');
       List<String> imageUrls = [];
+      try {
+        final cloudinary = CloudinaryPublic('dhpmkmnap', 'ifzll6l1');
 
-      for (int i = 0; i < images.length; i++) {
-        CloudinaryResponse res = await cloudinary.uploadFile(
-          CloudinaryFile.fromFile(images[i].path, folder: name),
-        );
-        imageUrls.add(res.secureUrl);
-      }
-      }
-      catch(e){
+        for (int i = 0; i < images.length; i++) {
+          CloudinaryResponse res = await cloudinary.uploadFile(
+            CloudinaryFile.fromFile(images[i].path, folder: name),
+          );
+          imageUrls.add(res.secureUrl);
+        }
+      } catch (e) {
         print(e);
       }
 
@@ -43,7 +42,7 @@ class VendorServices {
         name: name,
         description: description,
         quantity: quantity,
-        images: ['imageUrls'],
+        images: imageUrls,
         category: category,
         price: price,
       );
@@ -76,11 +75,12 @@ class VendorServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<ProductModel> productList = [];
     try {
-      http.Response res =
-          await http.get(Uri.parse('${Constants.backEndUrl}/vendor/get-products'), headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': userProvider.user.token,
-      });
+      http.Response res = await http.get(
+          Uri.parse('${Constants.backEndUrl}/vendor/get-products'),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': userProvider.user.token,
+          });
 
       httpErrorHandler(
         response: res,
@@ -103,7 +103,7 @@ class VendorServices {
     return productList;
   }
 
-void deleteProduct({
+  void deleteProduct({
     required BuildContext context,
     required ProductModel product,
     required VoidCallback onSuccess,
@@ -133,5 +133,4 @@ void deleteProduct({
       showSnackBar(context, e.toString());
     }
   }
-
 }

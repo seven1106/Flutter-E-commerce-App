@@ -1,4 +1,4 @@
-import 'package:emigo/core/common/bottom_bar.dart';
+import 'package:emigo/core/common/user_screen.dart';
 import 'package:emigo/features/auth/screens/auth_screen.dart';
 import 'package:emigo/features/auth/services/auth_service.dart';
 import 'package:emigo/features/vendor/screens/vendor_screen.dart';
@@ -38,7 +38,7 @@ class _MyAppState extends State<MyApp> {
       theme: AppTheme.lightThemeMode,
       home: Provider.of<UserProvider>(context).user.token.isEmpty
           ? Provider.of<UserProvider>(context).user.type == 'user'
-              ? const BottomAppBar()
+              ? const UserScreen()
               : const VendorScreen()
           : const AuthScreen(),
       onGenerateRoute: AppRouter.onGenerateRoute,
