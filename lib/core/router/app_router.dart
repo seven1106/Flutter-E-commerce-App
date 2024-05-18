@@ -1,5 +1,6 @@
 import 'package:emigo/core/common/user_screen.dart';
 import 'package:emigo/features/home/screens/home_screen.dart';
+import 'package:emigo/features/home/screens/product_category.dart';
 import 'package:emigo/features/vendor/screens/product/add_product_screen.dart';
 import 'package:emigo/features/vendor/screens/vendor_screen.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,8 @@ class AppRouter {
         return _materialRoute(const VendorScreen());
       case '/add-product':
         return _materialRoute(const AddProductScreen());
+      case '/product-category':
+        return _materialRoute(ProductCategory(category: settings.arguments as String));
       default:
         return _materialRoute(Scaffold(
           body: Center(child: Text('No route defined for ${settings.name}')),

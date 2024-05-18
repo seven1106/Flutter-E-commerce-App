@@ -1,14 +1,15 @@
 import 'package:emigo/core/config/theme/app_palette.dart';
 import 'package:emigo/core/constants/constants.dart';
+import 'package:emigo/features/home/screens/product_category.dart';
 import 'package:flutter/material.dart';
 
 class TopCategories extends StatelessWidget {
   const TopCategories({Key? key}) : super(key: key);
 
-  // void navigateToCategoryPage(BuildContext context, String category) {
-  //   Navigator.pushNamed(context, CategoryDealsScreen.routeName,
-  //       arguments: category);
-  // }
+  void navigateToCategoryPage(BuildContext context, String category) {
+    Navigator.pushNamed(context, ProductCategory.routeName,
+        arguments: category);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,10 +24,10 @@ class TopCategories extends StatelessWidget {
         itemExtent: 75,
         itemBuilder: (context, index) {
           return GestureDetector(
-            // onTap: () => navigateToCategoryPage(
-            //   context,
-            //   GlobalVariables.categoryImages[index]['title']!,
-            // ),
+            onTap: () => navigateToCategoryPage(
+              context,
+              Constants.categoryImages[index]['title']!,
+            ),
             child: Column(
               children: [
                 Container(
