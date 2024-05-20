@@ -14,6 +14,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  void navigateToSearchScreen(String query) {
+    Navigator.pushNamed(context, '/search-screen', arguments: query);
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
@@ -46,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     borderRadius: BorderRadius.circular(7),
                     elevation: 1,
                     child: TextFormField(
-                      // onFieldSubmitted: navigateToSearchScreen,
+                      onFieldSubmitted: navigateToSearchScreen,
                       decoration: InputDecoration(
                         prefixIcon: InkWell(
                           onTap: () {},
