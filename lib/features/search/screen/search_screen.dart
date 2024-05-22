@@ -1,5 +1,6 @@
 import 'package:emigo/core/utils/loader.dart';
 import 'package:emigo/features/home/widgets/address_box.dart';
+import 'package:emigo/features/product/screens/product_detail_screen.dart';
 import 'package:emigo/features/search/services/search_services.dart';
 import 'package:emigo/features/search/widgets/searched_product.dart';
 import 'package:emigo/models/product_model.dart';
@@ -15,6 +16,17 @@ class SearchScreen extends StatefulWidget {
 
   @override
   State<SearchScreen> createState() => _SearchScreenState();
+}
+
+void navigateToDetailScreen({
+  required BuildContext context,
+  required ProductModel product,
+}) {
+  Navigator.pushNamed(
+    context,
+    ProductDetailScreen.routeName,
+    arguments: product,
+  );
 }
 
 class _SearchScreenState extends State<SearchScreen> {
@@ -87,7 +99,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             width: 1,
                           ),
                         ),
-                        hintText: 'Search Amazon.in',
+                        hintText: 'Search...',
                         hintStyle: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 17,
@@ -119,7 +131,8 @@ class _SearchScreenState extends State<SearchScreen> {
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
-                        
+                          navigateToDetailScreen(
+                              context: context, product: products![index]);
                         },
                         child: SearchedProduct(
                           product: products![index],

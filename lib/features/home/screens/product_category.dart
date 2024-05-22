@@ -1,4 +1,5 @@
 import 'package:emigo/features/home/services/home_services.dart';
+import 'package:emigo/features/product/screens/product_detail_screen.dart';
 import 'package:emigo/models/product_model.dart';
 import 'package:flutter/material.dart';
 
@@ -32,6 +33,16 @@ class _ProductCategoryState extends State<ProductCategory> {
       category: widget.category,
     );
     setState(() {});
+  }
+  void navigateToDetailScreen({
+    required BuildContext context,
+    required ProductModel product,
+  }) {
+    Navigator.pushNamed(
+      context,
+      ProductDetailScreen.routeName,
+      arguments: product,
+    );
   }
 
   @override
@@ -79,11 +90,10 @@ class _ProductCategoryState extends State<ProductCategory> {
                       final product = productList![index];
                       return GestureDetector(
                         onTap: () {
-                          // Navigator.pushNamed(
-                          //   context,
-                          //   ProductDetailScreen.routeName,
-                          //   arguments: product,
-                          // );
+                          navigateToDetailScreen(
+                            context: context,
+                            product: product,
+                          );
                         },
                         child: Column(
                           children: [

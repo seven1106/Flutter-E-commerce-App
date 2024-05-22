@@ -1,9 +1,11 @@
 import 'package:emigo/core/common/user_screen.dart';
 import 'package:emigo/features/home/screens/home_screen.dart';
 import 'package:emigo/features/home/screens/product_category.dart';
+import 'package:emigo/features/product/screens/product_detail_screen.dart';
 import 'package:emigo/features/search/screen/search_screen.dart';
 import 'package:emigo/features/vendor/screens/product/add_product_screen.dart';
 import 'package:emigo/features/vendor/screens/vendor_screen.dart';
+import 'package:emigo/models/product_model.dart';
 import 'package:flutter/material.dart';
 import '../../features/auth/screens/auth_screen.dart';
 
@@ -24,6 +26,8 @@ class AppRouter {
         return _materialRoute(ProductCategory(category: settings.arguments as String));
       case '/search-screen':
         return _materialRoute(SearchScreen(searchQuery: settings.arguments as String));
+      case '/product-details':
+        return _materialRoute(ProductDetailScreen(product: settings.arguments as ProductModel));
       default:
         return _materialRoute(Scaffold(
           body: Center(child: Text('No route defined for ${settings.name}')),
