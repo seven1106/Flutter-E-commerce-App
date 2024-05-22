@@ -178,7 +178,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text('${widget.product.quantity} in stock',
+                        style: const TextStyle(fontSize: 16)),
                     Stars(
                       rating: avgRating,
                     ),
