@@ -6,7 +6,7 @@ import 'package:emigo/core/constants/constants.dart';
 import 'package:emigo/core/constants/error_handler.dart';
 import 'package:emigo/core/utils/show_snack_bar.dart';
 import 'package:emigo/models/product_model.dart';
-import 'package:emigo/providers/user-provider.dart';
+import 'package:emigo/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';

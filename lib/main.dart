@@ -2,7 +2,7 @@ import 'package:emigo/core/common/user_screen.dart';
 import 'package:emigo/features/auth/screens/auth_screen.dart';
 import 'package:emigo/features/auth/services/auth_service.dart';
 import 'package:emigo/features/vendor/screens/vendor_screen.dart';
-import 'package:emigo/providers/user-provider.dart';
+import 'package:emigo/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

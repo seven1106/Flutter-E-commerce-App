@@ -1,5 +1,5 @@
 import 'package:emigo/core/config/theme/app_palette.dart';
-import 'package:emigo/providers/user-provider.dart';
+import 'package:emigo/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

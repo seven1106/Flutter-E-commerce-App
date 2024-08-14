@@ -5,7 +5,7 @@ import 'package:emigo/core/constants/constants.dart';
 import 'package:emigo/core/constants/error_handler.dart';
 import 'package:emigo/features/vendor/screens/vendor_screen.dart';
 import 'package:emigo/models/user_model.dart';
-import 'package:emigo/providers/user-provider.dart';
+import 'package:emigo/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -29,6 +29,7 @@ class AuthService {
         address: '',
         type: role,
         token: '',
+        cart: [],
       );
       http.Response response = await http.post(
         Uri.parse('${Constants.backEndUrl}/sign-up'),

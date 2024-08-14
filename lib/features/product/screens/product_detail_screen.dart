@@ -8,6 +8,8 @@ import 'package:emigo/models/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
+import '../services/product_services.dart';
+
 class ProductDetailScreen extends StatefulWidget {
   static const String routeName = '/product-details';
   final ProductModel product;
@@ -21,8 +23,7 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
-  // final ProductDetailsServices productDetailsServices =
-  //     ProductDetailsServices();
+  final ProductServices productServices = ProductServices();
   double avgRating = 0;
   double myRating = 0;
 
@@ -33,6 +34,10 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
 
   void navigateToSearchScreen(String query) {
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
+  }
+
+  void addToCart() {
+    productServices.addToCart(context: context, product: widget.product);
   }
 
   @override
@@ -238,7 +243,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 width: 330,
                 child: CustomButton(
                   text: 'Add to Cart',
-                  onTap: () {},
+                  onTap: addToCart,
                 ),
               ),
             ],

@@ -2,7 +2,11 @@ import 'package:badges/badges.dart' as badges;
 import 'package:emigo/core/config/theme/app_palette.dart';
 import 'package:emigo/features/account/screens/account_screen.dart';
 import 'package:emigo/features/home/screens/home_screen.dart';
+import 'package:emigo/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../features/cart/screens/cart_screen.dart';
 
 class UserScreen extends StatefulWidget {
   static const String routeName = '/bottomBar';
@@ -23,10 +27,7 @@ class _UserScreenState extends State<UserScreen> {
       'Search',
       style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
     ),
-    const Text(
-      'Cart',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
+    const CartScreen(),
     const AccountScreen(),
   ];
   void _onItemTapped(int index) {
@@ -37,6 +38,7 @@ class _UserScreenState extends State<UserScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final userCartLength = context.watch<UserProvider>().user.cart.length;
     return Scaffold(
         body: _widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: Container(
@@ -80,7 +82,7 @@ class _UserScreenState extends State<UserScreen> {
               // CART
               BottomNavigationBarItem(
                 icon: badges.Badge(
-                  // badgeContent: Text(userCartLen.toString()),
+                  badgeContent: Text(userCartLength.toString()),
                   position: badges.BadgePosition.topEnd(top: -4, end: -4),
                   badgeAnimation: const badges.BadgeAnimation.rotation(
                     animationDuration: Duration(seconds: 1),
