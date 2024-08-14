@@ -13,6 +13,7 @@ import '../../../core/utils/show_snack_bar.dart';
 import '../../../providers/user_provider.dart';
 
 class CartServices {
+
   void removeFromCart({
     required BuildContext context,
     required ProductModel product,
