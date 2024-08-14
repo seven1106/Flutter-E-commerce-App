@@ -1,5 +1,6 @@
 import 'package:emigo/core/config/theme/app_palette.dart';
 import 'package:emigo/features/home/widgets/address_box.dart';
+import 'package:emigo/features/home/widgets/deal_products.dart';
 import 'package:emigo/features/home/widgets/top_categories.dart';
 import 'package:emigo/providers/user-provider.dart';
 import 'package:flutter/material.dart';
@@ -111,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
             TopCategories(),
             SizedBox(height: 10),
             // CarouselImage(),
-            // DealOfDay(),
+            DealOfProducts()
           ],
         ),
       ),
