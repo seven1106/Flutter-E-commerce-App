@@ -266,11 +266,13 @@ class _AddressScreenState extends State<AddressScreen> {
               ),
               const SizedBox(height: 10),
               GooglePayButton(
+                onPressed: () => payPressed(address),
+                width: double.infinity,
                 paymentConfiguration: PaymentConfiguration.fromJsonString(
                     defaultGooglePay),
                 onPaymentResult: onGooglePayResult,
                 paymentItems: paymentItems,
-                height: 50,
+                height: 80,
                 type: GooglePayButtonType.buy,
                 margin: const EdgeInsets.only(top: 15),
                 loadingIndicator: const Center(
