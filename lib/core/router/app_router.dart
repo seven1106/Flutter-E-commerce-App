@@ -1,4 +1,5 @@
 import 'package:emigo/core/common/user_screen.dart';
+import 'package:emigo/features/address/screens/address_screen.dart';
 import 'package:emigo/features/home/screens/home_screen.dart';
 import 'package:emigo/features/home/screens/product_category.dart';
 import 'package:emigo/features/product/screens/product_detail_screen.dart';
@@ -23,11 +24,17 @@ class AppRouter {
       case '/add-product':
         return _materialRoute(const AddProductScreen());
       case '/product-category':
-        return _materialRoute(ProductCategory(category: settings.arguments as String));
+        return _materialRoute(
+            ProductCategory(category: settings.arguments as String));
       case '/search-screen':
-        return _materialRoute(SearchScreen(searchQuery: settings.arguments as String));
+        return _materialRoute(
+            SearchScreen(searchQuery: settings.arguments as String));
       case '/product-details':
-        return _materialRoute(ProductDetailScreen(product: settings.arguments as ProductModel));
+        return _materialRoute(
+            ProductDetailScreen(product: settings.arguments as ProductModel));
+      case '/address':
+        return _materialRoute(
+            AddressScreen(totalAmount: settings.arguments as String));
       default:
         return _materialRoute(Scaffold(
           body: Center(child: Text('No route defined for ${settings.name}')),

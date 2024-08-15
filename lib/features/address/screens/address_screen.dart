@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pay/pay.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/common/custom_textfield.dart';
@@ -29,19 +30,89 @@ class _AddressScreenState extends State<AddressScreen> {
   final _addressFormKey = GlobalKey<FormState>();
 
   String addressToBeUsed = "";
-  // List<PaymentItem> paymentItems = [];
+  List<PaymentItem> paymentItems = [];
   final AddressServices addressServices = AddressServices();
 
+   String defaultApplePay = '''{
+  "provider": "apple_pay",
+  "data": {
+    "merchantIdentifier": "merchant.com.sams.fish",
+    "displayName": "Sam's Fish",
+    "merchantCapabilities": ["3DS", "debit", "credit"],
+    "supportedNetworks": ["amex", "visa", "discover", "masterCard"],
+    "countryCode": "US",
+    "currencyCode": "USD",
+    "requiredBillingContactFields": ["emailAddress", "name", "phoneNumber", "postalAddress"],
+    "requiredShippingContactFields": [],
+    "shippingMethods": [
+      {
+        "amount": "0.00",
+        "detail": "Available within an hour",
+        "identifier": "in_store_pickup",
+        "label": "In-Store Pickup"
+      },
+      {
+        "amount": "4.99",
+        "detail": "5-8 Business Days",
+        "identifier": "flat_rate_shipping_id_2",
+        "label": "UPS Ground"
+      },
+      {
+        "amount": "29.99",
+        "detail": "1-3 Business Days",
+        "identifier": "flat_rate_shipping_id_1",
+        "label": "FedEx Priority Mail"
+      }
+    ]
+  }
+}''';
+   String defaultGooglePay = '''{
+  "provider": "google_pay",
+  "data": {
+    "environment": "TEST",
+    "apiVersion": 2,
+    "apiVersionMinor": 0,
+    "allowedPaymentMethods": [
+      {
+        "type": "CARD",
+        "tokenizationSpecification": {
+          "type": "PAYMENT_GATEWAY",
+          "parameters": {
+            "gateway": "example",
+            "gatewayMerchantId": "gatewayMerchantId"
+          }
+        },
+        "parameters": {
+          "allowedCardNetworks": ["VISA", "MASTERCARD"],
+          "allowedAuthMethods": ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+          "billingAddressRequired": true,
+          "billingAddressParameters": {
+            "format": "FULL",
+            "phoneNumberRequired": true
+          }
+        }
+      }
+    ],
+    "merchantInfo": {
+      "merchantId": "01234567890123456789",
+      "merchantName": "Example Merchant Name"
+    },
+    "transactionInfo": {
+      "countryCode": "US",
+      "currencyCode": "USD"
+    }
+  }
+}''';
   @override
   void initState() {
     super.initState();
-    // paymentItems.add(
-    //   PaymentItem(
-    //     amount: widget.totalAmount,
-    //     label: 'Total Amount',
-    //     status: PaymentItemStatus.final_price,
-    //   ),
-    // );
+    paymentItems.add(
+      PaymentItem(
+        amount: widget.totalAmount,
+        label: 'Total Amount',
+        status: PaymentItemStatus.final_price,
+      ),
+    );
   }
 
   @override
@@ -181,9 +252,31 @@ class _AddressScreenState extends State<AddressScreen> {
                   ],
                 ),
               ),
-
+              ApplePayButton(
+                width: double.infinity,
+                style: ApplePayButtonStyle.whiteOutline,
+                type: ApplePayButtonType.buy,
+                paymentConfiguration: PaymentConfiguration.fromJsonString(
+                    defaultApplePay),
+                onPaymentResult: onApplePayResult,
+                paymentItems: paymentItems,
+                margin: const EdgeInsets.only(top: 15),
+                height: 50,
+                onPressed: () => payPressed(address),
+              ),
               const SizedBox(height: 10),
-
+              GooglePayButton(
+                paymentConfiguration: PaymentConfiguration.fromJsonString(
+                    defaultGooglePay),
+                onPaymentResult: onGooglePayResult,
+                paymentItems: paymentItems,
+                height: 50,
+                type: GooglePayButtonType.buy,
+                margin: const EdgeInsets.only(top: 15),
+                loadingIndicator: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
             ],
           ),
         ),

@@ -106,6 +106,7 @@ flutter:
     - assets/fonts/Alegreya_Sans/
     - assets/icon/
     - assets/images/
-    - assets/applepay.json
     - assets/gpay.json
+    - assets/applepay.json
+    - assets/
 

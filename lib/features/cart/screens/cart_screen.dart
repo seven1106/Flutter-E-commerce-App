@@ -3,8 +3,8 @@ import 'package:emigo/core/common/long_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/common/custom_button.dart';
 import '../../../providers/user_provider.dart';
+import '../../address/screens/address_screen.dart';
 import '../../home/widgets/address_box.dart';
 import '../../search/screen/search_screen.dart';
 import '../widgets/cart_product.dart';
@@ -23,11 +23,11 @@ class _CartScreenState extends State<CartScreen> {
   }
 
   void navigateToAddress(int sum) {
-    // Navigator.pushNamed(
-    //   context,
-    //   AddressScreen.routeName,
-    //   arguments: sum.toString(),
-    // );
+    Navigator.pushNamed(
+      context,
+      AddressScreen.routeName,
+      arguments: sum.toString(),
+    );
   }
 
   @override
