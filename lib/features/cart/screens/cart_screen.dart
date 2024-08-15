@@ -116,7 +116,6 @@ class _CartScreenState extends State<CartScreen> {
           children: [
             const AddressBox(),
             const CartSubtotal(),
-
             const SizedBox(height: 15),
             Container(
               color: Colors.black12.withOpacity(0.08),
