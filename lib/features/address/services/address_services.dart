@@ -29,7 +29,6 @@ class AddressServices {
           'address': address,
         }),
       );
-
       httpErrorHandler(
         response: res,
         context: context,
