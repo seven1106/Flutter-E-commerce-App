@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../../core/common/custom_button.dart';
 import '../../../providers/user_provider.dart';
 import '../../search/screen/search_screen.dart';
+import '../../vendor/services/vendor_services.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   static const String routeName = '/order-details';
@@ -22,7 +23,7 @@ class OrderDetailScreen extends StatefulWidget {
 
 class _OrderDetailScreenState extends State<OrderDetailScreen> {
   int currentStep = 0;
-  // final AdminServices adminServices = AdminServices();
+  final VendorServices vendorServices = VendorServices();
 
   void navigateToSearchScreen(String query) {
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
@@ -36,16 +37,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   // !!! ONLY FOR ADMIN!!!
   void changeOrderStatus(int status) {
-    // adminServices.changeOrderStatus(
-    //   context: context,
-    //   status: status + 1,
-    //   order: widget.order,
-    //   onSuccess: () {
-    //     setState(() {
-    //       currentStep += 1;
-    //     });
-    //   },
-    // );
+    vendorServices.changeOrderStatus(
+      context: context,
+      status: status + 1,
+      order: widget.order,
+      onSuccess: () {
+        setState(() {
+          currentStep += 1;
+        });
+      },
+    );
   }
 
   @override
@@ -59,68 +60,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           flexibleSpace: Container(
             decoration: const BoxDecoration(
             ),
-          ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Container(
-                  height: 42,
-                  margin: const EdgeInsets.only(left: 15),
-                  child: Material(
-                    borderRadius: BorderRadius.circular(7),
-                    elevation: 1,
-                    child: TextFormField(
-                      onFieldSubmitted: navigateToSearchScreen,
-                      decoration: InputDecoration(
-                        prefixIcon: InkWell(
-                          onTap: () {},
-                          child: const Padding(
-                            padding: EdgeInsets.only(
-                              left: 6,
-                            ),
-                            child: Icon(
-                              Icons.search,
-                              color: Colors.black,
-                              size: 23,
-                            ),
-                          ),
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.only(top: 10),
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(7),
-                          ),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(7),
-                          ),
-                          borderSide: BorderSide(
-                            color: Colors.black38,
-                            width: 1,
-                          ),
-                        ),
-                        hintText: 'Search...',
-                        hintStyle: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 17,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                color: Colors.transparent,
-                height: 42,
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                child: const Icon(Icons.mic, color: Colors.black, size: 25),
-              ),
-            ],
           ),
         ),
       ),
@@ -224,9 +163,15 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                 child: Stepper(
                   currentStep: currentStep,
                   controlsBuilder: (context, details) {
-                    if (user.type == 'admin') {
+                    if (user.type == 'vendor' && currentStep < 2) {
                       return CustomButton(
-                        text: 'Done',
+                        text: 'Confirm',
+                        onTap: () => changeOrderStatus(details.currentStep),
+                      );
+                    }
+                    if (user.type == 'user' && currentStep == 3) {
+                      return CustomButton(
+                        text: 'Received',
                         onTap: () => changeOrderStatus(details.currentStep),
                       );
                     }
@@ -244,7 +189,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           : StepState.indexed,
                     ),
                     Step(
-                      title: const Text('Completed'),
+                      title: const Text('Delivering'),
                       content: const Text(
                         'Your order has been delivered, you are yet to sign.',
                       ),
@@ -254,9 +199,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           : StepState.indexed,
                     ),
                     Step(
-                      title: const Text('Received'),
+                      title: const Text('Delivered'),
                       content: const Text(
-                        'Your order has been delivered and signed by you.',
+                        'Your order has been delivered',
                       ),
                       isActive: currentStep > 2,
                       state: currentStep > 2
@@ -264,9 +209,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           : StepState.indexed,
                     ),
                     Step(
-                      title: const Text('Delivered'),
+                      title: const Text('Completed'),
                       content: const Text(
-                        'Your order has been delivered and signed by you!',
+                        'Your order has been delivered and signed!',
                       ),
                       isActive: currentStep >= 3,
                       state: currentStep >= 3
