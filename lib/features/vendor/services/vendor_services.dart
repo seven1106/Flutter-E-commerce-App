@@ -5,6 +5,7 @@ import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:emigo/core/constants/constants.dart';
 import 'package:emigo/core/constants/error_handler.dart';
 import 'package:emigo/core/utils/show_snack_bar.dart';
+import 'package:emigo/models/order.dart';
 import 'package:emigo/models/product_model.dart';
 import 'package:emigo/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -133,4 +134,65 @@ class VendorServices {
       showSnackBar(context, e.toString());
     }
   }
+  Future<List<OrderModel>> fetchAllOrders(BuildContext context) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    List<OrderModel> orderList = [];
+    try {
+      http.Response res =
+      await http.get(Uri.parse('${Constants.backEndUrl}/vendor/get-orders'), headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-auth-token': userProvider.user.token,
+      });
+
+      httpErrorHandler(
+        response: res,
+        context: context,
+        onSuccess: () {
+          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+            orderList.add(
+              OrderModel.fromJson(
+                jsonEncode(
+                  jsonDecode(res.body)[i],
+                ),
+              ),
+            );
+          }
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+    return orderList;
+  }
+  void changeOrderStatus({
+    required BuildContext context,
+    required int status,
+    required OrderModel order,
+    required VoidCallback onSuccess,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    try {
+      http.Response res = await http.post(
+        Uri.parse('${Constants.backEndUrl}/vendor/change-order-status'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+        body: jsonEncode({
+          'id': order.id,
+          'status': status,
+        }),
+      );
+
+      httpErrorHandler(
+        response: res,
+        context: context,
+        onSuccess: onSuccess,
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
 }

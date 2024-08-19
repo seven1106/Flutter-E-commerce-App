@@ -4,6 +4,8 @@ import 'package:emigo/features/account/screens/account_screen.dart';
 import 'package:emigo/features/vendor/screens/product/product_screen.dart';
 import 'package:flutter/material.dart';
 
+import 'orders_screen.dart';
+
 class VendorScreen extends StatefulWidget {
   static const String routeName = '/vendor';
   const VendorScreen({super.key});
@@ -22,10 +24,7 @@ class _VendorScreenState extends State<VendorScreen> {
       'AnalyticsScreen',
       style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
     ),
-    const Text(
-      'OrdersScreen',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
+    const OrdersScreen(),
     const AccountScreen(),
   ];
   void _onItemTapped(int index) {
