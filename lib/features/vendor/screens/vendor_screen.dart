@@ -4,6 +4,7 @@ import 'package:emigo/features/account/screens/account_screen.dart';
 import 'package:emigo/features/vendor/screens/product/product_screen.dart';
 import 'package:flutter/material.dart';
 
+import 'analtyics_screen.dart';
 import 'orders_screen.dart';
 
 class VendorScreen extends StatefulWidget {
@@ -20,10 +21,7 @@ class _VendorScreenState extends State<VendorScreen> {
   double bottomBarBorderWidth = 5;
   final List<Widget> _widgetOptions = <Widget>[
     const ProductScreen(),
-    const Text(
-      'AnalyticsScreen',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
+    const AnalyticsScreen(),
     const OrdersScreen(),
     const AccountScreen(),
   ];
