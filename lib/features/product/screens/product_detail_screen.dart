@@ -1,7 +1,5 @@
-import 'package:badges/badges.dart' as badges;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:emigo/core/common/custom_button.dart';
-import 'package:emigo/core/common/start.dart';
 import 'package:emigo/core/config/theme/app_palette.dart';
 import 'package:emigo/features/search/screen/search_screen.dart';
 import 'package:emigo/models/product_model.dart';
@@ -26,10 +24,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   final ProductServices productServices = ProductServices();
   double avgRating = 0;
   double myRating = 0;
+  int _current = 0;
+  final CarouselController _controller = CarouselController();
 
   @override
   void initState() {
     super.initState();
+    // Ở đây bạn có thể thêm logic để tính toán avgRating từ widget.product.rating
   }
 
   void navigateToSearchScreen(String query) {
@@ -43,189 +44,177 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60),
-        child: AppBar(
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Container(
-                  height: 42,
-                  margin: const EdgeInsets.only(left: 15),
-                  child: Material(
-                    borderRadius: BorderRadius.circular(7),
-                    elevation: 1,
-                    child: TextFormField(
-                      onFieldSubmitted: navigateToSearchScreen,
-                      decoration: InputDecoration(
-                        prefixIcon: InkWell(
-                          onTap: () {},
-                          child: const Padding(
-                            padding: EdgeInsets.only(
-                              left: 6,
-                            ),
-                            child: Icon(
-                              Icons.search,
-                              color: Colors.black,
-                              size: 23,
-                            ),
-                          ),
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        contentPadding: const EdgeInsets.only(top: 10),
-                        border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(7),
-                          ),
-                          borderSide: BorderSide.none,
-                        ),
-                        enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(7),
-                          ),
-                          borderSide: BorderSide(
-                            color: Colors.black38,
-                            width: 1,
-                          ),
-                        ),
-                        hintText: 'Search...',
-                        hintStyle: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 17,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                color: Colors.transparent,
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                child: badges.Badge(
-                  // badgeContent: Text(userCartLen.toString()),
-                  position: badges.BadgePosition.topEnd(top: -4, end: -4),
-                  badgeAnimation: const badges.BadgeAnimation.rotation(
-                    animationDuration: Duration(seconds: 1),
-                    colorChangeAnimationDuration: Duration(seconds: 1),
-                    loopAnimation: false,
-                    curve: Curves.fastOutSlowIn,
-                    colorChangeAnimationCurve: Curves.easeInCubic,
-                  ),
-                  child: const Icon(
-                    Icons.shopping_cart_outlined,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+      appBar: AppBar(
+        title: Text(widget.product.name),
+        actions: [
+          IconButton(icon: const Icon(Icons.share), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.favorite_border), onPressed: () {}),
+        ],
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CarouselSlider(
-                items: widget.product.images.map(
-                  (i) {
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                CarouselSlider(
+                  items: widget.product.images.map((i) {
                     return Builder(
                       builder: (BuildContext context) => Image.network(
                         i,
-                        fit: BoxFit.contain,
-                        height: 200,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
                       ),
                     );
-                  },
-                ).toList(),
-                options: CarouselOptions(
-                  viewportFraction: 1,
-                  height: 300,
+                  }).toList(),
+                  options: CarouselOptions(
+                    viewportFraction: 1,
+                    aspectRatio: 1,
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        _current = index;
+                      });
+                    },
+                  ),
+                  carouselController: _controller,
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Positioned(
+                  bottom: 10,
+                  left: 0,
+                  right: 0,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: widget.product.images.asMap().entries.map((entry) {
+                      return Container(
+                        width: 8.0,
+                        height: 8.0,
+                        margin:const EdgeInsets.symmetric(horizontal: 4.0),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(_current == entry.key ? 0.9 : 0.4),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     widget.product.name,
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style:const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: RichText(
-                  text: TextSpan(
-                    text: 'Deal Price: ',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  const SizedBox(height: 8),
+                  Row(
                     children: [
-                      TextSpan(
-                        text: '\$${widget.product.price}',
+                      Text(
+                        '\$${widget.product.price}',
+                        style:const TextStyle(fontSize: 22, color: Colors.red, fontWeight: FontWeight.w500),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '\$${(widget.product.price * 1.2).toStringAsFixed(2)}',
                         style: const TextStyle(
-                          fontSize: 22,
-                          color: Colors.red,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 16,
+                          color: Colors.grey,
+                          decoration: TextDecoration.lineThrough,
                         ),
                       ),
                     ],
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('${widget.product.quantity} in stock',
-                        style: const TextStyle(fontSize: 16)),
-                    Stars(
-                      rating: avgRating,
-                    ),
-                    Text(widget.product.description),
-                  ],
-                ),
-              ),
-              Container(
-                color: Colors.black12,
-                height: 5,
-              ),
-              const SizedBox(height: 10),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Rating & Reviews:',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  const SizedBox(height: 16),
+                  const Text('Size'),
+                  Wrap(
+                    spacing: 8,
+                    children: ['S', 'M', 'L', 'XL'].map((size) {
+                      return ChoiceChip(
+                        label: Text(size),
+                        selected: false,
+                        onSelected: (bool selected) {},
+                      );
+                    }).toList(),
                   ),
-                  RatingBar.builder(
-                    initialRating: myRating,
-                    minRating: 1,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemPadding: const EdgeInsets.symmetric(horizontal: 4),
-                    itemBuilder: (context, _) => const Icon(
-                      Icons.star,
-                      color: AppPalette.gradient5,
-                    ),
-                    onRatingUpdate: (rating) {},
+                  const SizedBox(height: 16),
+                  const Text('Color'),
+                  Wrap(
+                    spacing: 8,
+                    children: [Colors.red, Colors.blue, Colors.green, Colors.yellow].map((color) {
+                      return CircleAvatar(
+                        backgroundColor: color,
+                        radius: 15,
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text('Description'),
+                  Text(widget.product.description),
+                  const SizedBox(height: 16),
+                  const Text('Shipping & Returns'),
+                  const ListTile(
+                    leading: Icon(Icons.local_shipping),
+                    title: Text('Free Shipping'),
+                    subtitle: Text('For orders over \$50'),
+                  ),
+                  const ListTile(
+                    leading: Icon(Icons.repeat),
+                    title: Text('Free Returns'),
+                    subtitle: Text('Within 30 days'),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text('Ratings & Reviews'),
+                  Row(
+                    children: [
+                      RatingBarIndicator(
+                        rating: avgRating,
+                        itemBuilder: (context, index) => const Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                        itemCount: 5,
+                        itemSize: 20.0,
+                      ),
+                      const SizedBox(width: 8),
+                      Text('(${widget.product.description.length} reviews)'),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  // Sample reviews
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: 2, // Show 2 sample reviews
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        leading: CircleAvatar(
+                          child: Text('U${index + 1}'),
+                        ),
+                        title: Text('User ${index + 1}'),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            RatingBarIndicator(
+                              rating: 4,
+                              itemBuilder: (context, index) => const Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              itemCount: 5,
+                              itemSize: 15.0,
+                            ),
+                            const Text('Great product! Highly recommended.'),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ],
-              )
-            ],
-          ),
+              ),
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: Padding(
@@ -250,6 +239,25 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class Stars extends StatelessWidget {
+  final double rating;
+
+  const Stars({Key? key, required this.rating}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return RatingBarIndicator(
+      rating: rating,
+      itemBuilder: (context, index) => const Icon(
+        Icons.star,
+        color: Colors.amber,
+      ),
+      itemCount: 5,
+      itemSize: 20.0,
     );
   }
 }

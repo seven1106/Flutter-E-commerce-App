@@ -1,4 +1,3 @@
-
 import 'package:emigo/models/product_model.dart';
 import 'package:flutter/material.dart';
 
@@ -14,21 +13,22 @@ class DealOfProducts extends StatefulWidget {
 }
 
 class _DealOfProductsState extends State<DealOfProducts> {
-  ProductModel? product;
+  List<ProductModel> productList = [];
   final HomeServices homeServices = HomeServices();
+  bool _isPressed = false;
 
   @override
   void initState() {
     super.initState();
-    fetchDealOfDay();
+    fetchTopRatedProducts();
   }
 
-  void fetchDealOfDay() async {
-    product = await homeServices.fetchDealOfDay(context: context);
+  void fetchTopRatedProducts() async {
+    productList = await homeServices.fetchTopRatedProducts(context: context);
     setState(() {});
   }
 
-  void navigateToDetailScreen() {
+  void navigateToDetailScreen(ProductModel product) {
     Navigator.pushNamed(
       context,
       ProductDetailScreen.routeName,
@@ -38,75 +38,89 @@ class _DealOfProductsState extends State<DealOfProducts> {
 
   @override
   Widget build(BuildContext context) {
-    return product == null
+    return productList.isEmpty
         ? const Loader()
-        : product!.name.isEmpty
-        ? const SizedBox()
-        : GestureDetector(
-      onTap: navigateToDetailScreen,
-      child: Column(
-        children: [
-          Container(
-            alignment: Alignment.topLeft,
-            padding: const EdgeInsets.only(left: 10, top: 15),
-            child: const Text(
-              'Deal of the day',
-              style: TextStyle(fontSize: 20),
-            ),
-          ),
-          Image.network(
-            product!.images[0],
-            height: 235,
-            fit: BoxFit.fitHeight,
-          ),
-          Container(
-            padding: const EdgeInsets.only(left: 15),
-            alignment: Alignment.topLeft,
-            child: const Text(
-              '\$100',
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-          Container(
-            alignment: Alignment.topLeft,
-            padding:
-            const EdgeInsets.only(left: 15, top: 5, right: 40),
-            child: const Text(
-              'Seven',
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: product!.images
-                  .map(
-                    (e) => Image.network(
-                  e,
-                  fit: BoxFit.fitWidth,
-                  width: 100,
-                  height: 100,
+        : Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.7,
                 ),
-              )
-                  .toList(),
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 15,
-            ).copyWith(left: 15),
-            alignment: Alignment.topLeft,
-            child: Text(
-              'See all deals',
-              style: TextStyle(
-                color: Colors.cyan[800],
+                itemCount: productList.length,
+                itemBuilder: (context, index) {
+          final product = productList[index];
+          return GestureDetector(
+            onTapDown: (_) => setState(() => _isPressed = true),
+            onTapUp: (_) => setState(() => _isPressed = false),
+            onTap: () => navigateToDetailScreen(product),
+            child: AnimatedScale(
+              scale: _isPressed ? 1.1 : 1.0,
+              duration: const Duration(milliseconds: 200),
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image.network(
+                        product.images[0],
+                        height: 150,
+                        fit: BoxFit.contain,
+                      ),
+                      const SizedBox(height: 8),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              product.name,
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.shopping_cart,
+                                  color: Colors.green,
+                                  size: 16,
+                                ),
+                                const SizedBox(width: 4),
+                                Text('${product.quantity} Sold'),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '\$${product.price}',
+                              style: const TextStyle(
+                                  fontSize: 16, color: Colors.red),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          );
+                },
+              ),
+        );
   }
 }

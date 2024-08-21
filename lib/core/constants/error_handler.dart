@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -15,6 +16,8 @@ void httpErrorHandler({
   void showErrorMessage(String? errorMessage) {
     if (errorMessage != null) {
       showSnackBar(context, errorMessage);
+      log(errorMessage);
+      print(jsonResponse['error']);
     } else {
       showSnackBar(context, "Unknown error occurred");
     }

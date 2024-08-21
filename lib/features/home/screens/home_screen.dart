@@ -6,6 +6,8 @@ import 'package:emigo/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/carousel_image.dart';
+
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/home';
   const HomeScreen({Key? key}) : super(key: key);
@@ -14,9 +16,23 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
   void navigateToSearchScreen(String query) {
     Navigator.pushNamed(context, '/search-screen', arguments: query);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 4, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -105,14 +121,41 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverList(
+              delegate: SliverChildListDelegate([
+                const AddressBox(),
+                const TopCategories(),
+                const SizedBox(height: 10),
+                const CarouselImage(),
+                Container(
+                  color: Colors.white,
+                  child: TabBar(
+                    controller: _tabController,
+                    tabs: const [
+                      Tab(text: 'Recommended'),
+                      Tab(text: 'New Arrival'),
+                      Tab(text: 'Best Seller'),
+                      Tab(text: 'Top Deals'),
+                    ],
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Colors.black38,
+                    indicatorColor: Colors.black,
+                  ),
+                ),
+              ]),
+            ),
+          ];
+        },
+        body: TabBarView(
+          controller: _tabController,
           children: const [
-            AddressBox(),
-            TopCategories(),
-            SizedBox(height: 10),
-            // CarouselImage(),
-            DealOfProducts()
+            DealOfProducts(),
+            Center(child: Text('Content for Tab 2')),
+            Center(child: Text('Content for Tab 3')),
+            Center(child: Text('Content for Tab 4')),
           ],
         ),
       ),

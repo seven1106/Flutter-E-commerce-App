@@ -175,6 +175,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         onTap: () => changeOrderStatus(details.currentStep),
                       );
                     }
+                    if(user.type == 'user' && currentStep == 4) {
+                      return CustomButton(
+                        text: 'Rate',
+                        onTap: () {
+                          // navigate to rating screen
+                        },
+                      );
+                    }
                     return const SizedBox();
                   },
                   steps: [
