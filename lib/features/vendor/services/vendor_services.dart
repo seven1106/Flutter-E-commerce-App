@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloudinary_public/cloudinary_public.dart';
@@ -72,6 +73,42 @@ class VendorServices {
     } catch (e) {
       showSnackBar(context, e.toString());
     }
+  }
+  Future<ProductModel> fetchProductById({
+    required BuildContext context,
+    required String? id,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    ProductModel product = ProductModel(
+      name: '',
+      description: '',
+      quantity: 0,
+      images: [],
+      category: '',
+      price: 0,
+      ratings: [],
+    );
+
+    try {
+      http.Response res = await http.get(
+        Uri.parse('${Constants.backEndUrl}/vendor/get-product/$id'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+      );
+      log(res.toString());
+      httpErrorHandler(
+        response: res,
+        context: context,
+        onSuccess: () {
+          product = ProductModel.fromJson(res.body);
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+    return product;
   }
 
   // get all the products

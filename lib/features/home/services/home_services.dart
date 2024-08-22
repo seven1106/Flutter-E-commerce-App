@@ -73,10 +73,6 @@ class HomeServices {
               ),
             );
           }
-          // Log product names for debugging
-          for (var product in productList) {
-            log(product.name);
-          }
         },
       );
     } catch (e) {

@@ -53,8 +53,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     );
   }
 
-  void showRatingDialog(BuildContext context, ProductModel product) {
+  void showRatingDialog(BuildContext context, String? id) async {
     double rating = 0;
+    ProductModel product = await vendorServices.fetchProductById(context: context, id: id);
     final TextEditingController commentController = TextEditingController();
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     bool hasRated = false;
@@ -319,7 +320,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         onTap: () {
                           showRatingDialog(
                             context,
-                            widget.order.products[0],
+                            widget.order.products[0].id,
                           );
                         },
                       );
