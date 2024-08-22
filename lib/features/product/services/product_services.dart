@@ -47,6 +47,7 @@ class ProductServices {
     required BuildContext context,
     required ProductModel product,
     required double rating,
+    String? comment,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
@@ -59,6 +60,7 @@ class ProductServices {
         body: jsonEncode({
           'id': product.id!,
           'rating': rating,
+          'comment': comment,
         }),
       );
 

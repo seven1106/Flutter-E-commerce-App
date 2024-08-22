@@ -48,6 +48,7 @@ class VendorServices {
         images: imageUrls,
         category: category,
         price: price,
+        ratings: [],
       );
       print(product.toJson());
 

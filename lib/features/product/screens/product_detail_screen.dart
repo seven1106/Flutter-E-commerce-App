@@ -1,6 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:emigo/core/common/custom_button.dart';
-import 'package:emigo/core/config/theme/app_palette.dart';
 import 'package:emigo/features/search/screen/search_screen.dart';
 import 'package:emigo/models/product_model.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +29,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   void initState() {
     super.initState();
-    // Ở đây bạn có thể thêm logic để tính toán avgRating từ widget.product.rating
+    // Tính toán điểm đánh giá trung bình
+    if (widget.product.ratings.isNotEmpty) {
+      double totalRating = 0;
+      for (var rating in widget.product.ratings) {
+        totalRating += rating.rating;
+      }
+      avgRating = totalRating / widget.product.ratings.length;
+    }
   }
 
   void navigateToSearchScreen(String query) {
@@ -178,7 +184,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                         itemSize: 20.0,
                       ),
                       const SizedBox(width: 8),
-                      Text('(${widget.product.description.length} reviews)'),
+                      Text('(${widget.product.ratings.length} reviews)'),
                     ],
                   ),
                   const SizedBox(height: 16),
@@ -186,18 +192,19 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: 2, // Show 2 sample reviews
+                    itemCount: widget.product.ratings.length, // Số lượng đánh giá từ danh sách
                     itemBuilder: (context, index) {
+                      var rating = widget.product.ratings[index];
                       return ListTile(
                         leading: CircleAvatar(
-                          child: Text('U${index + 1}'),
+                          child: Text(rating.userId.substring(0, 1)), // Hiển thị chữ cái đầu tiên của userId
                         ),
-                        title: Text('User ${index + 1}'),
+                        title: Text(rating.userId),
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             RatingBarIndicator(
-                              rating: 4,
+                              rating: rating.rating,
                               itemBuilder: (context, index) => const Icon(
                                 Icons.star,
                                 color: Colors.amber,
@@ -205,12 +212,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                               itemCount: 5,
                               itemSize: 15.0,
                             ),
-                            const Text('Great product! Highly recommended.'),
+                            Text(rating.comment),
                           ],
                         ),
                       );
                     },
                   ),
+
                 ],
               ),
             ),

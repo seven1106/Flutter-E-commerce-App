@@ -3,15 +3,18 @@ import 'dart:convert';
 class RatingModel {
   final String userId;
   final double rating;
+  final String comment;
   RatingModel({
     required this.userId,
     required this.rating,
+    required this.comment,
   });
 
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,
       'rating': rating,
+      'comment': comment,
     };
   }
 
@@ -19,8 +22,10 @@ class RatingModel {
     return RatingModel(
       userId: map['userId'] ?? '',
       rating: map['rating']?.toDouble() ?? 0.0,
+      comment: map['comment'] ?? '',
     );
   }
+
 
   String toJson() => json.encode(toMap());
 
