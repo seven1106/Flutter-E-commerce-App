@@ -33,8 +33,9 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
       context: context,
       product: product,
       onSuccess: () {
-        _products!.removeAt(index);
-        setState(() {});
+        setState(() {
+          _products!.removeAt(index);
+        });
       },
     );
   }
@@ -48,20 +49,23 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: Colors.white,
-        elevation: 0,
-        title: Text('My Store', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        elevation: 1,
+        title: const Text(
+          'My Store',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.black,
           unselectedLabelColor: Colors.grey,
           labelColor: Colors.black,
-          labelStyle: TextStyle(fontWeight: FontWeight.bold),
-          tabs: [
-            Tab(text: 'Stocking'),
-            Tab(text: 'Sold out'),
+          labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+          tabs: const [
+            Tab(text: 'In Stock'),
+            Tab(text: 'Sold Out'),
           ],
         ),
       ),
@@ -70,52 +74,12 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
           : TabBarView(
         controller: _tabController,
         children: [
-          GridView.builder(
-            padding: EdgeInsets.all(8),
-            itemCount: _products!.length,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.65,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-            ),
-            itemBuilder: (context, index) {
-              final productData = _products![index];
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: ProductEntity(
-                      image: productData.images[0],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 4),
-                    child: Text(
-                      productData.name,
-                      style: TextStyle(color: Colors.black, fontSize: 12),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '\$${productData.price}',
-                        style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 14),
-                      ),
-                      IconButton(
-                        onPressed: () => deleteProduct(productData, index),
-                        icon: Icon(Icons.delete_outline, color: Colors.grey, size: 20),
-                      ),
-                    ],
-                  ),
-                ],
-              );
-            },
+          _buildProductList(
+            _products!.where((product) => product.quantity > 0).toList(),
           ),
-          Center(child: Text('Sold out', style: TextStyle(color: Colors.black))),
+          _buildProductList(
+            _products!.where((product) => product.quantity == 0).toList(),
+          ),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -123,8 +87,68 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
         onPressed: () {
           Navigator.pushNamed(context, '/add-product');
         },
-        child: Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
+    );
+  }
+
+  Widget _buildProductList(List<ProductModel> productList) {
+    return GridView.builder(
+      padding: const EdgeInsets.all(8),
+      itemCount: productList.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        childAspectRatio: 0.6,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+      ),
+      itemBuilder: (context, index) {
+        final productData = productList[index];
+        return Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                  child: ProductEntity(
+                    image: productData.images[0],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  productData.name,
+                  style: const TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '\$${productData.price.toStringAsFixed(2)}',
+                      style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    IconButton(
+                      onPressed: () => deleteProduct(productData, index),
+                      icon: const Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }
