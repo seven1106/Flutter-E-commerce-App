@@ -2,6 +2,7 @@ import 'package:badges/badges.dart' as badges;
 import 'package:emigo/core/config/theme/app_palette.dart';
 import 'package:emigo/features/account/screens/account_screen.dart';
 import 'package:emigo/features/vendor/screens/product/product_screen.dart';
+import 'package:emigo/features/vendor/screens/voucher/voucher_screen.dart';
 import 'package:flutter/material.dart';
 
 import 'analtyics_screen.dart';
@@ -23,8 +24,10 @@ class _VendorScreenState extends State<VendorScreen> {
     const ProductScreen(),
     const AnalyticsScreen(),
     const OrdersScreen(),
+    const VouchersScreen(),  // Thêm VoucherScreen ở đây
     const AccountScreen(),
   ];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -34,76 +37,64 @@ class _VendorScreenState extends State<VendorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: _widgetOptions.elementAt(_selectedIndex),
-        bottomNavigationBar: Container(
-          decoration: const BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                color: Colors.grey,
-                width: 0.5,
-              ),
+      body: _widgetOptions.elementAt(_selectedIndex),
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Colors.grey,
+              width: 0.5,
             ),
           ),
-          child: BottomNavigationBar(
-            currentIndex: _selectedIndex,
-            selectedItemColor: AppPalette.btnColor,
-            unselectedItemColor: Colors.grey,
-            type: BottomNavigationBarType.fixed,
-            iconSize: double.parse('30'),
-            onTap: (index) {
-              _onItemTapped(index);
-            },
-            backgroundColor: AppPalette.appBarColor,
-            items: [
-              // HOME
-              BottomNavigationBarItem(
-                icon: _selectedIndex == 0
-                    ? const Icon(Icons.home)
-                    : const Icon(
-                        Icons.home_outlined,
-                      ),
-                label: 'Home',
-              ),
-              // SEARCH
-              BottomNavigationBarItem(
-                icon: _selectedIndex == 1
-                    ? const Icon(Icons.analytics)
-                    : const Icon(
-                        Icons.analytics_outlined,
-                      ),
-                label: 'AnalyticsScreen',
-              ),
-              // CART
-              BottomNavigationBarItem(
-                icon: badges.Badge(
-                  // badgeContent: Text(userCartLen.toString()),
-                  position: badges.BadgePosition.topEnd(top: -4, end: -4),
-                  badgeAnimation: const badges.BadgeAnimation.rotation(
-                    animationDuration: Duration(seconds: 1),
-                    colorChangeAnimationDuration: Duration(seconds: 1),
-                    loopAnimation: false,
-                    curve: Curves.fastOutSlowIn,
-                    colorChangeAnimationCurve: Curves.easeInCubic,
-                  ),
-                  child: _selectedIndex == 2
-                      ? const Icon(Icons.all_inbox)
-                      : const Icon(
-                          Icons.all_inbox_outlined,
-                        ),
-                ),
-                label: 'OrdersScreen',
-              ),
-              // ACCOUNT
-              BottomNavigationBarItem(
-                icon: _selectedIndex == 3
-                    ? const Icon(Icons.person)
-                    : const Icon(
-                        Icons.person_outlined,
-                      ),
-                label: 'Account',
-              ),
-            ],
-          ),
-        ));
+        ),
+        child: BottomNavigationBar(
+          currentIndex: _selectedIndex,
+          selectedItemColor: AppPalette.btnColor,
+          unselectedItemColor: Colors.grey,
+          type: BottomNavigationBarType.fixed,
+          iconSize: 30,
+          onTap: _onItemTapped,
+          backgroundColor: AppPalette.appBarColor,
+          items: [
+            // HOME
+            BottomNavigationBarItem(
+              icon: _selectedIndex == 0
+                  ? const Icon(Icons.home)
+                  : const Icon(Icons.home_outlined),
+              label: 'Home',
+            ),
+            // ANALYTICS
+            BottomNavigationBarItem(
+              icon: _selectedIndex == 1
+                  ? const Icon(Icons.analytics)
+                  : const Icon(Icons.analytics_outlined),
+              label: 'Analytics',
+            ),
+            // ORDERS
+            BottomNavigationBarItem(
+              icon: _selectedIndex == 2
+                  ? const Icon(Icons.all_inbox)
+                  : const Icon(Icons.all_inbox_outlined),
+              label: 'Orders',
+            ),
+            // VOUCHER
+            BottomNavigationBarItem(
+              icon: _selectedIndex == 3
+                  ? const Icon(Icons.discount)
+                  : const Icon(Icons.discount_outlined),
+              label: 'Voucher',
+            ),
+            // ACCOUNT
+            BottomNavigationBarItem(
+              icon: _selectedIndex == 4
+                  ? const Icon(Icons.person)
+                  : const Icon(Icons.person_outline),
+              label: 'Account',
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
+

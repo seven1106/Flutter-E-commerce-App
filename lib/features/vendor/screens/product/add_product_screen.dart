@@ -20,6 +20,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
+  final TextEditingController discountController = TextEditingController();
   final VendorServices vendorServices = VendorServices();
 
   String category = 'Mobiles';
@@ -33,6 +34,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
     descriptionController.dispose();
     priceController.dispose();
     quantityController.dispose();
+    discountController.dispose();
   }
 
   List<String> productCategories = [
@@ -60,6 +62,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         quantity: double.parse(quantityController.text),
         category: category,
         images: images,
+        // discount: double.parse(discountController.text),
       );
     } else {
       showSnackBar(context, 'Please fill all the fields');
@@ -150,6 +153,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     ),
                   ],
                 ),
+                SizedBox(height: 16),
+                CustomTextField(
+                  controller: discountController,
+                  hintText: 'Discount (%)',
+                                  ),
                 SizedBox(height: 16),
                 DropdownButtonFormField<String>(
                   decoration: InputDecoration(

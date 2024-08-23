@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import '../../features/auth/screens/auth_screen.dart';
 import '../../features/order_details/screens/order_details.dart';
 import '../../features/vendor/screens/orders_screen.dart';
+import '../../features/vendor/screens/voucher/add_voucher.dart';
 
 class AppRouter {
   static Route onGenerateRoute(RouteSettings settings) {
@@ -44,6 +45,9 @@ class AppRouter {
         case '/order-screen':
         return _materialRoute(
             const OrdersScreen());
+        case '/add-voucher':
+        return _materialRoute(
+            const AddVoucherScreen());
       default:
         return _materialRoute(Scaffold(
           body: Center(child: Text('No route defined for ${settings.name}')),
