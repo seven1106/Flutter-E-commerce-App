@@ -1,5 +1,4 @@
 import 'package:emigo/features/account/services/account_service.dart';
-import 'package:emigo/features/account/widgets/account_button.dart';
 import 'package:flutter/material.dart';
 
 class TopButtons extends StatelessWidget {
@@ -10,31 +9,50 @@ class TopButtons extends StatelessWidget {
     return Column(
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            AccountButton(
-              text: 'Your Orders',
-              onTap: () {},
-            ),
-            AccountButton(
-              text: 'Turn Seller',
-              onTap: () {},
-            ),
+            _buildFeatureButton(context, Icons.favorite_border, 'Wishlist', () {}),
+            _buildFeatureButton(context, Icons.loyalty, 'Coupons', () {}),
+            _buildFeatureButton(context, Icons.card_giftcard, 'Gift Cards', () {}),
+            _buildFeatureButton(context, Icons.credit_card, 'Payment', () {}),
           ],
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            AccountButton(
-              text: 'Log Out',
-              onTap: () => AccountService().logOut(context),
-            ),
-            AccountButton(
-              text: 'Your Wish List',
-              onTap: () {},
-            ),
+            _buildFeatureButton(context, Icons.location_on_outlined, 'Address', () {}),
+            _buildFeatureButton(context, Icons.support_agent, 'Customer Service', () {}),
+            _buildFeatureButton(context, Icons.settings, 'Settings', () {}),
+            _buildFeatureButton(context, Icons.exit_to_app, 'Log Out', () => AccountService().logOut(context)),
           ],
         ),
       ],
+    );
+  }
+
+  Widget _buildFeatureButton(BuildContext context, IconData icon, String label, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, size: 24, color: Colors.black87),
+          ),
+          SizedBox(height: 8),
+          Text(
+            label,
+            style: TextStyle(fontSize: 12),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }

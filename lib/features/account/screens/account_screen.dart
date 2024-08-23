@@ -1,4 +1,3 @@
-import 'package:emigo/core/config/theme/app_palette.dart';
 import 'package:emigo/features/account/widgets/order.dart';
 import 'package:emigo/features/account/widgets/top_buttons.dart';
 import 'package:emigo/providers/user_provider.dart';
@@ -17,52 +16,118 @@ class _AccountScreenState extends State<AccountScreen> {
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(50),
-        child: AppBar(
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              color: AppPalette.appBarColor,
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            expandedHeight: 200.0,
+            floating: false,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Stack(
+                fit: StackFit.expand,
+                children: [
+                  Image.network(
+                    'https://raw.githubusercontent.com/seven1106/host-file/master/social_app/High_resolution_wallpaper_background_ID_77701520645.webp',
+                    fit: BoxFit.cover,
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 20,
+                    left: 20,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const CircleAvatar(
+                          radius: 30,
+                          backgroundImage: NetworkImage('https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?w=740&t=st=1724378979~exp=1724379579~hmac=54329fb738a5052672db7c1c15da43a2da780ddf552897034dd31c0f9fbc7902'),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Hi, ${user.name}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Hi, ${user.name}',
-                    style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  )),
-              Container(
-                padding: const EdgeInsets.only(left: 15, right: 15),
-                child: const Row(
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(right: 15),
-                      child: Icon(Icons.notifications_outlined),
-                    ),
-                    Icon(
-                      Icons.search,
-                    ),
-                  ],
-                ),
-              )
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.notifications_outlined),
+                onPressed: () {
+                  // Handle notification action
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.settings),
+                onPressed: () {
+                  // Handle settings action
+                },
+              ),
             ],
           ),
-        ),
-      ),
-      body: Column(
-        children: const [
-          SizedBox(height: 10),
-          TopButtons(),
-          SizedBox(height: 20),
-          Orders(),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'My Account',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 20),
+                  const TopButtons(),
+                  const SizedBox(height: 20),
+                  const Orders(),
+                  const SizedBox(height: 20),
+                  _buildMenuSection('About Us'),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
+    );
+  }
+
+  Widget _buildMenuSection(String title) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+        ListTile(
+          title: const Text('Option 1'),
+          trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+          onTap: () {
+            // Handle option tap
+          },
+        ),
+        ListTile(
+          title: const Text('Option 2'),
+          trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+          onTap: () {
+            // Handle option tap
+          },
+        ),
+        const Divider(),
+      ],
     );
   }
 }

@@ -11,17 +11,16 @@ class ProductScreen extends StatefulWidget {
   State<ProductScreen> createState() => _ProductScreenState();
 }
 
-class _ProductScreenState extends State<ProductScreen>
-    with SingleTickerProviderStateMixin {
+class _ProductScreenState extends State<ProductScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final VendorServices _vendorServices = VendorServices();
   List<ProductModel>? _products;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     fetchProducts();
-    setState(() {});
   }
 
   fetchProducts() async {
@@ -49,81 +48,82 @@ class _ProductScreenState extends State<ProductScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('My Store'),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text('My Store', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         bottom: TabBar(
           controller: _tabController,
-          indicatorWeight: 4,
+          indicatorColor: Colors.black,
           unselectedLabelColor: Colors.grey,
-          labelStyle: const TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-          tabs: const [
-            Tab(
-              text: 'Stocking',
-            ),
-            Tab(
-              text: 'Sold out',
-            ),
+          labelColor: Colors.black,
+          labelStyle: TextStyle(fontWeight: FontWeight.bold),
+          tabs: [
+            Tab(text: 'Stocking'),
+            Tab(text: 'Sold out'),
           ],
         ),
       ),
       body: _products == null
           ? const Loader()
           : TabBarView(
-              controller: _tabController,
-              children: [
-                GridView.builder(
-                  itemCount: _products!.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2),
-                  itemBuilder: (context, index) {
-                    final productData = _products![index];
-                    return Column(
-                      children: [
-                        SizedBox(
-                          height: 140,
-                          child: ProductEntity(
-                            image: productData.images[0],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            left: 15,
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  productData.name,
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 2,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () =>
-                                    deleteProduct(productData, index),
-                                icon: const Icon(
-                                  Icons.delete_outline,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                ),
-                Text('Sold out'),
-              ],
+        controller: _tabController,
+        children: [
+          GridView.builder(
+            padding: EdgeInsets.all(8),
+            itemCount: _products!.length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.65,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
             ),
+            itemBuilder: (context, index) {
+              final productData = _products![index];
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: ProductEntity(
+                      image: productData.images[0],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 4),
+                    child: Text(
+                      productData.name,
+                      style: TextStyle(color: Colors.black, fontSize: 12),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '\$${productData.price}',
+                        style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 14),
+                      ),
+                      IconButton(
+                        onPressed: () => deleteProduct(productData, index),
+                        icon: Icon(Icons.delete_outline, color: Colors.grey, size: 20),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            },
+          ),
+          Center(child: Text('Sold out', style: TextStyle(color: Colors.black))),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black,
         onPressed: () {
           Navigator.pushNamed(context, '/add-product');
         },
-        child: const Icon(Icons.add),
+        child: Icon(Icons.add, color: Colors.white),
       ),
     );
   }

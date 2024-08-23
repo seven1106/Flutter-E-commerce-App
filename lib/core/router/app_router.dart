@@ -11,6 +11,7 @@ import 'package:emigo/models/product_model.dart';
 import 'package:flutter/material.dart';
 import '../../features/auth/screens/auth_screen.dart';
 import '../../features/order_details/screens/order_details.dart';
+import '../../features/vendor/screens/orders_screen.dart';
 
 class AppRouter {
   static Route onGenerateRoute(RouteSettings settings) {
@@ -40,6 +41,9 @@ class AppRouter {
         case '/order-details':
         return _materialRoute(
             OrderDetailScreen(order: settings.arguments as OrderModel));
+        case '/order-screen':
+        return _materialRoute(
+            const OrdersScreen());
       default:
         return _materialRoute(Scaffold(
           body: Center(child: Text('No route defined for ${settings.name}')),
