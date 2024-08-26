@@ -8,6 +8,8 @@ class ProductModel {
   final List<String> images;
   final String category;
   final double price;
+  final double discountPrice;
+  final double sellCount;
   final String? id;
   List<RatingModel> ratings = [];
 
@@ -18,6 +20,8 @@ class ProductModel {
     required this.images,
     required this.category,
     required this.price,
+    required this.discountPrice,
+    this.sellCount = 0.0,
     this.id,
     required this.ratings,
   });
@@ -30,6 +34,8 @@ class ProductModel {
       'images': images,
       'category': category,
       'price': price,
+      'discountPrice': discountPrice,
+      'sellCount': sellCount,
       'id': id,
       'ratings': ratings.map((x) => x.toMap()).toList(),
     };
@@ -43,6 +49,8 @@ class ProductModel {
       images: List<String>.from(map['images']),
       category: map['category'] ?? '',
       price: map['price']?.toDouble() ?? 0.0,
+      discountPrice: map['discountPrice']?.toDouble() ?? 0.0,
+      sellCount: map['sellCount']?.toDouble() ?? 0.0,
       id: map['_id'],
       ratings: map['ratings'] != null
           ? List<RatingModel>.from(

@@ -21,6 +21,7 @@ class VendorServices {
     required String name,
     required String description,
     required double price,
+    required double discountPrice,
     required double quantity,
     required String category,
     required List<File> images,
@@ -49,6 +50,8 @@ class VendorServices {
         images: imageUrls,
         category: category,
         price: price,
+        discountPrice: discountPrice,
+        sellCount: 0,
         ratings: [],
       );
       print(product.toJson());
@@ -74,6 +77,34 @@ class VendorServices {
       showSnackBar(context, e.toString());
     }
   }
+  Future<void> updateProduct({
+    required BuildContext context,
+    required ProductModel product,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    try {
+      http.Response res = await http.post(
+        Uri.parse('${Constants.backEndUrl}/vendor/update-product'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+        body: product.toJson(),
+      );
+
+      httpErrorHandler(
+        response: res,
+        context: context,
+        onSuccess: () {
+          showSnackBar(context, 'Product Updated Successfully!');
+          Navigator.pop(context);
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
   Future<ProductModel> fetchProductById({
     required BuildContext context,
     required String? id,
@@ -86,6 +117,8 @@ class VendorServices {
       images: [],
       category: '',
       price: 0,
+      discountPrice: 0,
+      sellCount: 0,
       ratings: [],
     );
 

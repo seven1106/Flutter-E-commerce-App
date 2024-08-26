@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/utils/loader.dart';
 import '../../product/screens/product_detail_screen.dart';
+import '../../vendor/widgets/product_entity.dart';
 import '../services/home_services.dart';
 
 class DealOfProducts extends StatefulWidget {
@@ -42,8 +43,8 @@ class _DealOfProductsState extends State<DealOfProducts> {
         : Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
+        const Padding(
+          padding: EdgeInsets.all(16.0),
           child: Text(
             'Top Picks For You',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -51,67 +52,90 @@ class _DealOfProductsState extends State<DealOfProducts> {
         ),
         Expanded(
           child: GridView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.all(8),
+            itemCount: productList.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 0.65,
               crossAxisSpacing: 8,
-              mainAxisSpacing: 8,
+              mainAxisSpacing: 12,
             ),
-            itemCount: productList.length,
             itemBuilder: (context, index) {
-              final product = productList[index];
-              return GestureDetector(
-                onTap: () => navigateToDetailScreen(product),
-                child: Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+              final productData = productList[index];
+              return InkWell(
+                onTap: () {
+                  navigateToDetailScreen(productData);
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(4),
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-                          child: Image.network(
-                            product.images[0],
-                            fit: BoxFit.cover,
-                            width: double.infinity,
-                          ),
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            ProductEntity(
+                              image: productData.images[0],
+                            ),
+                            Positioned(
+                              top: 8,
+                              left: 8,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                                child: Text(
+                                  '-${((productData.price - productData.discountPrice) / productData.price * 100).toInt()}%',
+                                  style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              product.name,
-                              style: const TextStyle(fontSize: 14),
-                              maxLines: 2,
+                              productData.name,
+                              style: const TextStyle(color: Colors.black87, fontSize: 12),
                               overflow: TextOverflow.ellipsis,
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              '\$${product.price.toStringAsFixed(2)}',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
-                              ),
+                              maxLines: 2,
                             ),
                             const SizedBox(height: 4),
                             Row(
                               children: [
-                                Icon(Icons.star, size: 16, color: Colors.amber),
                                 Text(
-                                  ' ${product.ratings.length > 0 ? (product.ratings.map((r) => r.rating).reduce((a, b) => a + b) / product.ratings.length).toStringAsFixed(1) : 'N/A'}',
-                                  style: TextStyle(fontSize: 12),
+                                  '\$${productData.discountPrice.toInt().toStringAsFixed(2)}',
+                                  style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 14),
                                 ),
+                                const SizedBox(width: 4),
                                 Text(
-                                  ' (${product.ratings.length})',
-                                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                                  '\$${productData.price.toStringAsFixed(2)}',
+                                  style: const TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                    decoration: TextDecoration.lineThrough,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                const Icon(Icons.shopping_cart, color: Colors.blueAccent, size: 14),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '${productData.sellCount.toInt()} sold',
+                                  style: const TextStyle(color: Colors.grey, fontSize: 12),
                                 ),
                               ],
                             ),

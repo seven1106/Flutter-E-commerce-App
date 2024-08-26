@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import '../../features/auth/screens/auth_screen.dart';
 import '../../features/order_details/screens/order_details.dart';
 import '../../features/vendor/screens/orders_screen.dart';
+import '../../features/vendor/screens/product/edit_product.dart';
 import '../../features/vendor/screens/voucher/add_voucher.dart';
 
 class AppRouter {
@@ -27,6 +28,9 @@ class AppRouter {
         return _materialRoute(const VendorScreen());
       case '/add-product':
         return _materialRoute(const AddProductScreen());
+      case '/edit-product':
+        return _materialRoute(
+            EditProductScreen(product: settings.arguments as ProductModel));
       case '/product-category':
         return _materialRoute(
             ProductCategory(category: settings.arguments as String));
@@ -39,15 +43,13 @@ class AppRouter {
       case '/address':
         return _materialRoute(
             AddressScreen(totalAmount: settings.arguments as String));
-        case '/order-details':
+      case '/order-details':
         return _materialRoute(
             OrderDetailScreen(order: settings.arguments as OrderModel));
-        case '/order-screen':
-        return _materialRoute(
-            const OrdersScreen());
-        case '/add-voucher':
-        return _materialRoute(
-            const AddVoucherScreen());
+      case '/order-screen':
+        return _materialRoute(const OrdersScreen());
+      case '/add-voucher':
+        return _materialRoute(const AddVoucherScreen());
       default:
         return _materialRoute(Scaffold(
           body: Center(child: Text('No route defined for ${settings.name}')),

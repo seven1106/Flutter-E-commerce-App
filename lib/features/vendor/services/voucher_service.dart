@@ -140,16 +140,16 @@ class VoucherServices {
   }
 
   // Xóa voucher theo ID
-  Future<void> deleteVoucher({
-    required BuildContext context,
-    required String id,
-    required VoidCallback onSuccess,
-  }) async {
+  Future<void> deleteVoucher(
+     BuildContext context,
+     String? id,
+     VoidCallback onSuccess,
+  ) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
-      http.Response res = await http.post(
-        Uri.parse('${Constants.backEndUrl}/vendor/delete-voucher'),
+      http.Response res = await http.delete(
+        Uri.parse('${Constants.backEndUrl}/delete-voucher/$id'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,

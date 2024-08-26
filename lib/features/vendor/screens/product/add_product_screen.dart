@@ -62,7 +62,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         quantity: double.parse(quantityController.text),
         category: category,
         images: images,
-        // discount: double.parse(discountController.text),
+        discountPrice: double.parse(discountController.text),
       );
     } else {
       showSnackBar(context, 'Please fill all the fields');
@@ -156,7 +156,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 SizedBox(height: 16),
                 CustomTextField(
                   controller: discountController,
-                  hintText: 'Discount (%)',
+                  hintText: 'Discount Price',
                                   ),
                 SizedBox(height: 16),
                 DropdownButtonFormField<String>(

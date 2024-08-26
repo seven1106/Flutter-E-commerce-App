@@ -14,7 +14,7 @@ class VouchersScreen extends StatefulWidget {
 
 class _VouchersScreenState extends State<VouchersScreen> with SingleTickerProviderStateMixin {
   List<VoucherModel>? vouchers;
-  final VoucherServices vendorServices = VoucherServices();
+  final VoucherServices voucherServices = VoucherServices();
   late TabController _tabController;
 
   @override
@@ -31,8 +31,13 @@ class _VouchersScreenState extends State<VouchersScreen> with SingleTickerProvid
   }
 
   void fetchVouchers() async {
-    vouchers = await vendorServices.fetchAllVouchers(context);
+    vouchers = await voucherServices.fetchAllVouchers(context);
     setState(() {});
+  }
+  void deleteVoucher(String? voucherId) async {
+    await voucherServices.deleteVoucher(context, voucherId, () {
+      fetchVouchers();
+    });
   }
 
   @override
@@ -62,7 +67,7 @@ class _VouchersScreenState extends State<VouchersScreen> with SingleTickerProvid
         onPressed: () {
           Navigator.pushNamed(context, '/add-voucher');
         },
-        child: Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }
@@ -99,6 +104,32 @@ class _VouchersScreenState extends State<VouchersScreen> with SingleTickerProvid
               ],
             ),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+            onLongPress: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('Delete Voucher'),
+                    content: const Text('Are you sure you want to delete this voucher?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          deleteVoucher(voucherData.id);
+                          Navigator.pop(context);
+                        },
+                        child: const Text('Delete'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
             onTap: () {
               // Navigator.pushNamed(
               //   context,

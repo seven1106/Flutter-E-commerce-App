@@ -98,54 +98,106 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
       itemCount: productList.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
-        childAspectRatio: 0.6,
-        crossAxisSpacing: 12,
+        childAspectRatio: 0.65,
+        crossAxisSpacing: 8,
         mainAxisSpacing: 12,
       ),
       itemBuilder: (context, index) {
         final productData = productList[index];
-        return Card(
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                  child: ProductEntity(
-                    image: productData.images[0],
+        return InkWell(
+          onTap: () {
+            Navigator.pushNamed(context, '/edit-product', arguments: productData);
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      ProductEntity(
+                        image: productData.images[0],
+                      ),
+                      Positioned(
+                        top: 8,
+                        left: 8,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                          child: Text(
+                            '-${((productData.price - productData.discountPrice) / productData.price * 100).toInt()}%',
+                            style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 8,
+                        right: 8,
+                        child: IconButton(
+                          onPressed: () => deleteProduct(productData, index),
+                          icon: const Icon(Icons.delete_outline, color: Colors.red, size: 20),
+                          style: IconButton.styleFrom(
+                            backgroundColor: Colors.black.withOpacity(0.5),
+                            padding: const EdgeInsets.all(4),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8),
-                child: Text(
-                  productData.name,
-                  style: const TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.bold),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        productData.name,
+                        style: const TextStyle(color: Colors.black87, fontSize: 12),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Text(
+                            '\$${productData.discountPrice.toStringAsFixed(2)}',
+                            style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 14),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '\$${productData.price.toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12,
+                              decoration: TextDecoration.lineThrough,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          const Icon(Icons.star, color: Colors.orange, size: 14),
+                          const SizedBox(width: 4),
+                          Text(
+                            '${productData.sellCount.toInt()} sold',
+                            style: const TextStyle(color: Colors.grey, fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      '\$${productData.price.toStringAsFixed(2)}',
-                      style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    IconButton(
-                      onPressed: () => deleteProduct(productData, index),
-                      icon: const Icon(Icons.delete_outline, color: Colors.red, size: 20),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       },
