@@ -35,7 +35,6 @@ class ProductServices {
           UserModel user =
               userProvider.user.copyWith(cart: jsonDecode(res.body)['cart']);
           userProvider.setUserFromModel(user);
-          showSnackBar(context, 'message');
         },
       );
     } catch (e) {

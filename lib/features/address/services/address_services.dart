@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:emigo/core/constants/error_handler.dart';
 import 'package:emigo/models/product_model.dart';
@@ -45,7 +46,6 @@ class AddressServices {
     }
   }
 
-  // get all the products
   void placeOrder({
     required BuildContext context,
     required String address,
@@ -68,6 +68,7 @@ class AddressServices {
         response: res,
         context: context,
         onSuccess: () {
+          Navigator.of(context).pop();
           showSnackBar(context, 'Your order has been placed!');
           UserModel user = userProvider.user.copyWith(
             cart: [],
@@ -76,7 +77,7 @@ class AddressServices {
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      log(e.toString());
     }
   }
 

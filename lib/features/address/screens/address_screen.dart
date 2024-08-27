@@ -1,8 +1,4 @@
-
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pay/pay.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/common/custom_textfield.dart';
@@ -30,90 +26,7 @@ class _AddressScreenState extends State<AddressScreen> {
   final _addressFormKey = GlobalKey<FormState>();
 
   String addressToBeUsed = "";
-  List<PaymentItem> paymentItems = [];
   final AddressServices addressServices = AddressServices();
-
-   String defaultApplePay = '''{
-  "provider": "apple_pay",
-  "data": {
-    "merchantIdentifier": "merchant.com.sams.fish",
-    "displayName": "Sam's Fish",
-    "merchantCapabilities": ["3DS", "debit", "credit"],
-    "supportedNetworks": ["amex", "visa", "discover", "masterCard"],
-    "countryCode": "US",
-    "currencyCode": "USD",
-    "requiredBillingContactFields": ["emailAddress", "name", "phoneNumber", "postalAddress"],
-    "requiredShippingContactFields": [],
-    "shippingMethods": [
-      {
-        "amount": "0.00",
-        "detail": "Available within an hour",
-        "identifier": "in_store_pickup",
-        "label": "In-Store Pickup"
-      },
-      {
-        "amount": "4.99",
-        "detail": "5-8 Business Days",
-        "identifier": "flat_rate_shipping_id_2",
-        "label": "UPS Ground"
-      },
-      {
-        "amount": "29.99",
-        "detail": "1-3 Business Days",
-        "identifier": "flat_rate_shipping_id_1",
-        "label": "FedEx Priority Mail"
-      }
-    ]
-  }
-}''';
-   String defaultGooglePay = '''{
-  "provider": "google_pay",
-  "data": {
-    "environment": "TEST",
-    "apiVersion": 2,
-    "apiVersionMinor": 0,
-    "allowedPaymentMethods": [
-      {
-        "type": "CARD",
-        "tokenizationSpecification": {
-          "type": "PAYMENT_GATEWAY",
-          "parameters": {
-            "gateway": "example",
-            "gatewayMerchantId": "gatewayMerchantId"
-          }
-        },
-        "parameters": {
-          "allowedCardNetworks": ["VISA", "MASTERCARD"],
-          "allowedAuthMethods": ["PAN_ONLY", "CRYPTOGRAM_3DS"],
-          "billingAddressRequired": true,
-          "billingAddressParameters": {
-            "format": "FULL",
-            "phoneNumberRequired": true
-          }
-        }
-      }
-    ],
-    "merchantInfo": {
-      "merchantId": "01234567890123456789",
-      "merchantName": "Example Merchant Name"
-    },
-    "transactionInfo": {
-      "countryCode": "US",
-      "currencyCode": "USD"
-    }
-  }
-}''';
-  @override
-  void initState() {
-    super.initState();
-    paymentItems.add(
-      PaymentItem(
-        amount: widget.totalAmount,
-        label: 'Total Amount',
-        status: PaymentItemStatus.final_price,
-      ),
-    );
-  }
 
   @override
   void dispose() {
@@ -124,55 +37,13 @@ class _AddressScreenState extends State<AddressScreen> {
     cityController.dispose();
   }
 
-  void onApplePayResult(res) {
-    if (Provider.of<UserProvider>(context, listen: false)
-        .user
-        .address
-        .isEmpty) {
+  void saveAddress() {
+    if (_addressFormKey.currentState!.validate()) {
+      addressToBeUsed =
+      '${flatBuildingController.text}, ${areaController.text}, ${cityController.text} - ${pincodeController.text}';
       addressServices.saveUserAddress(
           context: context, address: addressToBeUsed);
-    }
-    addressServices.placeOrder(
-      context: context,
-      address: addressToBeUsed,
-      totalSum: double.parse(widget.totalAmount),
-    );
-  }
-
-  void onGooglePayResult(res) {
-    if (Provider.of<UserProvider>(context, listen: false)
-        .user
-        .address
-        .isEmpty) {
-      addressServices.saveUserAddress(
-          context: context, address: addressToBeUsed);
-    }
-    addressServices.placeOrder(
-      context: context,
-      address: addressToBeUsed,
-      totalSum: double.parse(widget.totalAmount),
-    );
-  }
-
-  void payPressed(String addressFromProvider) {
-    addressToBeUsed = "";
-
-    bool isForm = flatBuildingController.text.isNotEmpty ||
-        areaController.text.isNotEmpty ||
-        pincodeController.text.isNotEmpty ||
-        cityController.text.isNotEmpty;
-
-    if (isForm) {
-      if (_addressFormKey.currentState!.validate()) {
-        addressToBeUsed =
-            '${flatBuildingController.text}, ${areaController.text}, ${cityController.text} - ${pincodeController.text}';
-      } else {
-        throw Exception('Please enter all the values!');
-      }
-    } else if (addressFromProvider.isNotEmpty) {
-      addressToBeUsed = addressFromProvider;
-    } else {
-      showSnackBar(context, 'ERROR');
+      showSnackBar(context, 'Address saved successfully!');
     }
   }
 
@@ -181,50 +52,53 @@ class _AddressScreenState extends State<AddressScreen> {
     var address = context.watch<UserProvider>().user.address;
 
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(60),
-        child: AppBar(
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-            ),
-          ),
-        ),
+      appBar: AppBar(
+        title: Text('Shipping Address'),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        elevation: 0,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (address.isNotEmpty)
-                Column(
-                  children: [
-                    Container(
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.black12,
+                Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey[300]!),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Default Address',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          address,
-                          style: const TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
+                      SizedBox(height: 8),
+                      Text(
+                        address,
+                        style: TextStyle(fontSize: 14),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'OR',
-                      style: TextStyle(
-                        fontSize: 18,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                  ],
+                    ],
+                  ),
                 ),
+              SizedBox(height: 24),
+              Text(
+                'Add New Address',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 16),
               Form(
                 key: _addressFormKey,
                 child: Column(
@@ -233,50 +107,37 @@ class _AddressScreenState extends State<AddressScreen> {
                       controller: flatBuildingController,
                       hintText: 'Flat, House no, Building',
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 16),
                     CustomTextField(
                       controller: areaController,
                       hintText: 'Area, Street',
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 16),
                     CustomTextField(
                       controller: pincodeController,
                       hintText: 'Pincode',
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 16),
                     CustomTextField(
                       controller: cityController,
                       hintText: 'Town/City',
                     ),
-                    const SizedBox(height: 10),
                   ],
                 ),
               ),
-              ApplePayButton(
-                width: double.infinity,
-                style: ApplePayButtonStyle.whiteOutline,
-                type: ApplePayButtonType.buy,
-                paymentConfiguration: PaymentConfiguration.fromJsonString(
-                    defaultApplePay),
-                onPaymentResult: onApplePayResult,
-                paymentItems: paymentItems,
-                margin: const EdgeInsets.only(top: 15),
-                height: 50,
-                onPressed: () => payPressed(address),
-              ),
-              const SizedBox(height: 10),
-              GooglePayButton(
-                onPressed: () => payPressed(address),
-                width: double.infinity,
-                paymentConfiguration: PaymentConfiguration.fromJsonString(
-                    defaultGooglePay),
-                onPaymentResult: onGooglePayResult,
-                paymentItems: paymentItems,
-                height: 80,
-                type: GooglePayButtonType.buy,
-                margin: const EdgeInsets.only(top: 15),
-                loadingIndicator: const Center(
-                  child: CircularProgressIndicator(),
+              SizedBox(height: 24),
+              OutlinedButton(
+                onPressed: saveAddress,
+                child: Text(
+                  'Save Address',
+                  style: TextStyle(color: Colors.black),
+                ),
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(color: Colors.black),
+                  minimumSize: Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
             ],

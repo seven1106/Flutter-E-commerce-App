@@ -9,6 +9,7 @@ import '../../home/widgets/address_box.dart';
 import '../../search/screen/search_screen.dart';
 import '../widgets/cart_product.dart';
 import '../widgets/cart_subtotal.dart';
+import 'checkout_screen.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -25,7 +26,7 @@ class _CartScreenState extends State<CartScreen> {
   void navigateToAddress(int sum) {
     Navigator.pushNamed(
       context,
-      AddressScreen.routeName,
+      CheckoutScreen.routeName,
       arguments: sum.toString(),
     );
   }

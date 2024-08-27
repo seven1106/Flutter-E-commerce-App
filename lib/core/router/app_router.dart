@@ -10,6 +10,7 @@ import 'package:emigo/models/order.dart';
 import 'package:emigo/models/product_model.dart';
 import 'package:flutter/material.dart';
 import '../../features/auth/screens/auth_screen.dart';
+import '../../features/cart/screens/checkout_screen.dart';
 import '../../features/order_details/screens/order_details.dart';
 import '../../features/vendor/screens/orders_screen.dart';
 import '../../features/vendor/screens/product/edit_product.dart';
@@ -46,10 +47,15 @@ class AppRouter {
       case '/order-details':
         return _materialRoute(
             OrderDetailScreen(order: settings.arguments as OrderModel));
-      case '/order-screen':
-        return _materialRoute(const OrdersScreen());
-      case '/add-voucher':
-        return _materialRoute(const AddVoucherScreen());
+        case '/order-screen':
+        return _materialRoute(
+            const OrdersScreen());
+        case '/add-voucher':
+        return _materialRoute(
+            const AddVoucherScreen());
+        case '/checkout':
+        return _materialRoute(
+             CheckoutScreen(totalAmount: settings.arguments as String,));
       default:
         return _materialRoute(Scaffold(
           body: Center(child: Text('No route defined for ${settings.name}')),

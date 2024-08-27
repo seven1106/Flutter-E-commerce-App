@@ -76,12 +76,12 @@ class _AddProductScreenState extends State<AddProductScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Text(
+        title: const Text(
           'Add Product',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
       ),
@@ -108,7 +108,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     borderType: BorderType.RRect,
                     radius: const Radius.circular(10),
                     color: Colors.grey,
-                    child: Container(
+                    child: const SizedBox(
                       height: 200,
                       width: double.infinity,
                       child: Column(
@@ -122,20 +122,20 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     ),
                   ),
                 ),
-                SizedBox(height: 24),
-                Text('Product Details', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                SizedBox(height: 16),
+                const SizedBox(height: 24),
+                const Text('Product Details', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 16),
                 CustomTextField(
                   controller: productNameController,
                   hintText: 'Product Name',
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 CustomTextField(
                   controller: descriptionController,
                   hintText: 'Description',
                   maxLines: 3,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Row(
                   children: [
                     Expanded(
@@ -144,7 +144,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         hintText: 'Price',
                       ),
                     ),
-                    SizedBox(width: 16),
+                    const SizedBox(width: 16),
                     Expanded(
                       child: CustomTextField(
                         controller: quantityController,
@@ -153,14 +153,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     ),
                   ],
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 CustomTextField(
                   controller: discountController,
                   hintText: 'Discount Price',
-                                  ),
-                SizedBox(height: 16),
+                ),
+                const SizedBox(height: 16),
                 DropdownButtonFormField<String>(
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
@@ -174,7 +174,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     });
                   },
                 ),
-                SizedBox(height: 24),
+                const SizedBox(height: 24),
                 LongButton(
                   buttonText: 'Add Product',
                   onPressed: addProduct,

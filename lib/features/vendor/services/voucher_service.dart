@@ -146,7 +146,6 @@ class VoucherServices {
      VoidCallback onSuccess,
   ) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-
     try {
       http.Response res = await http.delete(
         Uri.parse('${Constants.backEndUrl}/delete-voucher/$id'),

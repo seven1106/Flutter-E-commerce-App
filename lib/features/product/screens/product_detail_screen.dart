@@ -43,7 +43,22 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 
   void addToCart() {
-    productServices.addToCart(context: context, product: widget.product);
+    if (widget.product.quantity > 0) {
+      productServices.addToCart(context: context, product: widget.product);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Product added to cart'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Product out of stock'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
   }
 
   @override
