@@ -62,6 +62,7 @@ class _HomeScreenState extends State<HomeScreen>
                 color: Colors.black,
                 size: 30,
               ),
+
               Expanded(
                 child: Container(
                   height: 42,
@@ -116,6 +117,7 @@ class _HomeScreenState extends State<HomeScreen>
               ),
               const SizedBox(width: 5),
               IconButton(
+
                 icon: badges.Badge(
                   badgeContent: Text(
                     user.wishlist.length.toString(),

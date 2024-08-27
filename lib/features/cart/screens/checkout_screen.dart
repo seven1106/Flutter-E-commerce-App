@@ -1,4 +1,3 @@
-import 'package:emigo/core/common/long_button.dart';
 import 'package:flutter/material.dart';
 import 'package:pay/pay.dart';
 import 'package:provider/provider.dart';
@@ -266,7 +265,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       },
     );
   }
-
   Widget _buildOrderSummary() {
     // Calculate discount based on selected voucher
     double discount = 0;
