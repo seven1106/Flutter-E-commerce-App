@@ -83,7 +83,6 @@ class _UserScreenState extends State<UserScreen> {
               BottomNavigationBarItem(
                 icon: badges.Badge(
                   badgeContent: Text(userCartLength.toString()),
-                  position: badges.BadgePosition.topEnd(top: -4, end: -4),
                   badgeAnimation: const badges.BadgeAnimation.rotation(
                     animationDuration: Duration(seconds: 1),
                     colorChangeAnimationDuration: Duration(seconds: 1),

@@ -2,9 +2,11 @@ import 'package:emigo/core/config/theme/app_palette.dart';
 import 'package:emigo/features/home/widgets/address_box.dart';
 import 'package:emigo/features/home/widgets/deal_products.dart';
 import 'package:emigo/features/home/widgets/top_categories.dart';
+import 'package:emigo/features/wishlist/screens/wishlist_screen.dart';
 import 'package:emigo/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:badges/badges.dart' as badges;
 
 import '../widgets/carousel_image.dart';
 
@@ -16,7 +18,8 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin {
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   void navigateToSearchScreen(String query) {
@@ -112,10 +115,21 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 ),
               ),
               const SizedBox(width: 5),
-              const Icon(
-                Icons.favorite_border_outlined,
-                color: Colors.black,
-                size: 30,
+              IconButton(
+                icon: badges.Badge(
+                  badgeContent: Text(
+                    user.wishlist.length.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  child: const Icon(
+                    Icons.favorite_border,
+                    color: Colors.black,
+                    size: 30,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, WishlistScreen.routeName);
+                },
               ),
             ],
           ),

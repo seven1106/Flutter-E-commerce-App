@@ -11,6 +11,7 @@ class UserProvider extends ChangeNotifier {
     type: '',
     token: '',
     cart: [],
+    wishlist: []
   );
   UserModel get user => _user;
   void setUser(String user) {

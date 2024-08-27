@@ -1,10 +1,15 @@
+import 'dart:developer';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:emigo/core/common/custom_button.dart';
 import 'package:emigo/features/search/screen/search_screen.dart';
 import 'package:emigo/models/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
 
+import '../../../providers/user_provider.dart';
+import '../../wishlist/services/wishlist_services.dart';
 import '../services/product_services.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -25,6 +30,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   double myRating = 0;
   int _current = 0;
   final CarouselController _controller = CarouselController();
+  final WishlistServices wishlistServices = WishlistServices();
 
   @override
   void initState() {
@@ -61,14 +67,47 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     }
   }
 
+  void addToWishlist() {
+    productServices.addToWishlist(context: context, product: widget.product);
+
+  }
+  void removeFromWishlist(ProductModel product) {
+    wishlistServices.removeFromWishlist(
+      context: context,
+      product: product,
+    );
+  }
   @override
   Widget build(BuildContext context) {
+    final productWishList = context.watch<UserProvider>().user.wishlist;
+    bool isWishlisted = false;
+ for (var product in productWishList) {
+        log('product: ${product}');
+      if (product['product']['_id'] == widget.product.id) {
+        isWishlisted = true;
+        break;
+      }
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.product.name),
         actions: [
-          IconButton(icon: const Icon(Icons.share), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.favorite_border), onPressed: () {}),
+          IconButton(
+            icon: const Icon(Icons.share),
+            onPressed: () {},
+          ),
+          IconButton(
+              icon: isWishlisted
+                  ? const Icon(Icons.favorite)
+                  : const Icon(Icons.favorite_border),
+              color: isWishlisted ? Colors.red : null,
+              onPressed: () {
+                if (isWishlisted) {
+                  removeFromWishlist(widget.product);
+                } else {
+                  addToWishlist();
+                }
+              }),
         ],
       ),
       body: SingleChildScrollView(
@@ -104,14 +143,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   right: 0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: widget.product.images.asMap().entries.map((entry) {
+                    children:
+                        widget.product.images.asMap().entries.map((entry) {
                       return Container(
                         width: 8.0,
                         height: 8.0,
                         margin: const EdgeInsets.symmetric(horizontal: 4.0),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.white.withOpacity(_current == entry.key ? 0.9 : 0.4),
+                          color: Colors.white
+                              .withOpacity(_current == entry.key ? 0.9 : 0.4),
                         ),
                       );
                     }).toList(),
@@ -126,14 +167,18 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 children: [
                   Text(
                     widget.product.name,
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 8),
                   Row(
                     children: [
                       Text(
                         '\$${widget.product.discountPrice}',
-                        style: const TextStyle(fontSize: 22, color: Colors.red, fontWeight: FontWeight.w500),
+                        style: const TextStyle(
+                            fontSize: 22,
+                            color: Colors.red,
+                            fontWeight: FontWeight.w500),
                       ),
                       const SizedBox(width: 8),
                       Text(
@@ -151,12 +196,14 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                     children: [
                       Text(
                         'Quantity: ${widget.product.quantity.toInt()}',
-                        style: const TextStyle(fontSize: 16, color: Colors.grey),
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                       const Spacer(),
                       Text(
                         '${widget.product.sellCount.toInt()} sold',
-                        style: const TextStyle(fontSize: 16, color: Colors.grey),
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                     ],
                   ),
@@ -179,7 +226,12 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   const Text('Color'),
                   Wrap(
                     spacing: 8,
-                    children: [Colors.red, Colors.blue, Colors.green, Colors.yellow].map((color) {
+                    children: [
+                      Colors.red,
+                      Colors.blue,
+                      Colors.green,
+                      Colors.yellow
+                    ].map((color) {
                       return CircleAvatar(
                         backgroundColor: color,
                         radius: 15,
@@ -261,9 +313,17 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconButton(
-                icon: const Icon(Icons.favorite_border,
-                    color: Colors.black, size: 35),
-                onPressed: () {},
+                icon: isWishlisted
+                    ? const Icon(Icons.favorite)
+                    : const Icon(Icons.favorite_border),
+                color: isWishlisted ? Colors.red : null,
+                onPressed: () {
+                  if (isWishlisted) {
+                    removeFromWishlist(widget.product);
+                  } else {
+                    addToWishlist();
+                  }
+                },
               ),
               SizedBox(
                 width: 330,

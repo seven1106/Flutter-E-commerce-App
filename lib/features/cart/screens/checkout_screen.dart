@@ -46,11 +46,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   void onGooglePayResult(res) {
-    Navigator.of(context).pop();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Google Pay result: $res'),
-      ),
+    addressServices.placeOrder(
+      context: context,
+      address: context.read<UserProvider>().user.address,
+      totalSum: total,
     );
   }
 
@@ -131,13 +130,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       );
       return;
     }
-
-    // Here you would typically integrate with your payment processing and order placement logic
-    addressServices.placeOrder(
-      context: context,
-      address: address,
-      totalSum: total,
-    );
   }
 
   @override
@@ -322,11 +314,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       ),
     );
   }
-
   Widget _buildAddressSection(String address) {
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, AddressScreen.routeName,
-          arguments: widget.totalAmount),
+      onTap: () => Navigator.pushNamed(context, AddressScreen.routeName),
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.all(16),

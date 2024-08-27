@@ -8,10 +8,8 @@ import '../services/address_services.dart';
 
 class AddressScreen extends StatefulWidget {
   static const String routeName = '/address';
-  final String totalAmount;
   const AddressScreen({
     Key? key,
-    required this.totalAmount,
   }) : super(key: key);
 
   @override

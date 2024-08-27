@@ -9,6 +9,7 @@ class UserModel {
   final String type;
   final String token;
   final List<dynamic> cart;
+  final List<dynamic> wishlist;
 
   UserModel({
     required this.id,
@@ -19,6 +20,7 @@ class UserModel {
     required this.type,
     required this.token,
     required this.cart,
+    required this.wishlist,
   });
 
   Map<String, dynamic> toMap() {
@@ -31,6 +33,7 @@ class UserModel {
       'type': type,
       'token': token,
       'cart': cart,
+      'wishlist': wishlist,
     };
   }
 
@@ -45,15 +48,19 @@ class UserModel {
       token: map['token'] ?? '',
       cart: List<Map<String, dynamic>>.from(
         map['cart']?.map(
-              (x) => Map<String, dynamic>.from(x),
+          (x) => Map<String, dynamic>.from(x),
         ),
       ),
+      wishlist: List<Map<String, dynamic>>.from(map['wishlist']?.map(
+        (x) => Map<String, dynamic>.from(x),
+      )),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory UserModel.fromJson(String source) => UserModel.fromMap(json.decode(source));
+  factory UserModel.fromJson(String source) =>
+      UserModel.fromMap(json.decode(source));
 
   UserModel copyWith({
     String? id,
@@ -64,6 +71,7 @@ class UserModel {
     String? type,
     String? token,
     List<dynamic>? cart,
+    List<dynamic>? wishlist,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -74,6 +82,7 @@ class UserModel {
       type: type ?? this.type,
       token: token ?? this.token,
       cart: cart ?? this.cart,
+      wishlist: wishlist ?? this.wishlist,
     );
   }
 }

@@ -15,6 +15,7 @@ import '../../features/order_details/screens/order_details.dart';
 import '../../features/vendor/screens/orders_screen.dart';
 import '../../features/vendor/screens/product/edit_product.dart';
 import '../../features/vendor/screens/voucher/add_voucher.dart';
+import '../../features/wishlist/screens/wishlist_screen.dart';
 
 class AppRouter {
   static Route onGenerateRoute(RouteSettings settings) {
@@ -43,7 +44,7 @@ class AppRouter {
             ProductDetailScreen(product: settings.arguments as ProductModel));
       case '/address':
         return _materialRoute(
-            AddressScreen(totalAmount: settings.arguments as String));
+            const AddressScreen());
       case '/order-details':
         return _materialRoute(
             OrderDetailScreen(order: settings.arguments as OrderModel));
@@ -56,6 +57,9 @@ class AppRouter {
         case '/checkout':
         return _materialRoute(
              CheckoutScreen(totalAmount: settings.arguments as String,));
+        case '/wishlist':
+        return _materialRoute(
+            const WishlistScreen());
       default:
         return _materialRoute(Scaffold(
           body: Center(child: Text('No route defined for ${settings.name}')),

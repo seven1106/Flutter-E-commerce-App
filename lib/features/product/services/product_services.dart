@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:emigo/core/constants/constants.dart';
 import 'package:emigo/core/constants/error_handler.dart';
@@ -41,6 +42,46 @@ class ProductServices {
       showSnackBar(context, e.toString());
     }
   }
+
+  void addToWishlist({
+    required BuildContext context,
+    required ProductModel product,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+
+    try {
+      http.Response res = await http.post(
+        Uri.parse('${Constants.backEndUrl}/user/add-to-wishlist'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+        body: jsonEncode({
+          'productId': product.id!,
+        }),
+      );
+      httpErrorHandler(
+        response: res,
+        context: context,
+        onSuccess: () {
+          UserModel user = userProvider.user.copyWith(
+            wishlist: jsonDecode(res.body)['wishlist'],
+          );
+          userProvider.setUserFromModel(user);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Product added to wishlist'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        },
+
+      );
+    } catch (e) {
+      log(e.toString());
+    }
+  }
+
 
   void rateProduct({
     required BuildContext context,

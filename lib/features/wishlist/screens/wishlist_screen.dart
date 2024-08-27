@@ -1,42 +1,26 @@
-
-import 'package:emigo/core/common/long_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/user_provider.dart';
-import '../../home/widgets/address_box.dart';
 import '../../search/screen/search_screen.dart';
-import '../widgets/cart_product.dart';
-import '../widgets/cart_subtotal.dart';
-import 'checkout_screen.dart';
+import '../widgets/wishlist_product.dart';
 
-class CartScreen extends StatefulWidget {
-  const CartScreen({Key? key}) : super(key: key);
+class WishlistScreen extends StatefulWidget {
+  static const String routeName = '/wishlist';
+  const WishlistScreen({Key? key}) : super(key: key);
 
   @override
-  State<CartScreen> createState() => _CartScreenState();
+  State<WishlistScreen> createState() => _WishlistScreenState();
 }
 
-class _CartScreenState extends State<CartScreen> {
+class _WishlistScreenState extends State<WishlistScreen> {
   void navigateToSearchScreen(String query) {
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
-  }
-
-  void navigateToAddress(int sum) {
-    Navigator.pushNamed(
-      context,
-      CheckoutScreen.routeName,
-      arguments: sum.toString(),
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     final user = context.watch<UserProvider>().user;
-    int sum = 0;
-    user.cart
-        .map((e) => sum += e['quantity'] * e['product']['price'] as int)
-        .toList();
 
     return Scaffold(
       appBar: PreferredSize(
@@ -63,9 +47,7 @@ class _CartScreenState extends State<CartScreen> {
                         prefixIcon: InkWell(
                           onTap: () {},
                           child: const Padding(
-                            padding: EdgeInsets.only(
-                              left: 6,
-                            ),
+                            padding: EdgeInsets.only(left: 6),
                             child: Icon(
                               Icons.search,
                               color: Colors.black,
@@ -77,19 +59,12 @@ class _CartScreenState extends State<CartScreen> {
                         fillColor: Colors.white,
                         contentPadding: const EdgeInsets.only(top: 10),
                         border: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(7),
-                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(7)),
                           borderSide: BorderSide.none,
                         ),
                         enabledBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(7),
-                          ),
-                          borderSide: BorderSide(
-                            color: Colors.black38,
-                            width: 1,
-                          ),
+                          borderRadius: BorderRadius.all(Radius.circular(7)),
+                          borderSide: BorderSide(color: Colors.black38, width: 1),
                         ),
                         hintText: 'Search...',
                         hintStyle: const TextStyle(
@@ -114,34 +89,28 @@ class _CartScreenState extends State<CartScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const AddressBox(),
-            const CartSubtotal(),
-            const SizedBox(height: 15),
-            Container(
-              color: Colors.black12.withOpacity(0.08),
-              height: 1,
-            ),
-            const SizedBox(height: 5),
-            ListView.builder(
-              itemCount: user.cart.length,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return CartProduct(
-                  index: index,
-                );
-              },
-            ),
+            const SizedBox(height: 10),
+            if (user.wishlist.isEmpty)
+              const Center(
+                child: Text(
+                  'Your wishlist is empty',
+                  style: TextStyle(fontSize: 18, color: Colors.grey),
+                ),
+              )
+            else
+              ListView.builder(
+
+                itemCount: user.wishlist.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return WishlistProduct(
+                    productId: index,
+                  );
+                },
+              ),
           ],
         ),
       ),
-
-      bottomNavigationBar: (user.cart.isNotEmpty) ? Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: LongButton(
-          buttonText: 'Proceed to Buy (${user.cart.length} items)',
-          onPressed: () => navigateToAddress(sum),
-        ),
-      ) : null,
     );
   }
 }

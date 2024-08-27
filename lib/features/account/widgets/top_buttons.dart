@@ -21,7 +21,7 @@ class TopButtons extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _buildFeatureButton(context, Icons.location_on_outlined, 'Address', () {}),
+            _buildFeatureButton(context, Icons.location_on_outlined, 'Address', () => Navigator.pushNamed(context, '/address')),
             _buildFeatureButton(context, Icons.support_agent, 'Customer Service', () {}),
             _buildFeatureButton(context, Icons.settings, 'Settings', () {}),
             _buildFeatureButton(context, Icons.exit_to_app, 'Log Out', () => AccountService().logOut(context)),

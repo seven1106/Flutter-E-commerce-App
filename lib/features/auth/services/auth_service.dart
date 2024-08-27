@@ -30,6 +30,7 @@ class AuthService {
         type: role,
         token: '',
         cart: [],
+        wishlist: [],
       );
       http.Response response = await http.post(
         Uri.parse('${Constants.backEndUrl}/sign-up'),
