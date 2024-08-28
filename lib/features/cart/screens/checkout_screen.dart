@@ -183,14 +183,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 onPressed: () {
                   if (receiverNameController.text.isNotEmpty &&
                       receiverPhoneController.text.isNotEmpty) {
-                    addressServices.placeOrder(
-                      context: context,
-                      address: user.address,
-                      totalSum: total,
-                      receiverName: receiverNameController.text,
-                      receiverPhone: receiverPhoneController.text,
-                      paymentMethod: selectedPaymentMethod,
-                    );
+                    onGooglePayResult('success');
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(

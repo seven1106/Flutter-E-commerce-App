@@ -14,7 +14,7 @@ class AnalyticsScreen extends StatefulWidget {
 
 class _AnalyticsScreenState extends State<AnalyticsScreen> {
   final VendorServices adminServices = VendorServices();
-  int? totalSales;
+  double? totalSales;
   List<Sales>? earnings;
 
   @override
@@ -90,7 +90,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                                 .asMap()
                                 .entries
                                 .map((entry) => FlSpot(entry.key.toDouble(),
-                                    entry.value.earning.toDouble()))
+                                    entry.value.earning))
                                 .toList(),
                             isCurved: true,
                             color: Colors.pink,

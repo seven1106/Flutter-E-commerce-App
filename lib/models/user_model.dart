@@ -11,6 +11,7 @@ class UserModel {
   final String token;
   final List<dynamic> cart;
   final List<dynamic> wishlist;
+  final List<dynamic> notifications;
 
   UserModel({
     required this.id,
@@ -23,6 +24,7 @@ class UserModel {
     required this.token,
     required this.cart,
     required this.wishlist,
+    required this.notifications,
   });
 
   Map<String, dynamic> toMap() {
@@ -37,6 +39,7 @@ class UserModel {
       'token': token,
       'cart': cart,
       'wishlist': wishlist,
+      'notifications': notifications,
     };
   }
 
@@ -58,6 +61,9 @@ class UserModel {
       wishlist: List<Map<String, dynamic>>.from(map['wishlist']?.map(
         (x) => Map<String, dynamic>.from(x),
       )),
+      notifications: List<Map<String, dynamic>>.from(map['notifications']?.map(
+        (x) => Map<String, dynamic>.from(x),
+      )),
     );
   }
 
@@ -77,6 +83,7 @@ class UserModel {
     String? token,
     List<dynamic>? cart,
     List<dynamic>? wishlist,
+    List<dynamic>? notifications,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -89,6 +96,7 @@ class UserModel {
       token: token ?? this.token,
       cart: cart ?? this.cart,
       wishlist: wishlist ?? this.wishlist,
+      notifications: notifications ?? this.notifications,
     );
   }
 }

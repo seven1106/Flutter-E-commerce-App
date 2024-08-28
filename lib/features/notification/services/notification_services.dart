@@ -16,26 +16,27 @@ class NotificationServices {
     required String title,
     required String content,
     required String type,
-    required String userId,
+    required String orderId,
+    required String receiverId,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
-      final Map<String, dynamic> notificationData = {
-        'title': title,
-        'content': content,
-        'type': type,
-        'userId': userId,
-        'createAt': DateTime.now().millisecondsSinceEpoch,
-      };
+
 
       http.Response res = await http.post(
-        Uri.parse('${Constants.backEndUrl}/notifications'),
+        Uri.parse('${Constants.backEndUrl}/user/notification'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
         },
-        body: jsonEncode(notificationData),
+        body: jsonEncode({
+          'title': title,
+          'content': content,
+          'type': type,
+          'orderId': orderId,
+          'receiverId': receiverId,
+        }),
       );
 
       httpErrorHandler(
@@ -52,7 +53,6 @@ class NotificationServices {
 
 
 
-  // Lấy danh sách notification của người dùng
   Future<List<NotificationModel>> fetchUserNotifications({
     required BuildContext context,
   }) async {

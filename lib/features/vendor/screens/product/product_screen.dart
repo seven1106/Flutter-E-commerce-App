@@ -3,6 +3,11 @@ import 'package:emigo/features/vendor/services/vendor_services.dart';
 import 'package:emigo/features/vendor/widgets/product_entity.dart';
 import 'package:emigo/models/product_model.dart';
 import 'package:flutter/material.dart';
+import 'package:badges/badges.dart' as badges;
+import 'package:provider/provider.dart';
+
+import '../../../../providers/user_provider.dart';
+import '../../../notification/screens/notification_screen.dart';
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({Key? key}) : super(key: key);
@@ -48,15 +53,38 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).user;
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 1,
-        title: const Text(
-          'My Store',
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        title:  Row(
+          children: [
+            const Text(
+              'My Store',
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            ),
+            const Spacer(),
+            IconButton(
+              icon: badges.Badge(
+                badgeContent: Text(
+                  user.notifications.length.toString(),
+                  style: const TextStyle(color: Colors.white),
+                ),
+                child: const Icon(
+                  Icons.notifications,
+                  color: Colors.black,
+                  size: 30,
+                ),
+              ),
+              onPressed: () {
+                Navigator.pushNamed(context, NotificationScreen.routeName);
+              },
+            ),
+          ],
         ),
+
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.black,

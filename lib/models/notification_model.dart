@@ -5,17 +5,15 @@ import '../enum/notification_enum.dart';
 class NotificationModel {
   final String title;
   final String content;
-  final String uid;
-  final String id;
-  final bool isRead;
   final NotificationEnum type;
-  final DateTime createdAt;
+  final bool isRead;
+  final String orderId;
+  final int createdAt;
 
   const NotificationModel({
     required this.title,
     required this.content,
-    required this.uid,
-    required this.id,
+    required this.orderId,
     required this.isRead,
     required this.type,
     required this.createdAt,
@@ -23,38 +21,16 @@ class NotificationModel {
 
   @override
   String toString() {
-    return 'NotificationModel{ , name: $title, text: $content, uid: $uid, id: $id, isRead: $isRead, type: $type, createdAt: $createdAt,}';
+    return 'NotificationModel{ , name: $title, text: $content, orderId: $orderId, isRead: $isRead, type: $type, createdAt: $createdAt,}';
   }
-
-  NotificationModel copyWith({
-    String? title,
-    String? content,
-    String? uid,
-    String? id,
-    bool? isRead,
-    NotificationEnum? type,
-    DateTime? createdAt,
-  }) {
-    return NotificationModel(
-      title: title ?? this.title,
-      content: content ?? this.content,
-      uid: uid ?? this.uid,
-      id: id ?? this.id,
-      isRead: isRead ?? this.isRead,
-      type: type ?? this.type,
-      createdAt: createdAt ?? this.createdAt,
-    );
-  }
-
   Map<String, dynamic> toMap() {
     return {
       'title': title,
       'content': content,
-      'uid': uid,
-      'id': id,
+      'orderId': orderId,
       'isRead': isRead,
       'type': type.type,
-      'createdAt': createdAt.millisecondsSinceEpoch,
+      'createdAt': createdAt,
     };
   }
 
@@ -62,11 +38,10 @@ class NotificationModel {
     return NotificationModel(
       title: map['title'] as String,
       content: map['content'] as String,
-      uid: map['uid'] as String,
-      id: map['_id'] as String,
+      orderId: map['orderId'] as String,
       isRead: map['isRead'] as bool,
       type: (map['type'] as String).toEnum(),
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
+      createdAt: map['createdTime']?.toInt() ?? 0,
     );
   }
   factory NotificationModel.fromJson(String source) => NotificationModel.fromMap(json.decode(source));

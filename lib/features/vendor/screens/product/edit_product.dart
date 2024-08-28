@@ -39,8 +39,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     quantityController.text = widget.product.quantity.toString();
     discountController.text = widget.product.discountPrice.toString();
     category = widget.product.category;
-    // Assuming product images are available as URLs, convert to File objects if needed
-    images = widget.product.images.map((url) => File(url)).toList(); // Convert URL to File if needed
+    images = widget.product.images.map((url) => File(url)).toList();
   }
 
   @override
@@ -70,9 +69,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
     if (_editProductFormKey.currentState!.validate()) {
       final product = ProductModel(
         name: productNameController.text,
+        sellerId: widget.product.sellerId,
         description: descriptionController.text,
         price: double.parse(priceController.text),
-        quantity: double.parse(quantityController.text),
+        quantity: int.parse(quantityController.text),
         category: category,
         images: images.map((image) => image.path).toList(),
         discountPrice: double.parse(discountController.text),
@@ -129,7 +129,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     child: Container(
                       height: 200,
                       width: double.infinity,
-                      child: Column(
+                      child: const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(Icons.add_photo_alternate, size: 40, color: Colors.grey),

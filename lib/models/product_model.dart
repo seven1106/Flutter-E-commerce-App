@@ -3,25 +3,27 @@ import 'package:emigo/models/rating.dart';
 
 class ProductModel {
   final String name;
+  final  String sellerId;
   final String description;
-  final double quantity;
+  final int quantity;
   final List<String> images;
   final String category;
   final double price;
   final double discountPrice;
-  final double sellCount;
+  final int sellCount;
   final String? id;
   List<RatingModel> ratings = [];
 
   ProductModel({
     required this.name,
     required this.description,
+    required this.sellerId,
     required this.quantity,
     required this.images,
     required this.category,
     required this.price,
     required this.discountPrice,
-    this.sellCount = 0.0,
+    this.sellCount = 0,
     this.id,
     required this.ratings,
   });
@@ -29,6 +31,7 @@ class ProductModel {
   Map<String, dynamic> toMap() {
     return {
       'name': name,
+      'sellerId': sellerId,
       'description': description,
       'quantity': quantity,
       'images': images,
@@ -44,13 +47,14 @@ class ProductModel {
   factory ProductModel.fromMap(Map<String, dynamic> map) {
     return ProductModel(
       name: map['name'] ?? '',
+      sellerId: map['sellerId'] ?? '',
       description: map['description'] ?? '',
-      quantity: map['quantity']?.toDouble() ?? 0.0,
+      quantity: map['quantity']?.toInt() ?? 0,
       images: List<String>.from(map['images']),
       category: map['category'] ?? '',
       price: map['price']?.toDouble() ?? 0.0,
       discountPrice: map['discountPrice']?.toDouble() ?? 0.0,
-      sellCount: map['sellCount']?.toDouble() ?? 0.0,
+      sellCount: map['sellCount']?.toInt() ?? 0,
       id: map['_id'],
       ratings: map['ratings'] != null
           ? List<RatingModel>.from(

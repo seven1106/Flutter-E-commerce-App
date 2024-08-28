@@ -1,6 +1,6 @@
 class Sales {
   final String label;
-  final int earning;
+  final double earning;
 
   Sales(this.label, this.earning);
 }

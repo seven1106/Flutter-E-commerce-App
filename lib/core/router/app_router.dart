@@ -11,6 +11,7 @@ import 'package:emigo/models/product_model.dart';
 import 'package:flutter/material.dart';
 import '../../features/auth/screens/auth_screen.dart';
 import '../../features/cart/screens/checkout_screen.dart';
+import '../../features/notification/screens/notification_screen.dart';
 import '../../features/order_details/screens/order_details.dart';
 import '../../features/vendor/screens/orders_screen.dart';
 import '../../features/vendor/screens/product/edit_product.dart';
@@ -60,6 +61,9 @@ class AppRouter {
         case '/wishlist':
         return _materialRoute(
             const WishlistScreen());
+        case '/notifications':
+        return _materialRoute(
+            const NotificationScreen());
       default:
         return _materialRoute(Scaffold(
           body: Center(child: Text('No route defined for ${settings.name}')),

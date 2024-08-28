@@ -22,7 +22,7 @@ class VendorServices {
     required String description,
     required double price,
     required double discountPrice,
-    required double quantity,
+    required int quantity,
     required String category,
     required List<File> images,
   }) async {
@@ -45,6 +45,7 @@ class VendorServices {
 
       ProductModel product = ProductModel(
         name: name,
+        sellerId: userProvider.user.id,
         description: description,
         quantity: quantity,
         images: imageUrls,
@@ -69,6 +70,7 @@ class VendorServices {
         response: res,
         context: context,
         onSuccess: () {
+          fetchAllProducts(context);
           showSnackBar(context, 'Product Added Successfully!');
           Navigator.pop(context);
         },
@@ -112,6 +114,7 @@ class VendorServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     ProductModel product = ProductModel(
       name: '',
+      sellerId: '',
       description: '',
       quantity: 0,
       images: [],
@@ -270,26 +273,28 @@ class VendorServices {
   Future<Map<String, dynamic>> getEarnings(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<Sales> sales = [];
-    int totalEarning = 0;
+    double totalEarning = 0.0;
     try {
-      http.Response res =
-      await http.get(Uri.parse('${Constants.backEndUrl}/vendor/get-analytics'), headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': userProvider.user.token,
-      });
+      http.Response res = await http.get(
+        Uri.parse('${Constants.backEndUrl}/vendor/get-analytics'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+      );
 
       httpErrorHandler(
         response: res,
         context: context,
         onSuccess: () {
           var response = jsonDecode(res.body);
-          totalEarning = response['totalEarnings'];
+          totalEarning = (response['totalEarnings'] as num).toDouble();
           sales = [
-            Sales('Mobiles', response['mobileEarnings']),
-            Sales('Essentials', response['essentialEarnings']),
-            Sales('Books', response['booksEarnings']),
-            Sales('Appliances', response['applianceEarnings']),
-            Sales('Fashion', response['fashionEarnings']),
+            Sales('Mobiles', (response['mobileEarnings'] as num).toDouble()),
+            Sales('Essentials', (response['essentialEarnings'] as num).toDouble()),
+            Sales('Books', (response['booksEarnings'] as num).toDouble()),
+            Sales('Appliances', (response['applianceEarnings'] as num).toDouble()),
+            Sales('Fashion', (response['fashionEarnings'] as num).toDouble()),
           ];
         },
       );
@@ -301,4 +306,5 @@ class VendorServices {
       'totalEarnings': totalEarning,
     };
   }
+
 }
