@@ -31,6 +31,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
   final AuthService _authService = AuthService();
   bool _obscureText = true;
 
@@ -40,6 +41,7 @@ class _AuthScreenState extends State<AuthScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _nameController.dispose();
+    _phoneController.dispose();
   }
 
   void _signUp() {
@@ -48,7 +50,8 @@ class _AuthScreenState extends State<AuthScreen> {
       email: _emailController.text,
       password: _passwordController.text,
       name: _nameController.text,
-      role: _role == Role.user ? 'user' : 'vendor',
+      phone: _phoneController.text,
+      role: 'user',
     );
   }
 
@@ -85,6 +88,8 @@ class _AuthScreenState extends State<AuthScreen> {
                           controller: _nameController, hintText: 'Name'),
                       CustomTextField(
                           controller: _emailController, hintText: 'Email'),
+                      CustomTextField(
+                          controller: _phoneController, hintText: 'Phone'),
                       TextFormField(
                         obscuringCharacter: '*',
                         obscureText: _obscureText,
@@ -101,37 +106,37 @@ class _AuthScreenState extends State<AuthScreen> {
                         },
                       ),
                       const SizedBox(height: 1),
-                      Row(
-                        children: [
-                          const Text('Role:',
-                              style: TextStyle(
-                                fontSize: 20,
-                              )),
-                          Radio(
-                            activeColor: AppPalette.gradient3,
-                            value: Role.user,
-                            groupValue: _role,
-                            onChanged: (Role? val) {
-                              setState(() {
-                                _role = val!;
-                              });
-                            },
-                          ),
-                          const Text('User', style: TextStyle(fontSize: 16)),
-                          const SizedBox(width: 10),
-                          Radio(
-                            activeColor: AppPalette.gradient3,
-                            value: Role.vendor,
-                            groupValue: _role,
-                            onChanged: (Role? val) {
-                              setState(() {
-                                _role = val!;
-                              });
-                            },
-                          ),
-                          const Text('Vendor', style: TextStyle(fontSize: 16)),
-                        ],
-                      ),
+                      // Row(
+                      //   children: [
+                      //     const Text('Role:',
+                      //         style: TextStyle(
+                      //           fontSize: 20,
+                      //         )),
+                      //     Radio(
+                      //       activeColor: AppPalette.gradient3,
+                      //       value: Role.user,
+                      //       groupValue: _role,
+                      //       onChanged: (Role? val) {
+                      //         setState(() {
+                      //           _role = val!;
+                      //         });
+                      //       },
+                      //     ),
+                      //     const Text('User', style: TextStyle(fontSize: 16)),
+                      //     const SizedBox(width: 10),
+                      //     Radio(
+                      //       activeColor: AppPalette.gradient3,
+                      //       value: Role.vendor,
+                      //       groupValue: _role,
+                      //       onChanged: (Role? val) {
+                      //         setState(() {
+                      //           _role = val!;
+                      //         });
+                      //       },
+                      //     ),
+                      //     const Text('Vendor', style: TextStyle(fontSize: 16)),
+                      //   ],
+                      // ),
                       const SizedBox(height: 10),
                       LongButton(
                           buttonText: 'Sign Up',

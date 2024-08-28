@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import '../enum/notification_enum.dart';
 
 class NotificationModel {
@@ -67,4 +69,5 @@ class NotificationModel {
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt']),
     );
   }
+  factory NotificationModel.fromJson(String source) => NotificationModel.fromMap(json.decode(source));
 }

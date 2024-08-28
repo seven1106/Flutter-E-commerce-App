@@ -1,7 +1,10 @@
 import 'package:emigo/models/order.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../core/utils/loader.dart';
+import '../../../providers/user_provider.dart';
+import '../../account/services/account_service.dart';
 import '../../order_details/screens/order_details.dart';
 import '../services/vendor_services.dart';
 
@@ -17,6 +20,7 @@ class _OrdersScreenState extends State<OrdersScreen>
     with SingleTickerProviderStateMixin {
   List<OrderModel>? orders;
   final VendorServices adminServices = VendorServices();
+  final AccountService accountService = AccountService();
   late TabController _tabController;
 
   @override
@@ -33,7 +37,12 @@ class _OrdersScreenState extends State<OrdersScreen>
   }
 
   void fetchOrders() async {
-    orders = await adminServices.fetchAllOrders(context);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    if (userProvider.user.type == 'vendor') {
+      orders = await adminServices.fetchAllOrders(context);
+    } else {
+      orders = await accountService.fetchMyOrders(context: context);
+    }
     setState(() {});
   }
 

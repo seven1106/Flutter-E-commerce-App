@@ -9,6 +9,9 @@ class OrderModel {
   final List<int> quantity;
   final String address;
   final String userId;
+  final String receiverName;
+  final String receiverPhone;
+  final String paymentMethod;
   final int orderedAt;
   final int status;
   final double totalPrice;
@@ -18,6 +21,9 @@ class OrderModel {
     required this.quantity,
     required this.address,
     required this.userId,
+    required this.receiverName,
+    required this.receiverPhone,
+    required this.paymentMethod,
     required this.orderedAt,
     required this.status,
     required this.totalPrice,
@@ -30,6 +36,9 @@ class OrderModel {
       'quantity': quantity,
       'address': address,
       'userId': userId,
+      'receiverName': receiverName,
+      'receiverPhone': receiverPhone,
+      'paymentMethod': paymentMethod,
       'orderedAt': orderedAt,
       'status': status,
       'totalPrice': totalPrice,
@@ -48,6 +57,9 @@ class OrderModel {
       ),
       address: map['address'] ?? '',
       userId: map['userId'] ?? '',
+      receiverName: map['receiverName'] ?? '',
+      receiverPhone: map['receiverPhone'] ?? '',
+      paymentMethod: map['paymentMethod'] ?? '',
       orderedAt: map['orderedAt']?.toInt() ?? 0,
       status: map['status']?.toInt() ?? 0,
       totalPrice: map['totalPrice']?.toDouble() ?? 0.0,

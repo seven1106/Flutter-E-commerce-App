@@ -1,3 +1,5 @@
+import 'package:emigo/core/common/long_button.dart';
+import 'package:emigo/models/user_model.dart';
 import 'package:flutter/material.dart';
 import 'package:pay/pay.dart';
 import 'package:provider/provider.dart';
@@ -20,12 +22,14 @@ class CheckoutScreen extends StatefulWidget {
 
 class _CheckoutScreenState extends State<CheckoutScreen> {
   final AddressServices addressServices = AddressServices();
-  String selectedPaymentMethod = 'Credit Card';
+  String selectedPaymentMethod = 'Cash on Delivery';
   String? selectedVoucher;
   List<VoucherModel>? vouchers;
   List<PaymentItem> paymentItems = [];
   final VoucherServices voucherServices = VoucherServices();
   double total = 0;
+  TextEditingController receiverNameController = TextEditingController();
+  TextEditingController receiverPhoneController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -37,6 +41,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         status: PaymentItemStatus.final_price,
       ),
     );
+
+  }
+  @override
+  void dispose() {
+    receiverNameController.dispose();
+    receiverPhoneController.dispose();
+    super.dispose();
   }
 
   void fetchVouchers() async {
@@ -49,6 +60,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       context: context,
       address: context.read<UserProvider>().user.address,
       totalSum: total,
+      receiverName: receiverNameController.text,
+      receiverPhone: receiverPhoneController.text,
+      paymentMethod: selectedPaymentMethod,
     );
   }
 
@@ -123,9 +137,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 }''';
   void _placeOrder(String address) {
-    if (address.isEmpty) {
+    if (address.isEmpty ) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please add a shipping address')),
+      );
+      return;
+    } else if (receiverNameController.text.isEmpty || receiverPhoneController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in receiver information')),
       );
       return;
     }
@@ -134,7 +153,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   Widget build(BuildContext context) {
     final user = context.watch<UserProvider>().user;
-
+    receiverNameController.text = user.name;
+    receiverPhoneController.text = user.phone;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Checkout'),
@@ -144,11 +164,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: GooglePayButton(
+        child: selectedPaymentMethod == 'Google Pay'
+            ?  GooglePayButton(
           onPressed: () => _placeOrder(user.address),
           width: double.infinity,
           paymentConfiguration:
-              PaymentConfiguration.fromJsonString(defaultGooglePay),
+          PaymentConfiguration.fromJsonString(defaultGooglePay),
           onPaymentResult: onGooglePayResult,
           paymentItems: paymentItems,
           height: 80,
@@ -157,7 +178,29 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           loadingIndicator: const Center(
             child: CircularProgressIndicator(),
           ),
-        ),
+        )
+            : LongButton(
+                onPressed: () {
+                  if (receiverNameController.text.isNotEmpty &&
+                      receiverPhoneController.text.isNotEmpty) {
+                    addressServices.placeOrder(
+                      context: context,
+                      address: user.address,
+                      totalSum: total,
+                      receiverName: receiverNameController.text,
+                      receiverPhone: receiverPhoneController.text,
+                      paymentMethod: selectedPaymentMethod,
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Please fill in receiver information'),
+                      ),
+                    );
+                  }
+                },
+                buttonText: 'Place Order',
+              ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -167,6 +210,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             children: [
               _buildSectionTitle('Shipping Address'),
               _buildAddressSection(user.address),
+              _buildReceiverInfoFields(user),
               const SizedBox(height: 24),
               _buildSectionTitle('Payment Method'),
               _buildPaymentMethodSection(),
@@ -212,7 +256,29 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       ),
     );
   }
-
+  Widget _buildReceiverInfoFields(UserModel user) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextField(
+          controller: receiverNameController,
+          decoration: const InputDecoration(
+            labelText: 'Receiver Name',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        const SizedBox(height: 16),
+        TextField(
+          controller: receiverPhoneController,
+          decoration: const InputDecoration(
+            labelText: 'Receiver Phone',
+            border: OutlineInputBorder(),
+          ),
+          keyboardType: TextInputType.phone,
+        ),
+      ],
+    );
+  }
   void _buildVoucherList(List<VoucherModel> voucherList) {
     showModalBottomSheet(
       context: context,
@@ -345,7 +411,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       children: [
         // _buildPaymentOption('Credit Card', Icons.credit_card),
         // _buildPaymentOption('PayPal', Icons.paypal),
-        // _buildPaymentOption('Apple Pay', Icons.apple),
+        _buildPaymentOption('Cash on Delivery', Icons.payment),
         _buildPaymentOption('Google Pay', Icons.g_mobiledata),
       ],
     );

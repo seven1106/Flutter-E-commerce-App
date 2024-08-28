@@ -191,8 +191,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
         preferredSize: const Size.fromHeight(60),
         child: AppBar(
           flexibleSpace: Container(
-            decoration: const BoxDecoration(
-            ),
+            decoration: const BoxDecoration(),
           ),
         ),
       ),
@@ -226,6 +225,53 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     )}'),
                     Text('Order ID:          ${widget.order.id}'),
                     Text('Order Total:      \$${widget.order.totalPrice}'),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Receiver Information',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.black12,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Receiver Name:      ${widget.order.receiverName}'),
+                    Text('Receiver Phone:     ${widget.order.receiverPhone}'),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              const Text(
+                'Payment Method',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.black12,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Payment Method: ${widget.order.paymentMethod}'),
                   ],
                 ),
               ),
@@ -314,7 +360,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         onTap: () => changeOrderStatus(details.currentStep),
                       );
                     }
-                    if(user.type == 'user' && currentStep == 3) {
+                    if (user.type == 'user' && currentStep == 3) {
                       return CustomButton(
                         text: 'Rate the product',
                         onTap: () {
@@ -342,11 +388,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       title: const Text('Delivering'),
                       content: user.type == 'vendor'
                           ? const Text(
-                              'Deliver the order to the customer',
-                            )
+                        'Deliver the order to the customer',
+                      )
                           : const Text(
-                              'Your order is being delivered',
-                            ),
+                        'Your order is being delivered',
+                      ),
                       isActive: currentStep > 1,
                       state: currentStep > 1
                           ? StepState.complete
@@ -379,7 +425,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
           ),
         ),
       ),
-
     );
   }
+
 }
