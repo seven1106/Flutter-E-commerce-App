@@ -15,7 +15,6 @@ void httpErrorHandler({
 
   void showErrorMessage(String? errorMessage) {
     if (errorMessage != null) {
-      showSnackBar(context, errorMessage);
       log(errorMessage);
       print(jsonResponse['error']);
     } else {

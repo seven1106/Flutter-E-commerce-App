@@ -79,6 +79,7 @@ class VendorServices {
       showSnackBar(context, e.toString());
     }
   }
+
   Future<void> updateProduct({
     required BuildContext context,
     required ProductModel product,
@@ -107,6 +108,7 @@ class VendorServices {
       showSnackBar(context, e.toString());
     }
   }
+
   Future<ProductModel> fetchProductById({
     required BuildContext context,
     required String? id,
@@ -145,6 +147,47 @@ class VendorServices {
       showSnackBar(context, e.toString());
     }
     return product;
+  }
+
+  Future<OrderModel> fetchOrderById({
+    required BuildContext context,
+    required String? id,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    OrderModel order = OrderModel(
+      id: '',
+      userId: '',
+      products: [],
+      status: 0,
+      address: '',
+      quantity: [],
+      receiverName: '',
+      receiverPhone: '',
+      paymentMethod: '',
+      orderedAt: 0,
+      totalPrice: 0,
+    );
+
+    try {
+      http.Response res = await http.get(
+        Uri.parse('${Constants.backEndUrl}/vendor/get-order/$id'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+      );
+      log(res.toString());
+      httpErrorHandler(
+        response: res,
+        context: context,
+        onSuccess: () {
+          order = OrderModel.fromJson(res.body);
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+    return order;
   }
 
   // get all the products
@@ -210,15 +253,17 @@ class VendorServices {
       showSnackBar(context, e.toString());
     }
   }
+
   Future<List<OrderModel>> fetchAllOrders(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<OrderModel> orderList = [];
     try {
-      http.Response res =
-      await http.get(Uri.parse('${Constants.backEndUrl}/vendor/get-orders'), headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'x-auth-token': userProvider.user.token,
-      });
+      http.Response res = await http.get(
+          Uri.parse('${Constants.backEndUrl}/vendor/get-orders'),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': userProvider.user.token,
+          });
 
       httpErrorHandler(
         response: res,
@@ -240,6 +285,7 @@ class VendorServices {
     }
     return orderList;
   }
+
   void changeOrderStatus({
     required BuildContext context,
     required int status,
@@ -270,6 +316,7 @@ class VendorServices {
       showSnackBar(context, e.toString());
     }
   }
+
   Future<Map<String, dynamic>> getEarnings(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<Sales> sales = [];
@@ -291,9 +338,11 @@ class VendorServices {
           totalEarning = (response['totalEarnings'] as num).toDouble();
           sales = [
             Sales('Mobiles', (response['mobileEarnings'] as num).toDouble()),
-            Sales('Essentials', (response['essentialEarnings'] as num).toDouble()),
+            Sales('Essentials',
+                (response['essentialEarnings'] as num).toDouble()),
             Sales('Books', (response['booksEarnings'] as num).toDouble()),
-            Sales('Appliances', (response['applianceEarnings'] as num).toDouble()),
+            Sales('Appliances',
+                (response['applianceEarnings'] as num).toDouble()),
             Sales('Fashion', (response['fashionEarnings'] as num).toDouble()),
           ];
         },
@@ -306,5 +355,4 @@ class VendorServices {
       'totalEarnings': totalEarning,
     };
   }
-
 }

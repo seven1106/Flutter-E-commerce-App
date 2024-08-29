@@ -98,24 +98,27 @@ class NotificationServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
-      http.Response res = await http.put(
-        Uri.parse('${Constants.backEndUrl}/notifications/mark-as-read/$notificationId'),
+      http.Response res = await http.post(
+        Uri.parse('${Constants.backEndUrl}/user/mark-as-read'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
         },
+        body: jsonEncode({
+          'id': notificationId,
+          'uid': userProvider.user.id,
+        }),
       );
 
       httpErrorHandler(
         response: res,
         context: context,
         onSuccess: () {
-          // Update trạng thái của notification trong provider
           log('Notification marked as read');
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      log(e.toString());
     }
   }
 

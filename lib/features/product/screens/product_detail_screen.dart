@@ -82,7 +82,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     final productWishList = context.watch<UserProvider>().user.wishlist;
     bool isWishlisted = false;
  for (var product in productWishList) {
-        log('product: ${product}');
       if (product['product']['_id'] == widget.product.id) {
         isWishlisted = true;
         break;

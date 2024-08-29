@@ -1,10 +1,14 @@
+import 'dart:developer';
+
+import 'package:emigo/models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-import '../../../models/notification_model.dart'; // Thay đổi theo đúng đường dẫn của bạn
+import '../../../models/notification_model.dart';
 import '../../../providers/user_provider.dart';
-import '../services/notification_services.dart'; // Thay đổi theo đúng đường dẫn của bạn
+import '../../vendor/services/vendor_services.dart';
+import '../services/notification_services.dart';
 
 class NotificationWidget extends StatefulWidget {
   final int index;
@@ -20,7 +24,7 @@ class NotificationWidget extends StatefulWidget {
 
 class _NotificationWidgetState extends State<NotificationWidget> {
   final NotificationServices notificationServices = NotificationServices();
-
+ final VendorServices _vendorServices = VendorServices();
 
 
   @override
@@ -28,9 +32,14 @@ class _NotificationWidgetState extends State<NotificationWidget> {
     final notificationList = context.watch<UserProvider>().user.notifications[widget.index];
     final notification = NotificationModel.fromMap(notificationList['notify']);
     return InkWell(
-      onTap: () {
-        // Xử lý khi người dùng nhấn vào thông báo
-        // Ví dụ: Mở chi tiết thông báo hoặc trang liên quan
+      onTap: () async {
+        if (!notification.isRead) {
+          notificationServices.markAsRead(context: context, notificationId: notification.id);
+        }
+        if (notification.type == 'order') {
+          OrderModel order = await _vendorServices.fetchOrderById(context: context, id: notification.orderId);
+          Navigator.of(context).pushNamed('/order-details', arguments: order);
+        }
       },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -39,7 +48,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: notification.isRead ? Colors.grey[200] : Colors.white,
+                color: !notification.isRead ? Colors.lightBlueAccent : Colors.white,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.grey[300]!),
               ),
@@ -72,13 +81,6 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                         ),
                       ],
                     ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.done, color: Colors.green),
-                    onPressed: () {
-                      if (!notification.isRead) {
-                      }
-                    },
                   ),
                 ],
               ),

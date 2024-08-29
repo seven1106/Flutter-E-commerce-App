@@ -54,6 +54,12 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
+    int unreadNotifications = 0;
+    for (var notification in user.notifications) {
+      if (!notification['notify']['isRead']) {
+        unreadNotifications++;
+      }
+    }
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
@@ -69,7 +75,7 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
             IconButton(
               icon: badges.Badge(
                 badgeContent: Text(
-                  user.notifications.length.toString(),
+                  unreadNotifications.toString(),
                   style: const TextStyle(color: Colors.white),
                 ),
                 child: const Icon(
