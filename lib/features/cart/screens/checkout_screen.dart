@@ -224,7 +224,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   Widget _buildVoucherSection() {
     return GestureDetector(
       onTap: () {
-        _buildVoucherList(vouchers!);
+        _buildVoucherList(vouchers!.where((voucher) => voucher.isValid()).toList());
       },
       child: Container(
         width: double.infinity,

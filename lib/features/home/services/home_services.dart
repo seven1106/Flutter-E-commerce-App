@@ -59,7 +59,111 @@ class HomeServices {
             'x-auth-token': userProvider.user.token,
           }
       );
+      httpErrorHandler(
+        response: res,
+        context: context,
+        onSuccess: () {
+          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+            productList.add(
+              ProductModel.fromJson(
+                jsonEncode(
+                  jsonDecode(res.body)[i],
+                ),
+              ),
+            );
+          }
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
 
+    return productList;
+  }
+
+  Future<List<ProductModel>> fetchNewProducts({
+    required BuildContext context,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    List<ProductModel> productList = [];
+
+    try {
+      http.Response res = await http.get(
+          Uri.parse('${Constants.backEndUrl}/products/new-product'),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': userProvider.user.token,
+          }
+      );
+      httpErrorHandler(
+        response: res,
+        context: context,
+        onSuccess: () {
+          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+            productList.add(
+              ProductModel.fromJson(
+                jsonEncode(
+                  jsonDecode(res.body)[i],
+                ),
+              ),
+            );
+          }
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+    return productList.reversed.toList();
+  }
+  Future<List<ProductModel>> fetchBestSellerProducts({
+    required BuildContext context,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    List<ProductModel> productList = [];
+
+    try {
+      http.Response res = await http.get(
+          Uri.parse('${Constants.backEndUrl}/products/best-seller-product'),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': userProvider.user.token,
+          }
+      );
+      httpErrorHandler(
+        response: res,
+        context: context,
+        onSuccess: () {
+          for (int i = 0; i < jsonDecode(res.body).length; i++) {
+            productList.add(
+              ProductModel.fromJson(
+                jsonEncode(
+                  jsonDecode(res.body)[i],
+                ),
+              ),
+            );
+          }
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+
+    return productList;
+  }
+  Future<List<ProductModel>> fetchBestSaleProducts({
+    required BuildContext context,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    List<ProductModel> productList = [];
+
+    try {
+      http.Response res = await http.get(
+          Uri.parse('${Constants.backEndUrl}/products/best-sale-product'),
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8',
+            'x-auth-token': userProvider.user.token,
+          }
+      );
       httpErrorHandler(
         response: res,
         context: context,

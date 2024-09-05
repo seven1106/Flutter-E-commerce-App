@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:emigo/models/order.dart';
 import 'package:flutter/material.dart';
@@ -31,10 +30,12 @@ class _NotificationWidgetState extends State<NotificationWidget> {
   Widget build(BuildContext context) {
     final notificationList = context.watch<UserProvider>().user.notifications[widget.index];
     final notification = NotificationModel.fromMap(notificationList['notify']);
+    bool isRead = notification.isRead;
     return InkWell(
       onTap: () async {
         if (!notification.isRead) {
           notificationServices.markAsRead(context: context, notificationId: notification.id);
+          isRead = true;
         }
         if (notification.type == 'order') {
           OrderModel order = await _vendorServices.fetchOrderById(context: context, id: notification.orderId);
@@ -48,7 +49,7 @@ class _NotificationWidgetState extends State<NotificationWidget> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: !notification.isRead ? Colors.lightBlueAccent : Colors.white,
+                color: isRead ? Colors.white : Colors.blueGrey,
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.grey[300]!),
               ),
@@ -59,10 +60,10 @@ class _NotificationWidgetState extends State<NotificationWidget> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Date:      ${DateFormat().format(
+                        Text(DateFormat().format(
                           DateTime.fromMillisecondsSinceEpoch(
                               notification.createdAt),
-                        )}'),
+                        )),
                         Text(
                           notification.title,
                           style: const TextStyle(

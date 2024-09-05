@@ -1,6 +1,8 @@
 import 'package:emigo/core/config/theme/app_palette.dart';
 import 'package:emigo/features/home/widgets/address_box.dart';
-import 'package:emigo/features/home/widgets/deal_products.dart';
+import 'package:emigo/features/home/widgets/products/best_seller_product.dart';
+import 'package:emigo/features/home/widgets/products/deal_products.dart';
+import 'package:emigo/features/home/widgets/products/new_product.dart';
 import 'package:emigo/features/home/widgets/top_categories.dart';
 import 'package:emigo/features/wishlist/screens/wishlist_screen.dart';
 import 'package:emigo/providers/user_provider.dart';
@@ -9,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:badges/badges.dart' as badges;
 
 import '../widgets/carousel_image.dart';
+import '../widgets/products/best_sale_product.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = '/home';
@@ -169,9 +172,9 @@ class _HomeScreenState extends State<HomeScreen>
           controller: _tabController,
           children: const [
             DealOfProducts(),
-            Center(child: Text('Content for Tab 2')),
-            Center(child: Text('Content for Tab 3')),
-            Center(child: Text('Content for Tab 4')),
+            NewArrivalProducts(),
+            BestSellerProducts(),
+            BestSaleProducts(),
           ],
         ),
       ),

@@ -20,10 +20,7 @@ class NotificationServices {
     required String receiverId,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-
     try {
-
-
       http.Response res = await http.post(
         Uri.parse('${Constants.backEndUrl}/user/notification'),
         headers: {
@@ -38,7 +35,6 @@ class NotificationServices {
           'receiverId': receiverId,
         }),
       );
-
       httpErrorHandler(
         response: res,
         context: context,
@@ -50,9 +46,6 @@ class NotificationServices {
       showSnackBar(context, e.toString());
     }
   }
-
-
-
   Future<List<NotificationModel>> fetchUserNotifications({
     required BuildContext context,
   }) async {
@@ -67,7 +60,6 @@ class NotificationServices {
           'x-auth-token': userProvider.user.token,
         },
       );
-
       httpErrorHandler(
         response: res,
         context: context,
@@ -89,7 +81,6 @@ class NotificationServices {
 
     return notificationList;
   }
-
   // Đánh dấu notification là đã đọc
   Future<void> markAsRead({
     required BuildContext context,
@@ -98,7 +89,7 @@ class NotificationServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
-      http.Response res = await http.post(
+      http.Response res = await http.put(
         Uri.parse('${Constants.backEndUrl}/user/mark-as-read'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',

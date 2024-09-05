@@ -1,6 +1,8 @@
 import 'package:emigo/features/vendor/services/voucher_service.dart';
-import 'package:emigo/models/voucher.dart'; // Đảm bảo rằng bạn đã có model VoucherModel
+import 'package:emigo/models/voucher.dart';
+import 'package:emigo/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../core/utils/loader.dart';
 
@@ -30,18 +32,24 @@ class _VouchersScreenState extends State<VouchersScreen> with SingleTickerProvid
     super.dispose();
   }
 
-  void fetchVouchers() async {
+  Future<void> fetchVouchers() async {
     vouchers = await voucherServices.fetchAllVouchers(context);
     setState(() {});
   }
+
   void deleteVoucher(String? voucherId) async {
     await voucherServices.deleteVoucher(context, voucherId, () {
       fetchVouchers();
     });
   }
 
+  Future<void> _refreshVouchers() async {
+    await fetchVouchers();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).user;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Vouchers'),
@@ -58,22 +66,31 @@ class _VouchersScreenState extends State<VouchersScreen> with SingleTickerProvid
           : TabBarView(
         controller: _tabController,
         children: [
-          _buildVoucherList(vouchers!.where((voucher) => voucher.isValid()).toList()), // Active Vouchers
-          _buildVoucherList(vouchers!.where((voucher) => !voucher.isValid()).toList()), // Expired Vouchers
+          RefreshIndicator(
+            onRefresh: _refreshVouchers,
+            child: _buildVoucherList(vouchers!.where((voucher) => voucher.isValid()).toList()),
+          ),
+          RefreshIndicator(
+            onRefresh: _refreshVouchers,
+            child: _buildVoucherList(vouchers!.where((voucher) => !voucher.isValid()).toList()),
+          ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: (user.type == "vendor") ? FloatingActionButton(
         backgroundColor: Colors.black,
         onPressed: () {
           Navigator.pushNamed(context, '/add-voucher');
         },
         child: const Icon(Icons.add, color: Colors.white),
-      ),
+      ) : null,
     );
   }
 
   Widget _buildVoucherList(List<VoucherModel> voucherList) {
+    final user = Provider.of<UserProvider>(context).user;
+
     return ListView.builder(
+      physics: const AlwaysScrollableScrollPhysics(),
       itemCount: voucherList.length,
       itemBuilder: (context, index) {
         final voucherData = voucherList[index];
@@ -105,7 +122,8 @@ class _VouchersScreenState extends State<VouchersScreen> with SingleTickerProvid
             ),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onLongPress: () {
-              showDialog(
+              if (user.type != "vendor") {
+                showDialog(
                 context: context,
                 builder: (context) {
                   return AlertDialog(
@@ -129,6 +147,7 @@ class _VouchersScreenState extends State<VouchersScreen> with SingleTickerProvid
                   );
                 },
               );
+              }
             },
             onTap: () {
               // Navigator.pushNamed(

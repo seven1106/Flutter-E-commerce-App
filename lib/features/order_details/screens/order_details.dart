@@ -1,4 +1,3 @@
-
 import 'dart:developer';
 
 import 'package:emigo/features/product/services/product_services.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import '../../../core/common/custom_button.dart';
 import '../../../models/product_model.dart';
 import '../../../providers/user_provider.dart';
+import '../../notification/services/notification_services.dart';
 import '../../search/screen/search_screen.dart';
 import '../../vendor/services/vendor_services.dart';
 
@@ -30,7 +30,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   int currentStep = 0;
   final VendorServices vendorServices = VendorServices();
   final ProductServices productServices = ProductServices();
-
+  final NotificationServices notificationServices = NotificationServices();
   void navigateToSearchScreen(String query) {
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
   }
@@ -40,6 +40,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     super.initState();
     currentStep = widget.order.status;
   }
+
   void changeOrderStatus(int status) {
     vendorServices.changeOrderStatus(
       context: context,
@@ -55,20 +56,21 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
 
   void showRatingDialog(BuildContext context, String? id) async {
     double rating = 0;
-    ProductModel product = await vendorServices.fetchProductById(context: context, id: id);
+    ProductModel product =
+        await vendorServices.fetchProductById(context: context, id: id);
     final TextEditingController commentController = TextEditingController();
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     bool hasRated = false;
     if (product.ratings.any((r) => r.userId == userProvider.user.id)) {
-      final userRating = product.ratings.firstWhere((r) => r.userId == userProvider.user.id);
+      final userRating =
+          product.ratings.firstWhere((r) => r.userId == userProvider.user.id);
       rating = userRating.rating;
       commentController.text = userRating.comment;
       hasRated = true;
       log('User has rated this product');
     }
     log(product.ratings.toString());
-    log(userProvider.user.id  );
-
+    log(userProvider.user.id);
 
     showDialog(
       context: context,
@@ -83,7 +85,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
+                 Text(
+                  product.name,
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),const Text(
                   'Overall Rating',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -105,23 +110,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     });
                   },
                 ),
-                // const SizedBox(height: 20),
-                // Text(
-                //   'Add a photo or video',
-                //   style: TextStyle(fontWeight: FontWeight.bold),
-                // ),
-                // const SizedBox(height: 10),
-                // ElevatedButton.icon(
-                //   onPressed: () {
-                //     // Implement image/video upload functionality
-                //   },
-                //   icon: Icon(Icons.add_a_photo),
-                //   label: Text('Add Photos/Videos'),
-                //   style: ElevatedButton.styleFrom(
-                //     primary: Colors.grey[200],
-                //     onPrimary: Colors.black,
-                //   ),
-                // ),
                 const SizedBox(height: 20),
                 const Text(
                   'Write your review',
@@ -147,7 +135,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Cancel', style: TextStyle(color: Colors.black)),
+              child:
+                  const Text('Cancel', style: TextStyle(color: Colors.black)),
             ),
             ElevatedButton(
               onPressed: () {
@@ -160,12 +149,14 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   );
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Review submitted successfully')),
+                    const SnackBar(
+                        content: Text('Review submitted successfully')),
                   );
                 } else {
                   // Show error message if rating or comment is missing
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Please provide both rating and review')),
+                    const SnackBar(
+                        content: Text('Please provide both rating and review')),
                   );
                 }
               },
@@ -180,7 +171,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       ),
     );
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -345,13 +335,33 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     if (user.type == 'vendor' && currentStep == 0) {
                       return CustomButton(
                         text: 'Confirm',
-                        onTap: () => changeOrderStatus(details.currentStep),
+                        onTap: () {
+                          changeOrderStatus(details.currentStep);
+                          notificationServices.createNotification(
+                            context: context,
+                            title: 'Order Delivered',
+                            content: 'Your order has been confirmed',
+                            type: 'order',
+                            orderId: widget.order.id,
+                            receiverId: widget.order.userId,
+                          );
+                        },
                       );
                     }
                     if (user.type == 'vendor' && currentStep == 1) {
                       return CustomButton(
                         text: 'Delivered',
-                        onTap: () => changeOrderStatus(details.currentStep),
+                        onTap: () {
+                          changeOrderStatus(details.currentStep);
+                          notificationServices.createNotification(
+                            context: context,
+                            title: 'Order Delivered',
+                            content: 'Your order is on the way',
+                            type: 'order',
+                            orderId: widget.order.id,
+                            receiverId: widget.order.userId,
+                          );
+                        },
                       );
                     }
                     if (user.type == 'user' && currentStep == 2) {
@@ -364,10 +374,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       return CustomButton(
                         text: 'Rate the product',
                         onTap: () {
-                          showRatingDialog(
-                            context,
-                            widget.order.products[0].id,
-                          );
+                         for (int i = 0; i < widget.order.products.length; i++) {
+                            showRatingDialog(context, widget.order.products[i].id);
+                          }
                         },
                       );
                     }
@@ -388,11 +397,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                       title: const Text('Delivering'),
                       content: user.type == 'vendor'
                           ? const Text(
-                        'Deliver the order to the customer',
-                      )
+                              'Deliver the order to the customer',
+                            )
                           : const Text(
-                        'Your order is being delivered',
-                      ),
+                              'Your order is being delivered',
+                            ),
                       isActive: currentStep > 1,
                       state: currentStep > 1
                           ? StepState.complete
@@ -427,5 +436,4 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       ),
     );
   }
-
 }

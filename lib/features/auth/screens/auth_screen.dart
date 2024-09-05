@@ -1,6 +1,5 @@
 import 'package:emigo/core/common/custom_textfield.dart';
 import 'package:emigo/core/common/long_button.dart';
-import 'package:emigo/core/config/theme/app_palette.dart';
 import 'package:emigo/core/constants/constants.dart';
 import 'package:emigo/features/auth/services/auth_service.dart';
 import 'package:flutter/material.dart';

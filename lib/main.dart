@@ -27,7 +27,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _authService.getUserData(context: context);
+    _authService.getUserData(context);
   }
 
   @override
@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp> {
       title: 'Emigo',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightThemeMode,
-      home: Provider.of<UserProvider>(context).user.token.isEmpty
+      home: Provider.of<UserProvider>(context).user.token.isNotEmpty
           ? Provider.of<UserProvider>(context).user.type == 'user'
               ? const UserScreen()
               : const VendorScreen()

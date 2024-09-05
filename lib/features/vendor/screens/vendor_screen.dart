@@ -1,4 +1,3 @@
-import 'package:badges/badges.dart' as badges;
 import 'package:emigo/core/config/theme/app_palette.dart';
 import 'package:emigo/features/account/screens/account_screen.dart';
 import 'package:emigo/features/vendor/screens/product/product_screen.dart';

@@ -45,7 +45,7 @@ class NotificationModel {
       orderId: map['orderId'] as String,
       isRead: map['isRead'] as bool,
       type: map['type'] as String,
-      createdAt: map['createdTime']?.toInt() ?? 0,
+      createdAt: map['createTime']?.toInt() ?? 0,
     );
   }
   factory NotificationModel.fromJson(String source) => NotificationModel.fromMap(json.decode(source));

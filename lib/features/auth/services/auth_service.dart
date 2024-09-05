@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:emigo/core/common/user_screen.dart';
 import 'package:emigo/core/constants/constants.dart';
@@ -42,8 +43,6 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
-      print(response.toString());
-
       // ignore: use_build_context_synchronously
       httpErrorHandler(
         response: response,
@@ -72,21 +71,25 @@ class AuthService {
           'email': email,
           'password': password,
         }),
-        headers: {
+        headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
+      // ignore: use_build_context_synchronously
       httpErrorHandler(
         response: response,
         context: context,
         onSuccess: () async {
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString(
-              'x-auth-token', jsonDecode(response.body)['token']);
           Provider.of<UserProvider>(context, listen: false).setUser(
             response.body,
           );
+          await prefs.setString(
+              'x-auth-token', jsonDecode(response.body)['token']);
+          log(jsonDecode(response.body).toString());
+          log('pref: ${prefs.getString('x-auth-token')}');
           if (jsonDecode(response.body)['type'] == 'vendor') {
+            // ignore: use_build_context_synchronously
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -94,6 +97,7 @@ class AuthService {
               ),
             );
           } else {
+            // ignore: use_build_context_synchronously
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -108,12 +112,13 @@ class AuthService {
     }
   }
 
-  void getUserData({
-    required BuildContext context,
-  }) async {
+  void getUserData(
+     BuildContext context,
+  ) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('x-auth-token');
+      log('token: $token');
       if (token == null) {
         prefs.setString('x-auth-token', '');
       }
@@ -129,19 +134,22 @@ class AuthService {
       );
 
       var tokenData = jsonDecode(tokenResponse.body);
+      log('tokenData.toString()$tokenData');
       if (tokenData == true) {
         http.Response userRes = await http.get(
-          Uri.parse('${Constants.backEndUrl}/'),
+          Uri.parse('${Constants.backEndUrl}/auth'),
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
-            'x-auth-token': token,
+            'x-auth-token': token
           },
         );
         var userProvider = Provider.of<UserProvider>(context, listen: false);
         userProvider.setUser(userRes.body);
+        log('userRes.body: ${userRes.body}');
+        log('userProvider.user: ${userProvider.user.token}');
       }
     } catch (e) {
-      showSnackBar(context, e.toString());
+      showSnackBar(context, 'Please login again');
     }
   }
 }

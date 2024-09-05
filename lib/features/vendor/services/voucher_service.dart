@@ -53,12 +53,12 @@ class VoucherServices {
         response: res,
         context: context,
         onSuccess: () {
-          showSnackBar(context, 'Voucher created successfully!');
-          Navigator.pop(context);
+
+
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      log(e.toString());
     }
   }
 

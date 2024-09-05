@@ -2,6 +2,7 @@ import 'package:badges/badges.dart' as badges;
 import 'package:emigo/core/config/theme/app_palette.dart';
 import 'package:emigo/features/account/screens/account_screen.dart';
 import 'package:emigo/features/home/screens/home_screen.dart';
+import 'package:emigo/features/notification/screens/notification_screen.dart';
 import 'package:emigo/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,10 +24,7 @@ class _UserScreenState extends State<UserScreen> {
   double bottomBarBorderWidth = 5;
   final List<Widget> _widgetOptions = <Widget>[
     const HomeScreen(),
-    const Text(
-      'Search',
-      style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-    ),
+    const NotificationScreen(),
     const CartScreen(),
     const AccountScreen(),
   ];
@@ -38,7 +36,14 @@ class _UserScreenState extends State<UserScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).user;
     final userCartLength = context.watch<UserProvider>().user.cart.length;
+    int unreadNotifications = 0;
+    for (var notification in user.notifications) {
+      if (!notification['notify']['isRead']) {
+        unreadNotifications++;
+      }
+    }
     return Scaffold(
         body: _widgetOptions.elementAt(_selectedIndex),
         bottomNavigationBar: Container(
@@ -73,11 +78,29 @@ class _UserScreenState extends State<UserScreen> {
               // SEARCH
               BottomNavigationBarItem(
                 icon: _selectedIndex == 1
-                    ? const Icon(Icons.search)
-                    : const Icon(
-                        Icons.search_outlined,
-                      ),
-                label: 'Search',
+                    ? badges.Badge(
+                        badgeContent: Text(
+                          unreadNotifications.toString(),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        child: const Icon(
+                          Icons.notifications,
+                          color: Colors.black,
+                          size: 30,
+                        ),
+                      )
+                    : badges.Badge(
+                  badgeContent: Text(
+                    unreadNotifications.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  child: const Icon(
+                    Icons.notifications_none_outlined,
+                    color: Colors.black,
+                    size: 30,
+                  ),
+                ),
+                label: 'Notifications',
               ),
               // CART
               BottomNavigationBarItem(

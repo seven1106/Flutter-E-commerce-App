@@ -2,6 +2,8 @@ import 'package:emigo/core/common/long_button.dart';
 import 'package:emigo/features/vendor/services/voucher_service.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/show_snack_bar.dart';
+
 class AddVoucherScreen extends StatefulWidget {
   static const String routeName = '/add-voucher';
   const AddVoucherScreen({Key? key}) : super(key: key);
@@ -25,21 +27,24 @@ class _AddVoucherScreenState extends State<AddVoucherScreen> {
 
   void _submitForm() {
     if (_formKey.currentState?.validate() ?? false) {
-      _voucherServices.createVoucher(
-        context: context,
-        code: _codeController.text,
-        description: _descriptionController.text,
-        discountValue: double.tryParse(_discountValueController.text) ?? 0,
-        discountType: _discountType,
-        minOrderValue: _minOrderValue,
-        maxDiscountAmount: _maxDiscountAmount,
-        startDate: _startDate,
-        endDate: _endDate,
-        usageLimit: _usageLimit,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Voucher Added Successfully')),
-      );
+      _voucherServices
+          .createVoucher(
+            context: context,
+            code: _codeController.text,
+            description: _descriptionController.text,
+            discountValue: double.tryParse(_discountValueController.text) ?? 0,
+            discountType: _discountType,
+            minOrderValue: _minOrderValue,
+            maxDiscountAmount: _maxDiscountAmount,
+            startDate: _startDate,
+            endDate: _endDate,
+            usageLimit: _usageLimit,
+          )
+          .then((value) => {
+                showSnackBar(context, 'Voucher created successfully!'),
+                Navigator.pop(context),
+                _voucherServices.fetchAllVouchers(context),
+              });
     }
   }
 
@@ -93,8 +98,10 @@ class _AddVoucherScreenState extends State<AddVoucherScreen> {
                         border: OutlineInputBorder(),
                       ),
                       items: const [
-                        DropdownMenuItem(value: 'percentage', child: Text('Percentage')),
-                        DropdownMenuItem(value: 'fixed', child: Text('Fixed Amount')),
+                        DropdownMenuItem(
+                            value: 'percentage', child: Text('Percentage')),
+                        DropdownMenuItem(
+                            value: 'fixed', child: Text('Fixed Amount')),
                       ],
                       onChanged: (value) {
                         setState(() {
@@ -158,41 +165,49 @@ class _AddVoucherScreenState extends State<AddVoucherScreen> {
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Text('Start Date: ${_startDate.toLocal().toShortDateString()}', style: const TextStyle(fontSize: 20)),
+                  Text(
+                      'Start Date: ${_startDate.toLocal().toShortDateString()}',
+                      style: const TextStyle(fontSize: 20)),
                   const Spacer(),
-                  IconButton(onPressed: () async {
-                    DateTime? selectedDate = await showDatePicker(
-                      context: context,
-                      initialDate: _startDate,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2101),
-                    );
-                    if (selectedDate != null && selectedDate != _startDate) {
-                      setState(() {
-                        _startDate = selectedDate;
-                      });
-                    }
-                  }, icon: const Icon(Icons.calendar_today)),
+                  IconButton(
+                      onPressed: () async {
+                        DateTime? selectedDate = await showDatePicker(
+                          context: context,
+                          initialDate: _startDate,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2101),
+                        );
+                        if (selectedDate != null &&
+                            selectedDate != _startDate) {
+                          setState(() {
+                            _startDate = selectedDate;
+                          });
+                        }
+                      },
+                      icon: const Icon(Icons.calendar_today)),
                 ],
               ),
               const SizedBox(height: 16),
               Row(
                 children: [
-                  Text('End Date: ${_endDate.toLocal().toShortDateString()}', style: const TextStyle(fontSize: 20)),
+                  Text('End Date: ${_endDate.toLocal().toShortDateString()}',
+                      style: const TextStyle(fontSize: 20)),
                   const Spacer(),
-                  IconButton(onPressed: () async {
-                    DateTime? selectedDate = await showDatePicker(
-                      context: context,
-                      initialDate: _endDate,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2101),
-                    );
-                    if (selectedDate != null && selectedDate != _endDate) {
-                      setState(() {
-                        _endDate = selectedDate;
-                      });
-                    }
-                  }, icon: const Icon(Icons.calendar_today)),
+                  IconButton(
+                      onPressed: () async {
+                        DateTime? selectedDate = await showDatePicker(
+                          context: context,
+                          initialDate: _endDate,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2101),
+                        );
+                        if (selectedDate != null && selectedDate != _endDate) {
+                          setState(() {
+                            _endDate = selectedDate;
+                          });
+                        }
+                      },
+                      icon: const Icon(Icons.calendar_today)),
                 ],
               ),
               const SizedBox(height: 16),

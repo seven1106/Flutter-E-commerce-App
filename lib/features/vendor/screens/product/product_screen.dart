@@ -1,13 +1,14 @@
-import 'package:emigo/core/utils/loader.dart';
-import 'package:emigo/features/vendor/services/vendor_services.dart';
-import 'package:emigo/features/vendor/widgets/product_entity.dart';
-import 'package:emigo/models/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:badges/badges.dart' as badges;
 import 'package:provider/provider.dart';
 
+import '../../../../core/utils/loader.dart';
+import '../../../../models/product_model.dart';
 import '../../../../providers/user_provider.dart';
 import '../../../notification/screens/notification_screen.dart';
+import '../../services/vendor_services.dart';
+import '../../widgets/product_entity.dart';
+
 
 class ProductScreen extends StatefulWidget {
   const ProductScreen({Key? key}) : super(key: key);
@@ -28,9 +29,13 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
     fetchProducts();
   }
 
-  fetchProducts() async {
+  Future<void> fetchProducts() async {
     _products = await _vendorServices.fetchAllProducts(context);
     setState(() {});
+  }
+
+  Future<void> _onRefresh() async {
+    await fetchProducts();
   }
 
   void deleteProduct(ProductModel product, int index) {
@@ -60,12 +65,13 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
         unreadNotifications++;
       }
     }
+
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 1,
-        title:  Row(
+        title: Row(
           children: [
             const Text(
               'My Store',
@@ -90,7 +96,6 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
             ),
           ],
         ),
-
         bottom: TabBar(
           controller: _tabController,
           indicatorColor: Colors.black,
@@ -105,16 +110,19 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
       ),
       body: _products == null
           ? const Loader()
-          : TabBarView(
-        controller: _tabController,
-        children: [
-          _buildProductList(
-            _products!.where((product) => product.quantity > 0).toList(),
-          ),
-          _buildProductList(
-            _products!.where((product) => product.quantity == 0).toList(),
-          ),
-        ],
+          : RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: TabBarView(
+          controller: _tabController,
+          children: [
+            _buildProductList(
+              _products!.where((product) => product.quantity > 0).toList(),
+            ),
+            _buildProductList(
+              _products!.where((product) => product.quantity == 0).toList(),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.black,

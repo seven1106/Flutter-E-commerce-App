@@ -1,30 +1,30 @@
 import 'package:emigo/models/product_model.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/utils/loader.dart';
-import '../../product/screens/product_detail_screen.dart';
-import '../../vendor/widgets/product_entity.dart';
-import '../services/home_services.dart';
+import '../../../../core/utils/loader.dart';
+import '../../../product/screens/product_detail_screen.dart';
+import '../../../vendor/widgets/product_entity.dart';
+import '../../services/home_services.dart';
 
-class DealOfProducts extends StatefulWidget {
-  const DealOfProducts({Key? key}) : super(key: key);
+class BestSellerProducts extends StatefulWidget {
+  const BestSellerProducts({Key? key}) : super(key: key);
 
   @override
-  State<DealOfProducts> createState() => _DealOfProductsState();
+  State<BestSellerProducts> createState() => _BestSellerProductsState();
 }
 
-class _DealOfProductsState extends State<DealOfProducts> {
+class _BestSellerProductsState extends State<BestSellerProducts> {
   List<ProductModel> productList = [];
   final HomeServices homeServices = HomeServices();
 
   @override
   void initState() {
     super.initState();
-    fetchTopRatedProducts();
+    fetchProducts();
   }
 
-  void fetchTopRatedProducts() async {
-    productList = await homeServices.fetchTopRatedProducts(context: context);
+  void fetchProducts() async {
+    productList = await homeServices.fetchBestSellerProducts(context: context);
     setState(() {});
   }
 
