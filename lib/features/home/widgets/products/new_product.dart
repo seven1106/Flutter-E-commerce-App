@@ -114,12 +114,12 @@ class _NewArrivalProductsState extends State<NewArrivalProducts> {
                             Row(
                               children: [
                                 Text(
-                                  '\$${productData.discountPrice.toInt().toStringAsFixed(2)}',
+                                  '\$${productData.discountPrice}',
                                   style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold, fontSize: 14),
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  '\$${productData.price.toStringAsFixed(2)}',
+                                  '\$${productData.price}',
                                   style: const TextStyle(
                                     color: Colors.grey,
                                     fontSize: 12,

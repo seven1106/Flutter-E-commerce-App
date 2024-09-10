@@ -28,6 +28,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   List<PaymentItem> paymentItems = [];
   final VoucherServices voucherServices = VoucherServices();
   double total = 0;
+  double discount = 0;
   TextEditingController receiverNameController = TextEditingController();
   TextEditingController receiverPhoneController = TextEditingController();
   @override
@@ -63,6 +64,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       receiverName: receiverNameController.text,
       receiverPhone: receiverPhoneController.text,
       paymentMethod: selectedPaymentMethod,
+      voucherCode: selectedVoucher ?? '',
+      initialPrice: widget.totalAmount,
     );
   }
 
@@ -326,7 +329,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
   Widget _buildOrderSummary() {
     // Calculate discount based on selected voucher
-    double discount = 0;
     if (selectedVoucher != null) {
       final voucher = vouchers!.firstWhere((v) => v.code == selectedVoucher);
       if (voucher.discountType == 'percentage') {

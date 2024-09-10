@@ -159,6 +159,8 @@ class VendorServices {
       userId: '',
       products: [],
       status: 0,
+      description: '',
+      voucherCode: '',
       address: '',
       quantity: [],
       receiverName: '',
@@ -166,6 +168,7 @@ class VendorServices {
       paymentMethod: '',
       orderedAt: 0,
       totalPrice: 0,
+      initialPrice: 0,
     );
 
     try {
@@ -283,7 +286,7 @@ class VendorServices {
     } catch (e) {
       showSnackBar(context, e.toString());
     }
-    return orderList;
+    return orderList.reversed.toList();
   }
 
   void changeOrderStatus({
@@ -291,6 +294,7 @@ class VendorServices {
     required int status,
     required OrderModel order,
     required VoidCallback onSuccess,
+    required String message,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
@@ -304,6 +308,7 @@ class VendorServices {
         body: jsonEncode({
           'id': order.id,
           'status': status,
+          'message': message,
         }),
       );
 

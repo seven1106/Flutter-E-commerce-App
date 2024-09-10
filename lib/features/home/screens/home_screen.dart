@@ -76,21 +76,19 @@ class _HomeScreenState extends State<HomeScreen>
                     child: TextFormField(
                       onFieldSubmitted: navigateToSearchScreen,
                       decoration: InputDecoration(
-                        prefixIcon: InkWell(
-                          onTap: () {},
-                          child: Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(7),
-                                bottomLeft: Radius.circular(7),
-                              ),
+
+                        prefixIcon: Container(
+                          decoration: const BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(7),
+                              bottomLeft: Radius.circular(7),
                             ),
-                            child: const Icon(
-                              Icons.search,
-                              color: Colors.white,
-                              size: 23,
-                            ),
+                          ),
+                          child: const Icon(
+                            Icons.search,
+                            color: Colors.white,
+                            size: 23,
                           ),
                         ),
                         filled: true,

@@ -35,7 +35,10 @@ class _AccountScreenState extends State<AccountScreen> {
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
-                        colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+                        colors: [
+                          Colors.transparent,
+                          Colors.black.withOpacity(0.7)
+                        ],
                       ),
                     ),
                   ),
@@ -47,7 +50,8 @@ class _AccountScreenState extends State<AccountScreen> {
                       children: [
                         const CircleAvatar(
                           radius: 30,
-                          backgroundImage: NetworkImage('https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?w=740&t=st=1724378979~exp=1724379579~hmac=54329fb738a5052672db7c1c15da43a2da780ddf552897034dd31c0f9fbc7902'),
+                          backgroundImage: NetworkImage(
+                              'https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?w=740&t=st=1724378979~exp=1724379579~hmac=54329fb738a5052672db7c1c15da43a2da780ddf552897034dd31c0f9fbc7902'),
                         ),
                         const SizedBox(width: 10),
                         Text(
@@ -87,7 +91,10 @@ class _AccountScreenState extends State<AccountScreen> {
                 children: [
                   const Text(
                     'My Account',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 20),
                   const TopButtons(),

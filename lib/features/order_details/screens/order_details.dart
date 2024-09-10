@@ -9,10 +9,12 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import '../../../core/common/custom_button.dart';
 import '../../../models/product_model.dart';
+import '../../../models/voucher.dart';
 import '../../../providers/user_provider.dart';
 import '../../notification/services/notification_services.dart';
 import '../../search/screen/search_screen.dart';
 import '../../vendor/services/vendor_services.dart';
+import '../../vendor/services/voucher_service.dart';
 
 class OrderDetailScreen extends StatefulWidget {
   static const String routeName = '/order-details';
@@ -35,23 +37,47 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
   }
 
+  final TextEditingController reasonController = TextEditingController();
+  List<VoucherModel>? vouchers;
+  String? selectedVoucher;
+  double discount = 0;
+  final VoucherServices voucherServices = VoucherServices();
+
   @override
   void initState() {
     super.initState();
     currentStep = widget.order.status;
+    log('Current step: $currentStep');
+    log('Order status: ${widget.order.status}');
+    fetchVouchers();
+    selectedVoucher = widget.order.voucherCode;
   }
 
-  void changeOrderStatus(int status) {
+  @override
+  void dispose() {
+    reasonController.dispose();
+    super.dispose();
+  }
+
+  void changeOrderStatus(int status, String message) {
     vendorServices.changeOrderStatus(
       context: context,
       status: status + 1,
       order: widget.order,
+      message: message,
       onSuccess: () {
         setState(() {
-          currentStep += 1;
+          currentStep = status + 1;
+          log('Order status changed to $currentStep');
         });
+        vendorServices.fetchAllOrders(context);
       },
     );
+  }
+
+  void fetchVouchers() async {
+    vouchers = await voucherServices.fetchAllVouchers(context);
+    setState(() {});
   }
 
   void showRatingDialog(BuildContext context, String? id) async {
@@ -85,10 +111,11 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                 Text(
+                Text(
                   product.name,
                   style: TextStyle(fontWeight: FontWeight.bold),
-                ),const Text(
+                ),
+                const Text(
                   'Overall Rating',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
@@ -175,7 +202,16 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<UserProvider>(context).user;
-
+    // Calculate discount based on selected voucher
+    selectedVoucher = widget.order.voucherCode;
+    if (selectedVoucher != null && vouchers != null) {
+      final voucher = vouchers!.firstWhere((v) => v.code == selectedVoucher);
+      if (voucher.discountType == 'percentage') {
+        discount = widget.order.initialPrice * (voucher.discountValue / 100);
+      } else {
+        discount = voucher.discountValue;
+      }
+    }
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
@@ -214,7 +250,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           widget.order.orderedAt),
                     )}'),
                     Text('Order ID:          ${widget.order.id}'),
-                    Text('Order Total:      \$${widget.order.totalPrice}'),
                   ],
                 ),
               ),
@@ -244,7 +279,7 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
               ),
               const SizedBox(height: 10),
               const Text(
-                'Payment Method',
+                'Order Summary',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -262,6 +297,17 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text('Payment Method: ${widget.order.paymentMethod}'),
+                    Text('Subtotal:      \$${widget.order.initialPrice}'),
+                    Text('Discount:      -\$${discount.toStringAsFixed(2)}'),
+                    const Text('Shipping: Free'),
+                    const Text('Tax:      \$0.00'),
+                    const Divider(),
+                    Text(
+                        'Total:      ${widget.order.totalPrice.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        )),
                   ],
                 ),
               ),
@@ -307,6 +353,9 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                 Text(
                                   'Qty: ${widget.order.quantity[i]}',
                                 ),
+                                Text(
+                                  'Price: \$${widget.order.products[i].discountPrice}',
+                                ),
                               ],
                             ),
                           ),
@@ -333,30 +382,87 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                   currentStep: currentStep,
                   controlsBuilder: (context, details) {
                     if (user.type == 'vendor' && currentStep == 0) {
-                      return CustomButton(
-                        text: 'Confirm',
-                        onTap: () {
-                          changeOrderStatus(details.currentStep);
-                          notificationServices.createNotification(
-                            context: context,
-                            title: 'Order Delivered',
-                            content: 'Your order has been confirmed',
-                            type: 'order',
-                            orderId: widget.order.id,
-                            receiverId: widget.order.userId,
-                          );
-                        },
+                      return Column(
+                        children: [
+                          CustomButton(
+                            text: 'Confirm',
+                            onTap: () {
+                              changeOrderStatus(
+                                  details.currentStep, 'Order confirmed');
+                              notificationServices.createNotification(
+                                context: context,
+                                title: 'Order Confirmed',
+                                content: 'This order has been confirmed',
+                                type: 'order',
+                                orderId: widget.order.id,
+                                receiverId: widget.order.userId,
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 10),
+                          CustomButton(
+                            text: 'Cancel',
+                            onTap: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text('Cancel Order'),
+                                      content: TextField(
+                                        controller: reasonController,
+                                        decoration: const InputDecoration(
+                                          hintText: 'Enter reason here',
+                                          border: OutlineInputBorder(),
+                                        ),
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text('No'),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () {
+                                            changeOrderStatus(
+                                                3, reasonController.text);
+                                            notificationServices
+                                                .createNotification(
+                                              context: context,
+                                              title:
+                                                  'This order has been cancelled',
+                                              content:
+                                                  'Reason: ${reasonController.text}',
+                                              type: 'order',
+                                              orderId: widget.order.id,
+                                              receiverId: widget.order.userId,
+                                            );
+                                            Navigator.pop(context);
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            primary: Colors.red,
+                                            onPrimary: Colors.white,
+                                          ),
+                                          child: const Text('Yes'),
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            },
+                          ),
+                        ],
                       );
                     }
                     if (user.type == 'vendor' && currentStep == 1) {
                       return CustomButton(
                         text: 'Delivered',
                         onTap: () {
-                          changeOrderStatus(details.currentStep);
+                          changeOrderStatus(
+                              details.currentStep, 'Order delivered');
                           notificationServices.createNotification(
                             context: context,
                             title: 'Order Delivered',
-                            content: 'Your order is on the way',
+                            content: 'This order is on the way',
                             type: 'order',
                             orderId: widget.order.id,
                             receiverId: widget.order.userId,
@@ -367,15 +473,19 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     if (user.type == 'user' && currentStep == 2) {
                       return CustomButton(
                         text: 'Received',
-                        onTap: () => changeOrderStatus(details.currentStep),
+                        onTap: () => changeOrderStatus(
+                            details.currentStep, 'Order received'),
                       );
                     }
                     if (user.type == 'user' && currentStep == 3) {
                       return CustomButton(
                         text: 'Rate the product',
                         onTap: () {
-                         for (int i = 0; i < widget.order.products.length; i++) {
-                            showRatingDialog(context, widget.order.products[i].id);
+                          for (int i = 0;
+                              i < widget.order.products.length;
+                              i++) {
+                            showRatingDialog(
+                                context, widget.order.products[i].id);
                           }
                         },
                       );
@@ -386,10 +496,10 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     Step(
                       title: const Text('Pending'),
                       content: const Text(
-                        'Your order is pending confirmation',
+                        'This order is pending confirmation',
                       ),
-                      isActive: currentStep > 0,
-                      state: currentStep > 0
+                      isActive: currentStep == 0,
+                      state: currentStep == 0
                           ? StepState.complete
                           : StepState.indexed,
                     ),
@@ -402,28 +512,38 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                           : const Text(
                               'Your order is being delivered',
                             ),
-                      isActive: currentStep > 1,
-                      state: currentStep > 1
+                      isActive: currentStep == 1,
+                      state: currentStep == 1
                           ? StepState.complete
                           : StepState.indexed,
                     ),
                     Step(
                       title: const Text('Delivered'),
                       content: const Text(
-                        'Your order has been delivered',
+                        'This order has been delivered',
                       ),
-                      isActive: currentStep > 2,
-                      state: currentStep > 2
+                      isActive: currentStep == 2,
+                      state: currentStep == 2
                           ? StepState.complete
                           : StepState.indexed,
                     ),
                     Step(
                       title: const Text('Completed'),
                       content: const Text(
-                        'Your order has been delivered and signed!',
+                        'This order has been delivered and signed!',
                       ),
-                      isActive: currentStep >= 3,
-                      state: currentStep >= 3
+                      isActive: currentStep == 3,
+                      state: currentStep == 3
+                          ? StepState.complete
+                          : StepState.indexed,
+                    ),
+                    Step(
+                      title: const Text('Cancelled'),
+                      content: Text(
+                        'This order has been cancelled \n Reason: ${widget.order.description}',
+                      ),
+                      isActive: currentStep == 4,
+                      state: currentStep == 4
                           ? StepState.complete
                           : StepState.indexed,
                     ),

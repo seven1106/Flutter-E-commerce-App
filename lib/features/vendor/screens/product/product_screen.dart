@@ -163,7 +163,9 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
                     fit: StackFit.expand,
                     children: [
                       ProductEntity(
-                        image: productData.images[0],
+                        image: productData.images.isEmpty
+                            ? 'https://via.placeholder.com/150'
+                            : productData.images.first,
                       ),
                       Positioned(
                         top: 8,

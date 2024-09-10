@@ -55,6 +55,8 @@ class AddressServices {
     required String receiverName,
     required String receiverPhone,
     required String paymentMethod,
+    required String voucherCode,
+    required String initialPrice,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final productCart = userProvider.user.cart;
@@ -71,6 +73,8 @@ class AddressServices {
             'receiverName': receiverName,
             'receiverPhone': receiverPhone,
             'paymentMethod': paymentMethod,
+            'voucherId': voucherCode,
+            'initialPrice': initialPrice,
           }));
 
       httpErrorHandler(

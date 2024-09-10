@@ -14,7 +14,10 @@ class OrderModel {
   final String paymentMethod;
   final int orderedAt;
   final int status;
+  final String description;
+  final String voucherCode;
   final double totalPrice;
+  final double initialPrice;
   OrderModel({
     required this.id,
     required this.products,
@@ -26,7 +29,10 @@ class OrderModel {
     required this.paymentMethod,
     required this.orderedAt,
     required this.status,
+    required this.description,
+    required this.voucherCode,
     required this.totalPrice,
+    required this.initialPrice,
   });
 
   Map<String, dynamic> toMap() {
@@ -41,7 +47,10 @@ class OrderModel {
       'paymentMethod': paymentMethod,
       'orderedAt': orderedAt,
       'status': status,
+      'description': description,
+      'voucherCode': voucherCode,
       'totalPrice': totalPrice,
+      'initialPrice': initialPrice,
     };
   }
 
@@ -62,7 +71,10 @@ class OrderModel {
       paymentMethod: map['paymentMethod'] ?? '',
       orderedAt: map['orderedAt']?.toInt() ?? 0,
       status: map['status']?.toInt() ?? 0,
+      description: map['description'] ?? '',
+      voucherCode: map['voucherId'] ?? '',
       totalPrice: map['totalPrice']?.toDouble() ?? 0.0,
+      initialPrice: map['initialPrice']?.toDouble() ?? 0.0,
     );
   }
 
