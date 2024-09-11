@@ -289,40 +289,44 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: voucherList.length,
-                itemBuilder: (context, index) {
-                  final voucherData = voucherList[index];
-                  return ListTile(
-                    title: Text('Voucher #${voucherData.code}'),
-                    subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 4),
-                        voucherData.discountType == 'percentage'
-                            ? Text(
-                                'Discount: ${voucherData.discountValue.toStringAsFixed(2)}%')
-                            : Text(
-                                'Discount: \$${voucherData.discountValue.toStringAsFixed(2)}'),
-                        const SizedBox(height: 4),
-                        Text(
-                            'Valid From: ${voucherData.startDate.toLocal().toShortDateString()}'),
-                        Text(
-                            'Valid Until: ${voucherData.endDate.toLocal().toShortDateString()}'),
-                      ],
-                    ),
-                    onTap: () {
-                      setState(() {
-                        selectedVoucher = voucherData.code;
-                      });
-                      Navigator.pop(context);
-                    },
-                  );
-                },
+              // Sử dụng Expanded để tránh lỗi RenderFlex overflow
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: voucherList.length,
+                  itemBuilder: (context, index) {
+                    final voucherData = voucherList[index];
+                    return ListTile(
+                      title: Text('Voucher #${voucherData.code}'),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 4),
+                          voucherData.discountType == 'percentage'
+                              ? Text(
+                              'Discount: ${voucherData.discountValue.toStringAsFixed(2)}%')
+                              : Text(
+                              'Discount: \$${voucherData.discountValue.toStringAsFixed(2)}'),
+                          const SizedBox(height: 4),
+                          Text(
+                              'Valid From: ${voucherData.startDate.toLocal().toShortDateString()}'),
+                          Text(
+                              'Valid Until: ${voucherData.endDate.toLocal().toShortDateString()}'),
+                        ],
+                      ),
+                      onTap: () {
+                        setState(() {
+                          selectedVoucher = voucherData.code;
+                        });
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
+                ),
               ),
             ],
-          ),
+          )
+
         );
       },
     );

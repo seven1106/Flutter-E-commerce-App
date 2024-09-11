@@ -108,7 +108,7 @@ class AuthService {
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      log(e.toString());
     }
   }
 

@@ -38,6 +38,7 @@ class _NewArrivalProductsState extends State<NewArrivalProducts> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return productList.isEmpty
         ? const Loader()
         : Column(
@@ -54,8 +55,12 @@ class _NewArrivalProductsState extends State<NewArrivalProducts> {
           child: GridView.builder(
             padding: const EdgeInsets.all(8),
             itemCount: productList.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: screenWidth < 600
+                  ? 2
+                  : screenWidth < 1000
+                  ? 3
+                  : 4,
               childAspectRatio: 0.65,
               crossAxisSpacing: 8,
               mainAxisSpacing: 12,

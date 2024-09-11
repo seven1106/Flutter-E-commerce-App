@@ -25,6 +25,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final TextEditingController quantityController = TextEditingController();
   final TextEditingController discountController = TextEditingController();
   final VendorServices vendorServices = VendorServices();
+  int _current = 0;
+  final CarouselController _controller = CarouselController();
 
   String category = 'Mobiles';
   List<File> images = [];
@@ -51,9 +53,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
     quantityController.dispose();
     discountController.dispose();
   }
+
   List<String> productCategories = [
     'Mobiles', 'Essentials', 'Appliances', 'Books', 'Fashion'
   ];
+
   void selectImages() async {
     final res = await pickMultipleImages();
     if (res != null) {
@@ -81,7 +85,6 @@ class _EditProductScreenState extends State<EditProductScreen> {
         id: widget.product.id,
       );
       vendorServices.updateProduct(context: context, product: product);
-
     } else {
       showSnackBar(context, 'Please fill all the fields');
     }
@@ -89,6 +92,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isLargeScreen = screenWidth > 600;
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -112,13 +118,54 @@ class _EditProductScreenState extends State<EditProductScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 images.isNotEmpty
-                    ? CarouselSlider(
-                  items: images.map((i) => Image.file(i, fit: BoxFit.cover)).toList(),
-                  options: CarouselOptions(
-                    viewportFraction: 1,
-                    height: 200,
-                    aspectRatio: 1,
-                  ),
+                    ? Stack(
+                  children: [
+                    CarouselSlider(
+                      items: widget.product.images.map((i) {
+                        return Builder(
+                          builder: (BuildContext context) => Image.network(
+                            i,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          ),
+                        );
+                      }).toList(),
+                      options: CarouselOptions(
+                        viewportFraction: 1,
+                        aspectRatio: 1,
+                        onPageChanged: (index, reason) {
+                          setState(() {
+                            _current = index;
+                          });
+                        },
+                      ),
+                      carouselController: _controller,
+                    ),
+                    Positioned(
+                      bottom: 10,
+                      left: 0,
+                      right: 0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: widget.product.images
+                            .asMap()
+                            .entries
+                            .map((entry) {
+                          return Container(
+                            width: 8.0,
+                            height: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 4.0),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white.withOpacity(
+                                  _current == entry.key ? 0.9 : 0.4),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
                 )
                     : GestureDetector(
                   onTap: selectImages,
@@ -132,16 +179,20 @@ class _EditProductScreenState extends State<EditProductScreen> {
                       child: const Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.add_photo_alternate, size: 40, color: Colors.grey),
+                          Icon(Icons.add_photo_alternate,
+                              size: 40, color: Colors.grey),
                           SizedBox(height: 8),
-                          Text('Edit Product Images', style: TextStyle(color: Colors.grey)),
+                          Text('Edit Product Images',
+                              style: TextStyle(color: Colors.grey)),
                         ],
                       ),
                     ),
                   ),
                 ),
                 SizedBox(height: 24),
-                Text('Product Details', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                Text('Product Details',
+                    style:
+                    TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 SizedBox(height: 16),
                 CustomTextField(
                   controller: productNameController,
@@ -154,22 +205,42 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   maxLines: 3,
                 ),
                 SizedBox(height: 16),
-                Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextField(
-                        controller: priceController,
-                        hintText: 'Price',
-                      ),
-                    ),
-                    SizedBox(width: 16),
-                    Expanded(
-                      child: CustomTextField(
-                        controller: quantityController,
-                        hintText: 'Quantity',
-                      ),
-                    ),
-                  ],
+                LayoutBuilder(
+                  builder: (context, constraints) {
+                    if (isLargeScreen) {
+                      return Row(
+                        children: [
+                          Expanded(
+                            child: CustomTextField(
+                              controller: priceController,
+                              hintText: 'Price',
+                            ),
+                          ),
+                          SizedBox(width: 16),
+                          Expanded(
+                            child: CustomTextField(
+                              controller: quantityController,
+                              hintText: 'Quantity',
+                            ),
+                          ),
+                        ],
+                      );
+                    } else {
+                      return Column(
+                        children: [
+                          CustomTextField(
+                            controller: priceController,
+                            hintText: 'Price',
+                          ),
+                          SizedBox(height: 16),
+                          CustomTextField(
+                            controller: quantityController,
+                            hintText: 'Quantity',
+                          ),
+                        ],
+                      );
+                    }
+                  },
                 ),
                 SizedBox(height: 16),
                 CustomTextField(
@@ -180,7 +251,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 DropdownButtonFormField<String>(
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
                   value: category,
                   items: productCategories.map((String item) {
@@ -193,9 +265,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   },
                 ),
                 SizedBox(height: 24),
-                LongButton(
-                  buttonText: 'Update Product',
-                  onPressed: updateProduct,
+                SizedBox(
+                  width: isLargeScreen
+                      ? MediaQuery.of(context).size.width * 0.5
+                      : double.infinity, // Điều chỉnh linh hoạt với màn hình
+                  child: LongButton(
+                    buttonText: 'Update Product',
+                    onPressed: updateProduct,
+                  ),
                 ),
               ],
             ),

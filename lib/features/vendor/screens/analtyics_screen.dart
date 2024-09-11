@@ -3,6 +3,8 @@ import 'package:fl_chart/fl_chart.dart';
 import '../../../core/utils/loader.dart';
 import '../models/sales.dart';
 import '../services/vendor_services.dart';
+import '../widgets/category_products_chart.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class AnalyticsScreen extends StatefulWidget {
   const AnalyticsScreen({Key? key}) : super(key: key);
@@ -29,7 +31,12 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       _earnings = earningData['sales'];
     });
   }
-
+  getEarnings() async {
+    var earningData = await _vendorServices.getEarnings(context);
+    _totalSales = earningData['totalEarnings'];
+    _earnings = earningData['sales'];
+    setState(() {});
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,11 +64,33 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             children: [
               _buildTotalSalesCard(),
               const SizedBox(height: 24),
+              buildChart(context),
+              const SizedBox(height: 24),
               _buildSalesChart(),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildChart(BuildContext context) {
+    return _earnings == null || _totalSales == null
+        ? const Loader()
+        : Column(
+      children: [
+        SizedBox(
+          height: 250,
+          child: CategoryProductsChart(seriesList: [
+            charts.Series(
+              id: 'Sales',
+              data: _earnings!,
+              domainFn: (Sales sales, _) => sales.label,
+              measureFn: (Sales sales, _) => sales.earning,
+            ),
+          ]),
+        )
+      ],
     );
   }
 
@@ -124,12 +153,13 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         leftTitles: AxisTitles(
           sideTitles: SideTitles(
             reservedSize: 40,
+            showTitles: true,
             getTitlesWidget: (value, meta) {
               return SideTitleWidget(
                 axisSide: meta.axisSide,
                 child: Text(
                   '\$${value.toInt()}',
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  style: const TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.bold),
                 ),
               );
             },
@@ -137,15 +167,19 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
         ),
         bottomTitles: AxisTitles(
           sideTitles: SideTitles(
-            reservedSize: 40,
+            reservedSize: 60,
+            showTitles: true,
             getTitlesWidget: (value, meta) {
               final index = value.toInt();
-              if (index >= 0 ) {
+              if (index >= 0 && index < _earnings!.length) {
                 return SideTitleWidget(
                   axisSide: meta.axisSide,
-                  child: Text(
-                    _earnings![index].label,
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  child: RotatedBox(
+                    quarterTurns: 3, // Rotate labels to fit better
+                    child: Text(
+                      _earnings![index].label,
+                      style: const TextStyle(fontSize: 14, color: Colors.grey, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 );
               }
@@ -154,7 +188,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           ),
         ),
       ),
-      borderData: FlBorderData(show: false),
+      borderData: FlBorderData(
+        show: true,
+        border: Border.all(color: Colors.grey, width: 1),
+      ),
       lineBarsData: [
         LineChartBarData(
           spots: _earnings!
@@ -164,7 +201,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               .toList(),
           isCurved: true,
           color: Colors.blue,
-          barWidth: 3,
+          barWidth: 4,
           isStrokeCapRound: true,
           dotData: const FlDotData(show: true),
           belowBarData: BarAreaData(
@@ -175,4 +212,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       ],
     );
   }
+
+
+
 }

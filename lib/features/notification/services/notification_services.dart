@@ -64,15 +64,8 @@ class NotificationServices {
         response: res,
         context: context,
         onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
-            notificationList.add(
-              NotificationModel.fromJson(
-                jsonEncode(
-                  jsonDecode(res.body)[i],
-                ),
-              ),
-            );
-          }
+          final List<dynamic> data = jsonDecode(res.body);
+          notificationList = data.map((e) => NotificationModel.fromMap(e)).toList();
         },
       );
     } catch (e) {
@@ -89,7 +82,7 @@ class NotificationServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     try {
-      http.Response res = await http.put(
+      http.Response res = await http.post(
         Uri.parse('${Constants.backEndUrl}/user/mark-as-read'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
