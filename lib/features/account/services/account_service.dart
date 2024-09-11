@@ -59,4 +59,44 @@ class AccountService {
     }
     return orderList.reversed.toList();
   }
+  void editUserInformation({
+    required BuildContext context,
+    required String name,
+    required String email,
+    required String phone,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    try {
+      http.Response res = await http.post(
+        Uri.parse('${Constants.backEndUrl}/user/edit-user-info'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+        body: jsonEncode({
+          'name': name,
+          'email': email,
+          'phone': phone,
+        }),
+      );
+      httpErrorHandler(
+        response: res,
+        context: context,
+        onSuccess: () {
+          userProvider.setUserFromModel(
+            userProvider.user.copyWith(
+              name: name,
+              email: email,
+              phone: phone,
+            ),
+          );
+          showSnackBar(context, 'User information updated!');
+          Navigator.of(context).pop();
+
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
 }

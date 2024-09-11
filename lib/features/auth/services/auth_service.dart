@@ -145,8 +145,6 @@ class AuthService {
         );
         var userProvider = Provider.of<UserProvider>(context, listen: false);
         userProvider.setUser(userRes.body);
-        log('userRes.body: ${userRes.body}');
-        log('userProvider.user: ${userProvider.user.token}');
       }
     } catch (e) {
       showSnackBar(context, 'Please login again');

@@ -1,4 +1,5 @@
 import 'package:emigo/core/common/user_screen.dart';
+import 'package:emigo/features/account/screens/edit_user_info.dart';
 import 'package:emigo/features/address/screens/address_screen.dart';
 import 'package:emigo/features/home/screens/home_screen.dart';
 import 'package:emigo/features/home/screens/product_category.dart';
@@ -64,6 +65,9 @@ class AppRouter {
         case '/notifications':
         return _materialRoute(
             const NotificationScreen());
+        case '/edit_user_info':
+        return _materialRoute(
+            const EditUserInfo());
       default:
         return _materialRoute(Scaffold(
           body: Center(child: Text('No route defined for ${settings.name}')),

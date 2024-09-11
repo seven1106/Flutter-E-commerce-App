@@ -62,6 +62,16 @@ class _AccountScreenState extends State<AccountScreen> {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+                        const SizedBox(width: 10),
+                         IconButton(
+                          icon: const Icon(
+                            Icons.edit,
+                            color: Colors.white,
+                          ),
+                          onPressed: (){
+                            Navigator.pushNamed(context, '/edit_user_info');
+                          },
+                        ),
                       ],
                     ),
                   ),
