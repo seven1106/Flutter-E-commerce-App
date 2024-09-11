@@ -50,7 +50,18 @@ class _OrdersScreenState extends State<OrdersScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Orders'),
+        title: Row(
+          children:  [
+            const Icon(Icons.shopping_bag),
+            const SizedBox(width: 8),
+            const Text('Orders'),
+            const Spacer(),
+            IconButton(
+              icon:  const Icon(Icons.refresh, color: Colors.black, size: 30),
+              onPressed: fetchOrders,
+            ),
+          ],
+        ),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [

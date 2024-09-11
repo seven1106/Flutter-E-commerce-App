@@ -66,70 +66,76 @@ class _ProductScreenState extends State<ProductScreen> with SingleTickerProvider
       }
     }
 
-    return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 1,
-        title: Row(
-          children: [
-            const Text(
-              'My Store',
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-            ),
-            const Spacer(),
-            IconButton(
-              icon: badges.Badge(
-                badgeContent: Text(
-                  unreadNotifications.toString(),
-                  style: const TextStyle(color: Colors.white),
-                ),
-                child: const Icon(
-                  Icons.notifications,
-                  color: Colors.black,
-                  size: 30,
-                ),
+    return RefreshIndicator(
+      onRefresh: _onRefresh,
+      child: Scaffold(
+        backgroundColor: Colors.grey[100],
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 1,
+          title: Row(
+            children: [
+              const Text(
+                'My Store',
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
               ),
-              onPressed: () {
-                Navigator.pushNamed(context, NotificationScreen.routeName);
-              },
-            ),
-          ],
+              const Spacer(),
+              IconButton(
+                icon: badges.Badge(
+                  badgeContent: Text(
+                    unreadNotifications.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  child: const Icon(
+                    Icons.notifications,
+                    color: Colors.black,
+                    size: 30,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pushNamed(context, NotificationScreen.routeName);
+                },
+              ),
+              const SizedBox(width: 16),
+              IconButton(
+                icon: const Icon(Icons.refresh, color: Colors.black, size: 30),
+                onPressed: fetchProducts,
+              ),
+
+            ],
+          ),
+          bottom: TabBar(
+            controller: _tabController,
+            indicatorColor: Colors.black,
+            unselectedLabelColor: Colors.grey,
+            labelColor: Colors.black,
+            labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+            tabs: const [
+              Tab(text: 'In Stock'),
+              Tab(text: 'Sold Out'),
+            ],
+          ),
         ),
-        bottom: TabBar(
-          controller: _tabController,
-          indicatorColor: Colors.black,
-          unselectedLabelColor: Colors.grey,
-          labelColor: Colors.black,
-          labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-          tabs: const [
-            Tab(text: 'In Stock'),
-            Tab(text: 'Sold Out'),
-          ],
-        ),
-      ),
-      body: _products == null
-          ? const Loader()
-          : RefreshIndicator(
-        onRefresh: _onRefresh,
-        child: TabBarView(
-          controller: _tabController,
-          children: [
-            _buildProductList(
-              _products!.where((product) => product.quantity > 0).toList(),
+        body: _products == null
+            ? const Loader()
+            : TabBarView(
+              controller: _tabController,
+              children: [
+                _buildProductList(
+                  _products!.where((product) => product.quantity > 0).toList(),
+                ),
+                _buildProductList(
+                  _products!.where((product) => product.quantity == 0).toList(),
+                ),
+              ],
             ),
-            _buildProductList(
-              _products!.where((product) => product.quantity == 0).toList(),
-            ),
-          ],
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.black,
+          onPressed: () {
+            Navigator.pushNamed(context, '/add-product');
+          },
+          child: const Icon(Icons.add, color: Colors.white),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black,
-        onPressed: () {
-          Navigator.pushNamed(context, '/add-product');
-        },
-        child: const Icon(Icons.add, color: Colors.white),
       ),
     );
   }

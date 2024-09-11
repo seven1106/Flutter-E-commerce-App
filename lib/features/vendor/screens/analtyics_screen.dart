@@ -47,12 +47,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       body: _buildBody(),
     );
   }
-
   Widget _buildBody() {
     if (_earnings == null || _totalSales == null) {
       return const Center(child: Loader());
     }
-
     return RefreshIndicator(
       onRefresh: _fetchEarnings,
       child: SingleChildScrollView(

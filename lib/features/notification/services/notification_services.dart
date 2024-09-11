@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
+import '../../../models/user_model.dart';
+
 class NotificationServices {
 
   Future<void> createNotification({
@@ -39,42 +41,15 @@ class NotificationServices {
         response: res,
         context: context,
         onSuccess: () {
-          log('Notification created successfully');
+          UserModel user =
+          userProvider.user.copyWith(notifications: jsonDecode(res.body)['notifications']);
+          userProvider.setUserFromModel(user);
         },
       );
     } catch (e) {
-      showSnackBar(context, e.toString());
+      log(e.toString());
     }
   }
-  Future<List<NotificationModel>> fetchUserNotifications({
-    required BuildContext context,
-  }) async {
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
-    List<NotificationModel> notificationList = [];
-
-    try {
-      http.Response res = await http.get(
-        Uri.parse('${Constants.backEndUrl}/notifications'),
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-          'x-auth-token': userProvider.user.token,
-        },
-      );
-      httpErrorHandler(
-        response: res,
-        context: context,
-        onSuccess: () {
-          final List<dynamic> data = jsonDecode(res.body);
-          notificationList = data.map((e) => NotificationModel.fromMap(e)).toList();
-        },
-      );
-    } catch (e) {
-      showSnackBar(context, e.toString());
-    }
-
-    return notificationList;
-  }
-  // Đánh dấu notification là đã đọc
   Future<void> markAsRead({
     required BuildContext context,
     required String notificationId,
@@ -98,14 +73,43 @@ class NotificationServices {
         response: res,
         context: context,
         onSuccess: () {
-          log('Notification marked as read');
+          UserModel user =
+          userProvider.user.copyWith(notifications: jsonDecode(res.body)['notifications']);
+          userProvider.setUserFromModel(user);
         },
       );
     } catch (e) {
       log(e.toString());
     }
   }
+  Future<void> fetchUserNotifications({
+    required BuildContext context,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    List<NotificationModel> notificationList = [];
 
+    try {
+      http.Response res = await http.get(
+        Uri.parse('${Constants.backEndUrl}/notifications'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+      );
+      httpErrorHandler(
+        response: res,
+        context: context,
+        onSuccess: () {
+          UserModel user =
+          userProvider.user.copyWith(notifications: jsonDecode(res.body)['notifications']);
+          userProvider.setUserFromModel(user);
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+
+  }
   // Xóa một notification
   Future<void> deleteNotification({
     required BuildContext context,

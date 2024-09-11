@@ -35,7 +35,7 @@ class _CartScreenState extends State<CartScreen> {
     final user = context.watch<UserProvider>().user;
     double sum = 0;
     user.cart
-        .map((e) => sum += e['quantity'] * e['product']['discountPrice'] as double)
+        .map((e) => sum += e['quantity'] * e['product']['discountPrice'])
         .toList();
 
     return Scaffold(
