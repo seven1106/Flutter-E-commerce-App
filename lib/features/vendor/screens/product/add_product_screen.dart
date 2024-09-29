@@ -5,6 +5,7 @@ import 'package:emigo/core/common/custom_textfield.dart';
 import 'package:emigo/core/common/long_button.dart';
 import 'package:emigo/core/utils/utils.dart';
 import 'package:emigo/features/vendor/services/vendor_services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class AddProductScreen extends StatefulWidget {
@@ -38,7 +39,11 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   List<String> productCategories = [
-    'Mobiles', 'Essentials', 'Appliances', 'Books', 'Fashion'
+    'Mobiles',
+    'Essentials',
+    'Appliances',
+    'Books',
+    'Fashion'
   ];
 
   void selectImages() async {
@@ -95,35 +100,41 @@ class _AddProductScreenState extends State<AddProductScreen> {
               children: [
                 images.isNotEmpty
                     ? CarouselSlider(
-                  items: images.map((i) => Image.file(i, fit: BoxFit.cover)).toList(),
-                  options: CarouselOptions(
-                    viewportFraction: 1,
-                    height: 200,
-                    aspectRatio: 1,
-                  ),
-                )
+                        items: kIsWeb
+                            ? images.map((e) => Image.network(e.path)).toList()
+                            : images.map((e) => Image.file(e)).toList(),
+                        options: CarouselOptions(
+                          viewportFraction: 1,
+                          height: 200,
+                          aspectRatio: 1,
+                        ),
+                      )
                     : GestureDetector(
-                  onTap: selectImages,
-                  child: DottedBorder(
-                    borderType: BorderType.RRect,
-                    radius: const Radius.circular(10),
-                    color: Colors.grey,
-                    child: const SizedBox(
-                      height: 200,
-                      width: double.infinity,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.add_photo_alternate, size: 40, color: Colors.grey),
-                          SizedBox(height: 8),
-                          Text('Add Product Images', style: TextStyle(color: Colors.grey)),
-                        ],
+                        onTap: selectImages,
+                        child: DottedBorder(
+                          borderType: BorderType.RRect,
+                          radius: const Radius.circular(10),
+                          color: Colors.grey,
+                          child: const SizedBox(
+                            height: 200,
+                            width: double.infinity,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.add_photo_alternate,
+                                    size: 40, color: Colors.grey),
+                                SizedBox(height: 8),
+                                Text('Add Product Images',
+                                    style: TextStyle(color: Colors.grey)),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 24),
-                const Text('Product Details', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const Text('Product Details',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 16),
                 CustomTextField(
                   controller: productNameController,
@@ -162,7 +173,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 DropdownButtonFormField<String>(
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
                   value: category,
                   items: productCategories.map((String item) {

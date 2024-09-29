@@ -1,4 +1,3 @@
-
 import 'package:emigo/models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -23,22 +22,30 @@ class NotificationWidget extends StatefulWidget {
 
 class _NotificationWidgetState extends State<NotificationWidget> {
   final NotificationServices notificationServices = NotificationServices();
- final VendorServices _vendorServices = VendorServices();
-
+  final VendorServices _vendorServices = VendorServices();
 
   @override
   Widget build(BuildContext context) {
-    final notificationList = context.watch<UserProvider>().user.notifications[widget.index];
+    final notificationList = context
+        .watch<UserProvider>()
+        .user
+        .notifications
+        .reversed
+        .toList()[widget.index];
+
     final notification = NotificationModel.fromMap(notificationList['notify']);
+
     bool isRead = notification.isRead;
     return InkWell(
       onTap: () async {
         if (!notification.isRead) {
-          notificationServices.markAsRead(context: context, notificationId: notification.id);
+          notificationServices.markAsRead(
+              context: context, notificationId: notification.id);
           isRead = true;
         }
         if (notification.type == 'order') {
-          OrderModel order = await _vendorServices.fetchOrderById(context: context, id: notification.orderId);
+          OrderModel order = await _vendorServices.fetchOrderById(
+              context: context, id: notification.orderId);
           Navigator.of(context).pushNamed('/order-details', arguments: order);
         }
       },

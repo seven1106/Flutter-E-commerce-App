@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import '../enum/notification_enum.dart';
-
 class NotificationModel {
   final String id;
   final String title;
@@ -25,6 +23,7 @@ class NotificationModel {
   String toString() {
     return 'NotificationModel{ id: $id, title: $title, content: $content, orderId: $orderId, isRead: $isRead, type: $type, createdAt: $createdAt,}';
   }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -48,5 +47,6 @@ class NotificationModel {
       createdAt: map['createTime']?.toInt() ?? 0,
     );
   }
-  factory NotificationModel.fromJson(String source) => NotificationModel.fromMap(json.decode(source));
+  factory NotificationModel.fromJson(String source) =>
+      NotificationModel.fromMap(json.decode(source));
 }

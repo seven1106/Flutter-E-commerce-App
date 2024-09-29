@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:emigo/models/product_model.dart';
 
-
 class OrderModel {
   final String id;
   final List<ProductModel> products;
@@ -15,7 +14,7 @@ class OrderModel {
   final int orderedAt;
   final int status;
   final String description;
-  final String voucherCode;
+  final String? voucherCode;
   final double totalPrice;
   final double initialPrice;
   OrderModel({
@@ -30,7 +29,7 @@ class OrderModel {
     required this.orderedAt,
     required this.status,
     required this.description,
-    required this.voucherCode,
+    this.voucherCode,
     required this.totalPrice,
     required this.initialPrice,
   });
@@ -80,5 +79,6 @@ class OrderModel {
 
   String toJson() => json.encode(toMap());
 
-  factory OrderModel.fromJson(String source) => OrderModel.fromMap(json.decode(source));
+  factory OrderModel.fromJson(String source) =>
+      OrderModel.fromMap(json.decode(source));
 }

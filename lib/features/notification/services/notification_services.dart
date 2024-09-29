@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:emigo/core/constants/constants.dart';
 import 'package:emigo/core/constants/error_handler.dart';
 import 'package:emigo/core/utils/show_snack_bar.dart';
-import 'package:emigo/models/notification_model.dart';
 import 'package:emigo/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -12,7 +11,6 @@ import 'package:provider/provider.dart';
 import '../../../models/user_model.dart';
 
 class NotificationServices {
-
   Future<void> createNotification({
     required BuildContext context,
     required String title,
@@ -41,8 +39,8 @@ class NotificationServices {
         response: res,
         context: context,
         onSuccess: () {
-          UserModel user =
-          userProvider.user.copyWith(notifications: jsonDecode(res.body)['notifications']);
+          UserModel user = userProvider.user
+              .copyWith(notifications: jsonDecode(res.body)['notifications']);
           userProvider.setUserFromModel(user);
         },
       );
@@ -50,6 +48,7 @@ class NotificationServices {
       log(e.toString());
     }
   }
+
   Future<void> markAsRead({
     required BuildContext context,
     required String notificationId,
@@ -73,8 +72,8 @@ class NotificationServices {
         response: res,
         context: context,
         onSuccess: () {
-          UserModel user =
-          userProvider.user.copyWith(notifications: jsonDecode(res.body)['notifications']);
+          UserModel user = userProvider.user
+              .copyWith(notifications: jsonDecode(res.body)['notifications']);
           userProvider.setUserFromModel(user);
         },
       );
@@ -82,12 +81,11 @@ class NotificationServices {
       log(e.toString());
     }
   }
+
   Future<void> fetchUserNotifications({
     required BuildContext context,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    List<NotificationModel> notificationList = [];
-
     try {
       http.Response res = await http.get(
         Uri.parse('${Constants.backEndUrl}/notifications'),
@@ -100,16 +98,16 @@ class NotificationServices {
         response: res,
         context: context,
         onSuccess: () {
-          UserModel user =
-          userProvider.user.copyWith(notifications: jsonDecode(res.body)['notifications']);
+          UserModel user = userProvider.user
+              .copyWith(notifications: jsonDecode(res.body)['notifications']);
           userProvider.setUserFromModel(user);
         },
       );
     } catch (e) {
       showSnackBar(context, e.toString());
     }
-
   }
+
   // Xóa một notification
   Future<void> deleteNotification({
     required BuildContext context,

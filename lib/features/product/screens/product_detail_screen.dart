@@ -79,6 +79,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final productWishList = context.watch<UserProvider>().user.wishlist;
+    final user = context.watch<UserProvider>().user;
     bool isWishlisted = false;
     for (var product in productWishList) {
       if (product['product']['_id'] == widget.product.id) {
@@ -127,35 +128,37 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           }
         },
       ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(10),
-        child: SizedBox(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: isWishlisted
-                    ? const Icon(Icons.favorite)
-                    : const Icon(Icons.favorite_border),
-                color: isWishlisted ? Colors.red : null,
-                onPressed: () {
-                  if (isWishlisted) {
-                    removeFromWishlist(widget.product);
-                  } else {
-                    addToWishlist();
-                  }
-                },
-              ),
-              Expanded(
-                child: CustomButton(
-                  text: 'Add to Cart',
-                  onTap: addToCart,
+      bottomNavigationBar: user.type == 'vendor'
+          ? null
+          : Padding(
+              padding: const EdgeInsets.all(10),
+              child: SizedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      icon: isWishlisted
+                          ? const Icon(Icons.favorite)
+                          : const Icon(Icons.favorite_border),
+                      color: isWishlisted ? Colors.red : null,
+                      onPressed: () {
+                        if (isWishlisted) {
+                          removeFromWishlist(widget.product);
+                        } else {
+                          addToWishlist();
+                        }
+                      },
+                    ),
+                    Expanded(
+                      child: CustomButton(
+                        text: 'Add to Cart',
+                        onTap: addToCart,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 
@@ -241,8 +244,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           right: 0,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children:
-            widget.product.images.asMap().entries.map((entry) {
+            children: widget.product.images.asMap().entries.map((entry) {
               return GestureDetector(
                 onTap: () => _controller.animateToPage(entry.key),
                 child: Container(
@@ -251,8 +253,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                   margin: const EdgeInsets.symmetric(horizontal: 4.0),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: Colors.white.withOpacity(
-                        _current == entry.key ? 0.9 : 0.4),
+                    color: Colors.white
+                        .withOpacity(_current == entry.key ? 0.9 : 0.4),
                   ),
                 ),
               );
@@ -272,8 +274,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         children: [
           Text(
             widget.product.name,
-            style:
-            const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 8),
           Row(
@@ -349,12 +350,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
           const SizedBox(height: 8),
           Wrap(
             spacing: 8,
-            children: [
-              Colors.red,
-              Colors.blue,
-              Colors.green,
-              Colors.yellow
-            ].map((color) {
+            children: [Colors.red, Colors.blue, Colors.green, Colors.yellow]
+                .map((color) {
               return GestureDetector(
                 onTap: () {
                   // Handle color selection

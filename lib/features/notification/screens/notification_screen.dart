@@ -19,6 +19,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     await notificationServices.fetchUserNotifications(context: context);
     setState(() {});
   }
+
   @override
   void initState() {
     super.initState();
@@ -34,15 +35,15 @@ class _NotificationScreenState extends State<NotificationScreen> {
         child: AppBar(
           flexibleSpace: Container(
             decoration: const BoxDecoration(
-              // gradient: GlobalVariables.appBarGradient,
-            ),
+                // gradient: GlobalVariables.appBarGradient,
+                ),
           ),
           title: const Text('Notifications'),
           centerTitle: true,
         ),
       ),
       body: RefreshIndicator(
-        onRefresh: _refreshNotifications,
+        onRefresh: () => _refreshNotifications(),
         child: SingleChildScrollView(
           child: Column(
             children: [
@@ -58,7 +59,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 ListView.builder(
                   itemCount: user.notifications.length,
                   shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(), // Ngăn không cho ListView cuộn khi bên ngoài cuộn
+                  physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
                     return NotificationWidget(
                       index: index,
