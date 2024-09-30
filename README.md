@@ -22,6 +22,12 @@ Flexible Payment: Pay on delivery or via online payment gateways such as Google 
 
 Order Management: Track order status and receive notifications.
 
+Order Status Updates: Users receive notifications about changes in their order status, such as "Order Confirmed," "Order Shipped," and "Order Delivered."
+
+Notification Center: A screen where users can see a list of all their notifications.
+
+Rating And Review Product: Users can give products a rating from 1 to 5 stars and Leave a review.
+
 Voucher System: Access discount codes and special offers.
 
 Responsive UI: Modern design, easy to use, and compatible with various screen sizes.
@@ -79,31 +85,57 @@ https://youtu.be/Rma9pRjfMGo
 
 ## Screenshots
 
-<p style="display: flex; flex-wrap: wrap; justify-content: space-between;">
-      <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/log.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/home.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-      <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/reg.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/wishl.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/voucher_screen.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/review_dialog.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/rating.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/product_detail.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/order_detail.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/noti.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/my_store.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/my_order.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/mu_account.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/edit_product.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/edit_acc_info.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/customer_tracking.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/checkout_gpay.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/checkout_cash.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/cart.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/analytics_screen.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/address.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/add_voucher.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/add_product.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-    <img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/ad_tracking.png?raw=true" style="width: 24%; margin-bottom: 20px;">
-</p>
+<h2>📱 Screenshots of the Emigo Ecommerce App</h2>
+
+<table>
+  <tr>
+    <th>Authentication</th>
+    <th>Home & Wishlist</th>
+    <th>Product Pages</th>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/log.png?raw=true" width="200"></td>
+    <td><img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/home.png?raw=true" width="200"></td>
+    <td><img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/product_detail.png?raw=true" width="200"></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/reg.png?raw=true" width="200"></td>
+    <td><img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/wishl.png?raw=true" width="200"></td>
+    <td><img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/rating.png?raw=true" width="200"></td>
+  </tr>
+
+  <tr>
+    <th>Cart & Checkout</th>
+    <th>Order Management</th>
+    <th>Notifications & Analytics</th>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/cart.png?raw=true" width="200"></td>
+    <td><img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/order_detail.png?raw=true" width="200"></td>
+    <td><img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/noti.png?raw=true" width="200"></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/checkout_gpay.png?raw=true" width="200"></td>
+    <td><img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/my_order.png?raw=true" width="200"></td>
+    <td><img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/analytics_screen.png?raw=true" width="200"></td>
+  </tr>
+
+  <tr>
+    <th>User Profile & Store Management</th>
+    <th>Vouchers & Address</th>
+    <th>Customer & Ad Tracking</th>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/mu_account.png?raw=true" width="200"></td>
+    <td><img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/voucher_screen.png?raw=true" width="200"></td>
+    <td><img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/customer_tracking.png?raw=true" width="200"></td>
+  </tr>
+  <tr>
+    <td><img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/my_store.png?raw=true" width="200"></td>
+    <td><img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/add_voucher.png?raw=true" width="200"></td>
+    <td><img src="https://github.com/seven1106/Flutter-E-commerce-App/blob/master/ss/ad_tracking.png?raw=true" width="200"></td>
+  </tr>
+</table>
+
 
 
