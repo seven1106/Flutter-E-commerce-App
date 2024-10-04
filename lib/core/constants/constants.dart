@@ -5,9 +5,10 @@ class Constants {
   static const String appAuthor = '';
   static const bottomLinePath = "assets/images/3.png";
   static const logoPath = "assets/images/logo.png";
+  static const splashScreenPath = "assets/images/avt.jpg";
   static const welcomeLottiePath = "assets/animation/cat.json";
 
-    static const List<String> carouselImages = [
+  static const List<String> carouselImages = [
     'https://images-eu.ssl-images-amazon.com/images/G/31/img21/Wireless/WLA/TS/D37847648_Accessories_savingdays_Jan22_Cat_PC_1500.jpg',
     'https://images-eu.ssl-images-amazon.com/images/G/31/img2021/Vday/bwl/English.jpg',
     'https://images-eu.ssl-images-amazon.com/images/G/31/img22/Wireless/AdvantagePrime/BAU/14thJan/D37196025_IN_WL_AdvantageJustforPrime_Jan_Mob_ingress-banner_1242x450.jpg',
@@ -38,5 +39,3 @@ class Constants {
   ];
   static const backEndUrl = "http://192.168.145.1:6969/api";
 }
-
-

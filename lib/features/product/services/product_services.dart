@@ -12,6 +12,27 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class ProductServices {
+  void fetchProductById({
+    required BuildContext context,
+    required String id,
+    required Function(ProductModel) onSuccess,
+  }) async {
+    try {
+      http.Response res = await http.get(
+        Uri.parse('${Constants.backEndUrl}/get-products/$id'),
+      );
+      httpErrorHandler(
+        response: res,
+        context: context,
+        onSuccess: () {
+          onSuccess(ProductModel.fromMap(jsonDecode(res.body)['product']));
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
   void addToCart({
     required BuildContext context,
     required ProductModel product,
@@ -75,13 +96,11 @@ class ProductServices {
             ),
           );
         },
-
       );
     } catch (e) {
       log(e.toString());
     }
   }
-
 
   void rateProduct({
     required BuildContext context,

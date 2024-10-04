@@ -176,8 +176,8 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                     title: '${userProvider.user.name} has rated your product',
                     content:
                         'Rating: $rating, Comment: ${commentController.text}',
-                    type: 'order',
-                    orderId: widget.order.id,
+                    type: 'rating',
+                    orderId: product.id,
                     receiverId: product.sellerId,
                   );
                   Navigator.pop(context);

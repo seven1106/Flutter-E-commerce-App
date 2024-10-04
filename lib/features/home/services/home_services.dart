@@ -52,13 +52,11 @@ class HomeServices {
     List<ProductModel> productList = [];
 
     try {
-      http.Response res = await http.get(
-          Uri.parse('${Constants.backEndUrl}/products/deals'),
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-            'x-auth-token': userProvider.user.token,
-          }
-      );
+      http.Response res = await http
+          .get(Uri.parse('${Constants.backEndUrl}/products/deals'), headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-auth-token': userProvider.user.token,
+      });
       httpErrorHandler(
         response: res,
         context: context,
@@ -93,8 +91,7 @@ class HomeServices {
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'x-auth-token': userProvider.user.token,
-          }
-      );
+          });
       httpErrorHandler(
         response: res,
         context: context,
@@ -115,6 +112,7 @@ class HomeServices {
     }
     return productList.reversed.toList();
   }
+
   Future<List<ProductModel>> fetchBestSellerProducts({
     required BuildContext context,
   }) async {
@@ -127,8 +125,7 @@ class HomeServices {
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'x-auth-token': userProvider.user.token,
-          }
-      );
+          });
       httpErrorHandler(
         response: res,
         context: context,
@@ -150,6 +147,7 @@ class HomeServices {
 
     return productList;
   }
+
   Future<List<ProductModel>> fetchBestSaleProducts({
     required BuildContext context,
   }) async {
@@ -162,8 +160,7 @@ class HomeServices {
           headers: {
             'Content-Type': 'application/json; charset=UTF-8',
             'x-auth-token': userProvider.user.token,
-          }
-      );
+          });
       httpErrorHandler(
         response: res,
         context: context,

@@ -4,6 +4,8 @@ import 'package:emigo/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../core/constants/constants.dart';
+
 class AccountScreen extends StatefulWidget {
   const AccountScreen({Key? key}) : super(key: key);
 
@@ -50,8 +52,8 @@ class _AccountScreenState extends State<AccountScreen> {
                       children: [
                         const CircleAvatar(
                           radius: 30,
-                          backgroundImage: NetworkImage(
-                              'https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?w=740&t=st=1724378979~exp=1724379579~hmac=54329fb738a5052672db7c1c15da43a2da780ddf552897034dd31c0f9fbc7902'),
+                          backgroundImage:
+                              AssetImage(Constants.splashScreenPath),
                         ),
                         const SizedBox(width: 10),
                         Text(
@@ -63,12 +65,12 @@ class _AccountScreenState extends State<AccountScreen> {
                           ),
                         ),
                         const SizedBox(width: 10),
-                         IconButton(
+                        IconButton(
                           icon: const Icon(
                             Icons.edit,
                             color: Colors.white,
                           ),
-                          onPressed: (){
+                          onPressed: () {
                             Navigator.pushNamed(context, '/edit_user_info');
                           },
                         ),

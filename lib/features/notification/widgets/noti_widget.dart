@@ -1,9 +1,12 @@
+import 'dart:developer';
+
 import 'package:emigo/models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../../models/notification_model.dart';
+import '../../../models/product_model.dart';
 import '../../../providers/user_provider.dart';
 import '../../vendor/services/vendor_services.dart';
 import '../services/notification_services.dart';
@@ -47,6 +50,14 @@ class _NotificationWidgetState extends State<NotificationWidget> {
           OrderModel order = await _vendorServices.fetchOrderById(
               context: context, id: notification.orderId);
           Navigator.of(context).pushNamed('/order-details', arguments: order);
+        }
+        if (notification.type == 'rating') {
+          ProductModel product = await _vendorServices.fetchProductById(
+              context: context, id: notification.orderId);
+          log('ProductorderId: ${notification.orderId}');
+          log('Product: $product');
+          Navigator.of(context)
+              .pushNamed('/product-details', arguments: product);
         }
       },
       child: Container(

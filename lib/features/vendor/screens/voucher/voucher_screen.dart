@@ -14,7 +14,8 @@ class VouchersScreen extends StatefulWidget {
   State<VouchersScreen> createState() => _VouchersScreenState();
 }
 
-class _VouchersScreenState extends State<VouchersScreen> with SingleTickerProviderStateMixin {
+class _VouchersScreenState extends State<VouchersScreen>
+    with SingleTickerProviderStateMixin {
   List<VoucherModel>? vouchers;
   final VoucherServices voucherServices = VoucherServices();
   late TabController _tabController;
@@ -53,6 +54,14 @@ class _VouchersScreenState extends State<VouchersScreen> with SingleTickerProvid
     return Scaffold(
       appBar: AppBar(
         title: const Text('Vouchers'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: () {
+              fetchVouchers();
+            },
+          ),
+        ],
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
@@ -64,25 +73,30 @@ class _VouchersScreenState extends State<VouchersScreen> with SingleTickerProvid
       body: vouchers == null
           ? const Loader()
           : TabBarView(
-        controller: _tabController,
-        children: [
-          RefreshIndicator(
-            onRefresh: _refreshVouchers,
-            child: _buildVoucherList(vouchers!.where((voucher) => voucher.isValid()).toList()),
-          ),
-          RefreshIndicator(
-            onRefresh: _refreshVouchers,
-            child: _buildVoucherList(vouchers!.where((voucher) => !voucher.isValid()).toList()),
-          ),
-        ],
-      ),
-      floatingActionButton: (user.type == "vendor") ? FloatingActionButton(
-        backgroundColor: Colors.black,
-        onPressed: () {
-          Navigator.pushNamed(context, '/add-voucher');
-        },
-        child: const Icon(Icons.add, color: Colors.white),
-      ) : null,
+              controller: _tabController,
+              children: [
+                RefreshIndicator(
+                  onRefresh: _refreshVouchers,
+                  child: _buildVoucherList(
+                      vouchers!.where((voucher) => voucher.isValid()).toList()),
+                ),
+                RefreshIndicator(
+                  onRefresh: _refreshVouchers,
+                  child: _buildVoucherList(vouchers!
+                      .where((voucher) => !voucher.isValid())
+                      .toList()),
+                ),
+              ],
+            ),
+      floatingActionButton: (user.type == "vendor")
+          ? FloatingActionButton(
+              backgroundColor: Colors.black,
+              onPressed: () {
+                Navigator.pushNamed(context, '/add-voucher');
+              },
+              child: const Icon(Icons.add, color: Colors.white),
+            )
+          : null,
     );
   }
 
@@ -113,40 +127,45 @@ class _VouchersScreenState extends State<VouchersScreen> with SingleTickerProvid
               children: [
                 const SizedBox(height: 4),
                 voucherData.discountType == 'percentage'
-                    ? Text('Discount: ${voucherData.discountValue.toStringAsFixed(2)}%')
-                    : Text('Discount: \$${voucherData.discountValue.toStringAsFixed(2)}'),
+                    ? Text(
+                        'Discount: ${voucherData.discountValue.toStringAsFixed(2)}%')
+                    : Text(
+                        'Discount: \$${voucherData.discountValue.toStringAsFixed(2)}'),
                 const SizedBox(height: 4),
-                Text('Valid From: ${voucherData.startDate.toLocal().toShortDateString()}'),
-                Text('Valid Until: ${voucherData.endDate.toLocal().toShortDateString()}'),
+                Text(
+                    'Valid From: ${voucherData.startDate.toLocal().toShortDateString()}'),
+                Text(
+                    'Valid Until: ${voucherData.endDate.toLocal().toShortDateString()}'),
               ],
             ),
             trailing: const Icon(Icons.arrow_forward_ios, size: 16),
             onLongPress: () {
               if (user.type != "vendor") {
                 showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: const Text('Delete Voucher'),
-                    content: const Text('Are you sure you want to delete this voucher?'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          deleteVoucher(voucherData.id);
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Delete'),
-                      ),
-                    ],
-                  );
-                },
-              );
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Delete Voucher'),
+                      content: const Text(
+                          'Are you sure you want to delete this voucher?'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Cancel'),
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            deleteVoucher(voucherData.id);
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Delete'),
+                        ),
+                      ],
+                    );
+                  },
+                );
               }
             },
             onTap: () {

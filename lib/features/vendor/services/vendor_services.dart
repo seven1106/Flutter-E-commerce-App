@@ -54,9 +54,8 @@ class VendorServices {
         discountPrice: discountPrice,
         sellCount: 0,
         ratings: [],
+        id: '',
       );
-      print(product.toJson());
-
       http.Response res = await http.post(
         Uri.parse('${Constants.backEndUrl}/vendor/add-product'),
         headers: {
@@ -125,6 +124,7 @@ class VendorServices {
       discountPrice: 0,
       sellCount: 0,
       ratings: [],
+      id: '',
     );
 
     try {

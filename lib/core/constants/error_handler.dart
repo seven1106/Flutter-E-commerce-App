@@ -35,6 +35,6 @@ void httpErrorHandler({
       print(jsonResponse['error']);
       break;
     default:
-      showSnackBar(context, response.body);
+      log(jsonResponse['error']);
   }
 }

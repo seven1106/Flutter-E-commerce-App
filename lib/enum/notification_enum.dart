@@ -1,7 +1,7 @@
 enum NotificationEnum {
   common('common'),
   order('order'),
-  vote('vote'),
+  rating('rating'),
   delivery('delivery'),
   voucher('voucher');
 
@@ -16,8 +16,8 @@ extension ConvertNotification on String {
         return NotificationEnum.common;
       case 'order':
         return NotificationEnum.order;
-      case 'vote':
-        return NotificationEnum.vote;
+      case 'rating':
+        return NotificationEnum.rating;
       case 'delivery':
         return NotificationEnum.delivery;
       case 'voucher':

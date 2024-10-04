@@ -3,7 +3,7 @@ import 'package:emigo/models/rating.dart';
 
 class ProductModel {
   final String name;
-  final  String sellerId;
+  final String sellerId;
   final String description;
   final int quantity;
   final List<String> images;
@@ -11,7 +11,7 @@ class ProductModel {
   final double price;
   final double discountPrice;
   final int sellCount;
-  final String? id;
+  final String id;
   List<RatingModel> ratings = [];
 
   ProductModel({
@@ -24,7 +24,7 @@ class ProductModel {
     required this.price,
     required this.discountPrice,
     this.sellCount = 0,
-    this.id,
+    required this.id,
     required this.ratings,
   });
 
@@ -58,10 +58,10 @@ class ProductModel {
       id: map['_id'],
       ratings: map['ratings'] != null
           ? List<RatingModel>.from(
-        map['ratings']?.map(
-              (x) => RatingModel.fromMap(x),
-        ),
-      )
+              map['ratings']?.map(
+                (x) => RatingModel.fromMap(x),
+              ),
+            )
           : [],
     );
   }
