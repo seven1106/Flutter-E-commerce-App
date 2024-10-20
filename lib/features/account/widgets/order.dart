@@ -75,12 +75,8 @@ class _OrdersState extends State<Orders> {
                         orders!.where((order) => order.status == 1).length),
                     _buildOrderStatusCard('To Review', Icons.rate_review,
                         orders!.where((order) => order.status == 2 | 3).length),
-                    _buildOrderStatusCard(
-                        'Returns',
-                        Icons.assignment_return,
-                        orders!
-                            .where((order) => order.status == 'RETURNED')
-                            .length),
+                    _buildOrderStatusCard('Cancelled', Icons.cancel,
+                        orders!.where((order) => order.status == 4).length),
                   ],
                 ),
               ),

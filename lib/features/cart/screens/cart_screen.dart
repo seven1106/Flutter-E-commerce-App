@@ -1,4 +1,3 @@
-
 import 'package:emigo/core/common/long_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,8 +43,8 @@ class _CartScreenState extends State<CartScreen> {
         child: AppBar(
           flexibleSpace: Container(
             decoration: const BoxDecoration(
-              // gradient: GlobalVariables.appBarGradient,
-            ),
+                // gradient: GlobalVariables.appBarGradient,
+                ),
           ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -125,6 +124,7 @@ class _CartScreenState extends State<CartScreen> {
             ListView.builder(
               itemCount: user.cart.length,
               shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return CartProduct(
                   index: index,
@@ -134,14 +134,15 @@ class _CartScreenState extends State<CartScreen> {
           ],
         ),
       ),
-
-      bottomNavigationBar: (user.cart.isNotEmpty) ? Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: LongButton(
-          buttonText: 'Proceed to Buy (${user.cart.length} items)',
-          onPressed: () => navigateToAddress(sum),
-        ),
-      ) : null,
+      bottomNavigationBar: (user.cart.isNotEmpty)
+          ? Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: LongButton(
+                buttonText: 'Proceed to Buy (${user.cart.length} items)',
+                onPressed: () => navigateToAddress(sum),
+              ),
+            )
+          : null,
     );
   }
 }

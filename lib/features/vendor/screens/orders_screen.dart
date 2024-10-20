@@ -51,13 +51,13 @@ class _OrdersScreenState extends State<OrdersScreen>
     return Scaffold(
       appBar: AppBar(
         title: Row(
-          children:  [
+          children: [
             const Icon(Icons.shopping_bag),
             const SizedBox(width: 8),
             const Text('Orders'),
             const Spacer(),
             IconButton(
-              icon:  const Icon(Icons.refresh, color: Colors.black, size: 30),
+              icon: const Icon(Icons.refresh, color: Colors.black, size: 30),
               onPressed: fetchOrders,
             ),
           ],
@@ -69,7 +69,7 @@ class _OrdersScreenState extends State<OrdersScreen>
             Tab(text: 'To Ship'),
             Tab(text: 'To Receive'),
             Tab(text: 'To Review'),
-            Tab(text: 'Returns'),
+            Tab(text: 'Cancelled'),
           ],
         ),
       ),
@@ -85,9 +85,8 @@ class _OrdersScreenState extends State<OrdersScreen>
                     orders!.where((order) => order.status == 1).toList()),
                 _buildOrderList(
                     orders!.where((order) => order.status == 2 | 3).toList()),
-                _buildOrderList(orders!
-                    .where((order) => order.status == 'RETURNED')
-                    .toList()),
+                _buildOrderList(
+                    orders!.where((order) => order.status == 4).toList()),
               ],
             ),
     );

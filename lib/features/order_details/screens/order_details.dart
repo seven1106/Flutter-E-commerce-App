@@ -220,7 +220,6 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
       }
     }
     final user = Provider.of<UserProvider>(context).user;
-
     return isLoaded
         ? Scaffold(
             appBar: PreferredSize(
@@ -418,25 +417,29 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                         child: Stepper(
                           currentStep: currentStep,
                           controlsBuilder: (context, details) {
-                            if (user.type == 'vendor' && currentStep == 0) {
+                            if (currentStep == 0) {
                               return Column(
                                 children: [
-                                  CustomButton(
-                                    text: 'Confirm',
-                                    onTap: () {
-                                      changeOrderStatus(details.currentStep,
-                                          'Order confirmed');
-                                      notificationServices.createNotification(
-                                        context: context,
-                                        title: 'Order Confirmed',
-                                        content:
-                                            'This order has been confirmed',
-                                        type: 'order',
-                                        orderId: widget.order.id,
-                                        receiverId: widget.order.userId,
-                                      );
-                                    },
-                                  ),
+                                  (user.type == 'vendor')
+                                      ? CustomButton(
+                                          text: 'Confirm',
+                                          onTap: () {
+                                            changeOrderStatus(
+                                                details.currentStep,
+                                                'Order confirmed');
+                                            notificationServices
+                                                .createNotification(
+                                              context: context,
+                                              title: 'Order Confirmed',
+                                              content:
+                                                  'This order has been confirmed',
+                                              type: 'order',
+                                              orderId: widget.order.id,
+                                              receiverId: widget.order.userId,
+                                            );
+                                          },
+                                        )
+                                      : const SizedBox(),
                                   const SizedBox(height: 10),
                                   CustomButton(
                                     text: 'Cancel',
@@ -474,8 +477,13 @@ class _OrderDetailScreenState extends State<OrderDetailScreen> {
                                                           'Reason: ${reasonController.text}',
                                                       type: 'order',
                                                       orderId: widget.order.id,
-                                                      receiverId:
-                                                          widget.order.userId,
+                                                      receiverId: user.type ==
+                                                              'vendor'
+                                                          ? widget.order.userId
+                                                          : widget
+                                                              .order
+                                                              .products[0]
+                                                              .sellerId,
                                                     );
                                                     Navigator.pop(context);
                                                   },
